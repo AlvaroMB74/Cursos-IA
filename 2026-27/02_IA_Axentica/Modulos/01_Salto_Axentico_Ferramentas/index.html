@@ -13,20 +13,33 @@
             theme: {
                 extend: {
                     colors: {
-                        dark: '#0f172a',
-                        card: '#1e293b',
-                        'card-elevated': '#334155',
-                        cream: '#f8fafc',
-                        dim: '#94a3b8',
+                        dark: '#121212',
+                        card: '#1E1E1E',
+                        'card-elevated': '#282828',
+                        cream: '#EAE0C8',
+                        dim: '#A8A090',
+                        slate: {
+                            950: '#0a0a0a',
+                            900: '#121212',
+                            850: '#181818',
+                            800: '#1E1E1E',
+                            700: '#2A2A2A',
+                            600: '#383838',
+                            500: '#666666',
+                            400: '#A8A090',
+                            300: '#C5BDB0',
+                            200: '#DCD4C6',
+                            100: '#EAE0C8',
+                        },
                         orange: '#f97316',
-                        gold: '#f59e0b',
                         cyan: '#06b6d4',
                         emerald: '#10b981',
+                        gold: '#D4AF37',
                         purple: '#8b5cf6',
-                        rose: '#f43f5e'
+                        rose: '#f43f5e',
                     },
                     fontFamily: {
-                        sans: ['Open Sans', 'sans-serif']
+                        sans: ['Open Sans', 'sans-serif'],
                     }
                 }
             }
@@ -38,8 +51,8 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         body {
-            background-color: #0f172a;
-            color: #f8fafc;
+            background-color: #121212;
+            color: #EAE0C8;
             overflow-y: auto;
         }
     </style>
@@ -295,7 +308,7 @@
                                             O Modelo Chat (Curso Básico)
                                         </div>
                                         <div className="text-3xl mb-3">💬</div>
-                                        <h3 className="text-xl font-bold text-white mb-2">Unha pregunta $\rightarrow$ Unha resposta</h3>
+                                        <h3 className="text-xl font-bold text-white mb-2">Unha pregunta → Unha resposta</h3>
                                         <p className="text-slate-400 text-sm leading-relaxed mb-4">
                                             O usuario escribe un prompt, o modelo responde nun só turno a partir dos seus pesos internos. Se algo está mal, hai que reformular todo o prompt.
                                         </p>
@@ -321,7 +334,7 @@
                                             O Paradigma Axéntico (2026–2027)
                                         </div>
                                         <div className="text-3xl mb-3">⚡</div>
-                                        <h3 className="text-xl font-bold text-white mb-2">Un encargo acoutado $\rightarrow$ Un plan con ferramentas</h3>
+                                        <h3 className="text-xl font-bold text-white mb-2">Un encargo acoutado → Un plan con ferramentas</h3>
                                         <p className="text-slate-300 text-sm leading-relaxed mb-4">
                                             O usuario define a finalidade e as fontes. O colaborador le os arquivos, propón un plan, executa tarefas por fases e entrega produtos comprobables.
                                         </p>

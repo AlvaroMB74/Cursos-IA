@@ -7,7 +7,40 @@
     <link rel="stylesheet" href="../CSS/estilos_ia.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { dark: 'var(--bg-dark)', card: 'var(--card-bg)', cream: 'var(--text-main)', dim: 'var(--text-dim)', gold: 'var(--accent-gold)', orange: 'var(--accent-orange)', retro: 'var(--accent-retro)', cyan: '#06B6D4', purple: '#8B5CF6', green: '#10B981', pink: '#EC4899' }, fontFamily: { sans: ['Open Sans', 'sans-serif'] }, animation: { 'fade-in': 'fadeIn 0.6s ease-out forwards' }, keyframes: { fadeIn: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } } } } }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#121212',
+                        card: '#1E1E1E',
+                        'card-elevated': '#282828',
+                        cream: '#EAE0C8',
+                        dim: '#A8A090',
+                        gold: '#D4AF37',
+                        orange: '#D35400',
+                        retro: '#C0392B',
+                        cyan: '#06B6D4',
+                        purple: '#8B5CF6',
+                        green: '#10B981',
+                        pink: '#EC4899',
+                        rose: '#F43F5E',
+                        slate: {
+                            950: '#0a0a0a',
+                            900: '#121212',
+                            850: '#181818',
+                            800: '#1E1E1E',
+                            700: '#2A2A2A',
+                            600: '#383838',
+                            500: '#666666',
+                            400: '#A8A090',
+                            300: '#C5BDB0',
+                            200: '#DCD4C6',
+                            100: '#EAE0C8',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Open Sans', 'sans-serif'],
+                    }, animation: { 'fade-in': 'fadeIn 0.6s ease-out forwards' }, keyframes: { fadeIn: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } } } } }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -15,7 +48,10 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.js"></script>
-    <style> body { background-color: var(--bg-dark); color: var(--text-main); } .bg-glow { background: radial-gradient(circle at 50% 0%, rgba(236, 72, 153, 0.08) 0%, rgba(18, 18, 18, 0) 70%); } .reveal { height: 100vh; } .reveal .slides > section { padding: 0; } .perspective-1000 { perspective: 1000px; } .transform-style-3d { transform-style: preserve-3d; } .backface-hidden { -webkit-backface-visibility: hidden; backface-visibility: hidden; } .rotate-y-180 { transform: rotateY(180deg); } .custom-scroll::-webkit-scrollbar { width: 4px; } .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); } .custom-scroll::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 3px; } </style>
+    <style> body {
+            background-color: #121212;
+            color: #EAE0C8;
+        } .bg-glow { background: radial-gradient(circle at 50% 0%, rgba(236, 72, 153, 0.08) 0%, rgba(18, 18, 18, 0) 70%); } .reveal { height: 100vh; } .reveal .slides > section { padding: 0; } .perspective-1000 { perspective: 1000px; } .transform-style-3d { transform-style: preserve-3d; } .backface-hidden { -webkit-backface-visibility: hidden; backface-visibility: hidden; } .rotate-y-180 { transform: rotateY(180deg); } .custom-scroll::-webkit-scrollbar { width: 4px; } .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); } .custom-scroll::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 3px; } </style>
 </head>
 <body class="bg-dark text-cream font-sans overflow-hidden bg-glow">
     <div id="root"></div>

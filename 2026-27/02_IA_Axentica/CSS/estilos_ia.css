@@ -2,24 +2,24 @@
    PALETA DE CORES (Dark 70s Retro-Tech & Axéntica)
    ========================================= */
 :root {
-    --bg-dark: #0f172a;         /* Azul ardósia moi escuro */
-    --card-bg: #1e293b;         /* Superficie de tarxeta */
-    --card-bg-elevated: #334155;
-    --text-main: #f8fafc;       /* Branco brillante suave */
-    --text-dim: #94a3b8;        /* Cinza medio lexible */
+    --bg-dark: #121212;         /* Negro carbon suave */
+    --card-bg: #1E1E1E;         /* Superficie de tarxeta */
+    --card-bg-elevated: #282828;
+    --text-main: #EAE0C8;       /* Crema / Hueso suave */
+    --text-dim: #A8A090;        /* Beige / Cinza medio lexible */
     
     /* Acentos Principais */
     --accent-orange: #f97316;   /* Naranxa axente */
-    --accent-gold: #f59e0b;     /* Ouro cálido */
+    --accent-gold: #D4AF37;     /* Ouro calido */
     --accent-cyan: #06b6d4;     /* Ciano sistema */
     --accent-emerald: #10b981;  /* Verde proxectos */
-    --accent-purple: #8b5cf6;   /* Púrpura normativo */
+    --accent-purple: #8b5cf6;   /* Purpura normativo */
     --accent-rose: #f43f5e;     /* Vermello parada / alerta */
     
-    --border-color: rgba(255, 255, 255, 0.1);
+    --border-color: #333333;
     --glow-orange: 0 0 20px rgba(249, 115, 22, 0.25);
     --glow-cyan: 0 0 20px rgba(6, 182, 212, 0.25);
-    --glow-gold: 0 0 20px rgba(245, 158, 11, 0.25);
+    --glow-gold: 0 0 20px rgba(212, 175, 55, 0.25);
     --glow-emerald: 0 0 20px rgba(16, 185, 129, 0.25);
     --glow-purple: 0 0 20px rgba(139, 92, 246, 0.25);
 }

@@ -12,20 +12,35 @@
             theme: {
                 extend: {
                     colors: {
-                        dark: 'var(--bg-dark)',
-                        card: 'var(--card-bg)',
-                        cream: 'var(--text-main)',
-                        dim: 'var(--text-dim)',
-                        gold: 'var(--accent-gold)',
-                        orange: 'var(--accent-orange)',
-                        retro: 'var(--accent-retro)',
+                        dark: '#121212',
+                        card: '#1E1E1E',
+                        'card-elevated': '#282828',
+                        cream: '#EAE0C8',
+                        dim: '#A8A090',
+                        gold: '#D4AF37',
+                        orange: '#D35400',
+                        retro: '#C0392B',
                         cyan: '#06B6D4',
                         purple: '#8B5CF6',
                         green: '#10B981',
-                        rose: '#F43F5E'
+                        pink: '#EC4899',
+                        rose: '#F43F5E',
+                        slate: {
+                            950: '#0a0a0a',
+                            900: '#121212',
+                            850: '#181818',
+                            800: '#1E1E1E',
+                            700: '#2A2A2A',
+                            600: '#383838',
+                            500: '#666666',
+                            400: '#A8A090',
+                            300: '#C5BDB0',
+                            200: '#DCD4C6',
+                            100: '#EAE0C8',
+                        }
                     },
                     fontFamily: {
-                        sans: ['Open Sans', 'sans-serif']
+                        sans: ['Open Sans', 'sans-serif'],
                     },
                     animation: {
                         'fade-in': 'fadeIn 0.5s ease-out forwards'
@@ -46,8 +61,8 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            background-color: #121212;
+            color: #EAE0C8;
         }
 
         .bg-glow {
