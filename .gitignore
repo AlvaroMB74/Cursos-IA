@@ -1,0 +1,15 @@
+# Arquivos comprimidos de copia de seguridade pesados (>10MB)
+*.zip
+*.tar.gz
+*.rar
+
+# Sistemas operativos e editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Ficheiros temporais e logs
+*.tmp
+*.log

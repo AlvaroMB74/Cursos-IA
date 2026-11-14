@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="gl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 5: Marco Normativo e Boas Prácticas no Entregable (Edición 2026–2027)</title>
+    <link rel="stylesheet" href="../../CSS/estilos_ia.css">
+    <link rel="stylesheet" href="../../CSS/axentica.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0f172a',
+                        card: '#1e293b',
+                        'card-elevated': '#334155',
+                        cream: '#f8fafc',
+                        dim: '#94a3b8',
+                        orange: '#f97316',
+                        gold: '#f59e0b',
+                        cyan: '#06b6d4',
+                        emerald: '#10b981',
+                        purple: '#8b5cf6',
+                        rose: '#f43f5e'
+                    },
+                    fontFamily: {
+                        sans: ['Open Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body class="custom-scroll selection:bg-purple-500 selection:text-white">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const Modulo5App = () => {
+            const [activeTab, setActiveTab] = useState('semaforo');
+            const [activeCase, setActiveCase] = useState(0);
+            const [selectedDoc, setSelectedDoc] = useState(null);
+
+            // Dilemas de aula sincronizados
+            const cases = [
+                {
+                    id: 0,
+                    tag: "Privacidade e NEAE",
+                    title: "Redactar un informe de adaptación cunha IA comercial",
+                    scenario: "Un docente quere gañar tempo e introduce en ChatGPT: 'O meu alumno Mateo Fernández ten TDAH e dificultades de cálculo en 2º ESO. Faimi unha proposta de adaptación curricular para a súa nai Ana'.",
+                    question: "É correcto este procedemento?",
+                    verdict: "INCORRECTO E GRAVEMENTE ILEGAL",
+                    verdictType: "bad",
+                    legalBasis: "Artigo 7 da LOPDGDD, RGPD e Art. 11 da Lei de Educación Dixital de Galicia",
+                    explanation: "Introducíronse datos persoais reais (nome do menor, nai, curso) e datos sensibles de saúde/diagnóstico (TDAH) nun servidor comercial internacional fóra da rede educativa da Xunta de Galicia.",
+                    recommendation: "Emprega datos completamente anonimizados ou perfís abstractos: 'Crea unha proposta de estratexias didácticas para un alumno xenérico de 2º ESO con dificultades de atención no cálculo algebraico'."
+                },
+                {
+                    id: 1,
+                    tag: "Avaliación e Sancións",
+                    title: "Suspender un traballo polo resultado dun 'Detector de IA'",
+                    scenario: "Unha alumna entrega unha redacción impecable. O profesor pásaa por un detector online gratuíto que marca '88% probabilidade de IA' e decide cualificar o traballo cun cero por plaxio.",
+                    question: "Pode o centro sancionar á alumna con esta proba?",
+                    verdict: "NULO DE PLENO DEREITO E DESACONSELLADO",
+                    verdictType: "bad",
+                    legalBasis: "Regulamento (UE) 2024/1689 (Anexo III - Alto Risco) e Principio de Presunción de Inocencia",
+                    explanation: "Os detectores de texto xerado por IA carecen de rigor científico e xeran abundantes falsos positivos, especialmente en textos formais ou redactados por alumnado brillante. Non teñen validez probatoria legal.",
+                    recommendation: "Pide á alumna que faga unha breve defensa oral de 3 minutos, explique a súa liña argumental, amose borradores previos ou faga unha proba presencial. Avalía a adquisición da competencia, non a estatística dun detector."
+                },
+                {
+                    id: 2,
+                    tag: "Identidade e Dispositivos",
+                    title: "Obrigar a rexistrarse nunha ferramenta con contas persoais",
+                    scenario: "Para un proxecto de creación gráfica en 4º ESO, o docente esixe que cada alumno cree unha conta en Midjourney ou Runway usando a súa conta persoal de Gmail.",
+                    question: "Pódese esixir este rexistro como obrigatorio?",
+                    verdict: "PROHIBIDO POLA NOVA NORMATIVA",
+                    verdictType: "bad",
+                    legalBasis: "Proxecto de Lei de Educación Dixital de Galicia (Identidade corporativa @edu.xunta.gal)",
+                    explanation: "A nova normativa galega prohibe obrigar ao alumnado a crear contas en plataformas comerciais privadas que impliquen cesión de datos sen convenio coa Consellería.",
+                    recommendation: "Utiliza ferramentas que non requiran rexistro persoal do alumno, servizos corporativos integrados no proxecto Edixgal/Agueiro ou fai demostracións colectivas desde o computador de aula."
+                },
+                {
+                    id: 3,
+                    tag: "Canles de Comunicación",
+                    title: "Crear un bot de IA en Telegram ou WhatsApp para dúbidas",
+                    scenario: "Un profesor de Tecnoloxía crea un grupo de WhatsApp cos alumnos e conecta un axente conversacional para resolver dúbidas das tarefas pola noite e fins de semana.",
+                    question: "Está permitida esta canle de comunicación?",
+                    verdict: "VULNERA A LEI DE EDUCACIÓN DIXITAL",
+                    verdictType: "bad",
+                    legalBasis: "Dereito á Desconexión Dixital e Canles Oficiais (Lei de Educación Dixital de Galicia)",
+                    explanation: "Prohíbese o uso de mensaxería comercial persoal para fins docentes. Ademais, vulnera o dereito á desconexión dixital de alumnado e profesorado fóra da xornada lectiva.",
+                    recommendation: "Canaliza as titorías e recursos a través da Aula Virtual oficial (Moodle/Webex/Falemos). As dúbidas resólvense en horario escolar axeitado, promovendo a hixiene dixital."
+                },
+                {
+                    id: 4,
+                    tag: "Elaboración de Exames",
+                    title: "Empregar a IA para xerar probas de avaliación",
+                    scenario: "O departamento usa un modelo de IA para xerar un banco de 50 preguntas tipo test sobre o temario da materia, revisando as preguntas antes de imprimilas.",
+                    question: "É legal e conforme á normativa este uso?",
+                    verdict: "TOTALMENTE PERMITIDO E EXEMPLAR",
+                    verdictType: "good",
+                    legalBasis: "Principio de Human-in-the-Loop (Lei 2/2025 de Galicia)",
+                    explanation: "A IA actúa como apoio auxiliar á creatividade docente, e a revisión e validación final é realizada polo profesorado humano, quen asume a autoría pedagóxica.",
+                    recommendation: "Asegúrate sempre de verificar que as preguntas non conteñan alucinacións nin formulacións ambiguas, adaptando o vocabulario ao nivel específico do teu grupo."
+                }
+            ];
+
+            const documentos = [
+                {
+                    id: "eu",
+                    titulo: "Regulamento (UE) 2024/1689 (AI Act)",
+                    subtitulo: "Marco Europeo de Intelixencia Artificial",
+                    ano: "2024",
+                    resumo: "Clasifica os sistemas de IA polo seu nivel de risco. Educación sitúase no Anexo III (Alto Risco) cando inflúe na avaliación, admisión ou itinerarios do alumnado.",
+                    claves: [
+                        "Artigo 5: Prohibición absoluta de inferencia de emocións nas aulas.",
+                        "Artigo 6 e Anexo III: Sistemas de Alto Risco esixen supervisión humana obrigatoria.",
+                        "Transparencia: O alumnado debe saber cando interactúa con sistemas automatizados."
+                    ]
+                },
+                {
+                    id: "galicia",
+                    titulo: "Lei 2/2025 de Galicia (IA)",
+                    subtitulo: "Desenvolvemento e Impulso Ético da IA en Galicia",
+                    ano: "2025",
+                    resumo: "Establece a 'Reserva de Humanidade' no sector público galego: ningunha decisión administrativa nin cualificación escolar pode ser emitida unicamente por un algoritmo.",
+                    claves: [
+                        "Principio de Reserva de Humanidade: sempre debe haber un docente responsable.",
+                        "Gobernanza ética: auditoría contra sesgos algorítmicos nas aulas.",
+                        "Soberanía tecnolóxica: impulso a modelos en lingua galega e infraestruturas públicas."
+                    ]
+                },
+                {
+                    id: "dixital",
+                    titulo: "Proxecto de Lei de Educación Dixital de Galicia",
+                    subtitulo: "Regulación Integral da Dixitalización e IA nas Aulas",
+                    ano: "2026",
+                    resumo: "Blinda a identidade corporativa do alumnado (@edu.xunta.gal), protexe a desconexión dixital e prohibe o uso de mensaxería comercial persoal para fins docentes.",
+                    claves: [
+                        "Prohibición de esixir contas comerciais persoais en servizos privados.",
+                        "Obriga de usar canles oficiais corporativas para calquera comunicación.",
+                        "Hixiene dixital e salvagarda do dereito á intimidade de menores."
+                    ]
+                },
+                {
+                    id: "aepd",
+                    titulo: "Guía AEPD: Protección de Menores nas Aulas",
+                    subtitulo: "Criterios da Axencia Española de Protección de Datos",
+                    ano: "2025–2026",
+                    resumo: "Pautas estritas sobre o tratamento de imaxes, rexistro de voz e expedientes académicos en plataformas de intelixencia artificial.",
+                    claves: [
+                        "Prohibición de subir fotos, vídeos ou nomes de menores a IAs externas.",
+                        "Emprego preferente de contornas locais sen saída á nube.",
+                        "Datos sintéticos e anonimizados como estándar obrigatorio para probas."
+                    ]
+                }
+            ];
+
+            const current = cases[activeCase];
+
+            return (
+                <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 pl-20 md:pl-24">
+                    {/* Cabeceira */}
+                    <div className="max-w-6xl mx-auto mb-8 border-b border-slate-800 pb-6">
+                        <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
+                            <div className="flex items-center gap-3">
+                                <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                                    Módulo 5 · Peche do Curso
+                                </span>
+                                <span className="text-slate-400 text-sm">Sincronizado co Curso Básico e 02_Reforzo</span>
+                            </div>
+                            <div className="text-xs text-slate-500 font-mono">
+                                Garantías: AI Act 2024 · Lei 2/2025 · RGPD
+                            </div>
+                        </div>
+                        <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+                            Marco Normativo e Boas Prácticas no Entregable
+                        </h1>
+                        <p className="text-slate-400 text-base md:text-lg mt-2 max-w-4xl">
+                            O uso do axente é <strong className="text-purple-400">para o traballo persoal do docente</strong>. Cando o produto final resultante chega ao alumnado ou a terceiros, aplícase o noso marco legal garantista.
+                        </p>
+
+                        {/* Pestanas */}
+                        <div className="flex flex-wrap gap-2 mt-6">
+                            {[
+                                { id: 'semaforo', label: '1. O Semáforo Legal', icon: '🚦' },
+                                { id: 'boasPracticas', label: '2. Boas Prácticas no Entregable', icon: '🛡️' },
+                                { id: 'simulador', label: '3. Dilemas Reais de Aula', icon: '⚖️' },
+                                { id: 'normativa', label: '4. Textos Normativos Vixentes', icon: '📜' }
+                            ].map(tab => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 ${
+                                        activeTab === tab.id
+                                            ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/20 font-bold'
+                                            : 'bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-slate-800'
+                                    }`}
+                                >
+                                    <span>{tab.icon}</span>
+                                    <span>{tab.label}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="max-w-6xl mx-auto">
+
+                        {/* PESTANA 1: O SEMÁFORO LEGAL */}
+                        {activeTab === 'semaforo' && (
+                            <div className="space-y-6 animate-fadeIn">
+                                {/* Liña Vermella */}
+                                <div className="bg-slate-900 border-l-4 border-red-500 rounded-2xl p-6 border-slate-800">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <span className="w-8 h-8 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center font-bold text-sm">✕</span>
+                                        <div>
+                                            <span className="text-[10px] uppercase font-bold text-red-400 tracking-wider">Risco Inaceptable (PROHIBIDO)</span>
+                                            <h3 className="text-xl font-bold text-white">Liñas Vermellas na Educación (AI Act Art. 5 e LOPDGDD)</h3>
+                                        </div>
+                                    </div>
+                                    <div className="grid md:grid-cols-2 gap-4 text-xs text-slate-300">
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                            <strong className="text-red-400 block mb-1">Inferencia de Emocións na Aula</strong>
+                                            Prohíbese o uso de cámaras ou software para medir a atención, o estado de ánimo ou as emocións dos alumnos (Art. 5.1.f do AI Act).
+                                        </div>
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                            <strong className="text-red-400 block mb-1">Avaliación 100% Automatizada</strong>
+                                            Ningunha nota ou promoción pode ser decidida por un algoritmo sen revisión docente (Reserva de Humanidade, Lei 2/2025).
+                                        </div>
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                            <strong className="text-red-400 block mb-1">Datos Reais de Menores en Servidores Comerciais</strong>
+                                            Prohíbese subir nomes, notas ou diagnósticos de saúde a IAs fóra da rede educativa da Xunta de Galicia.
+                                        </div>
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                            <strong className="text-red-400 block mb-1">Canles de Mensaxería Persoal</strong>
+                                            Prohibido comunicarse co alumnado mediante WhatsApp ou Telegram para tarefas lectivas; uso obrigatorio de @edu.xunta.gal.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Liña Amarela */}
+                                <div className="bg-slate-900 border-l-4 border-amber-500 rounded-2xl p-6 border-slate-800">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <span className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">⚠</span>
+                                        <div>
+                                            <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Alto Risco (Supervisión Estrita Obrigatoria)</span>
+                                            <h3 className="text-xl font-bold text-white">Sistemas Clasificados no Anexo III do AI Act</h3>
+                                        </div>
+                                    </div>
+                                    <div className="grid md:grid-cols-2 gap-4 text-xs text-slate-300">
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                            <strong className="text-amber-400 block mb-1">Corrección de Exames e Probas</strong>
+                                            A IA pode propoñer borradores ou rúbricas, pero o docente debe revisar persoalmente cada exame con criterio propio.
+                                        </div>
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                            <strong className="text-amber-400 block mb-1">Detectores de Plaxio por IA</strong>
+                                            Carecen de fiabilidade científica e xeran falsos positivos. Nunca se debe sancionar un alumno baseándose nun detector online.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Liña Verde */}
+                                <div className="bg-slate-900 border-l-4 border-emerald-500 rounded-2xl p-6 border-slate-800">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <span className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">✓</span>
+                                        <div>
+                                            <span className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider">Usos Autorizados e Fomentados</span>
+                                            <h3 className="text-xl font-bold text-white">Preparación de Materiais e Apoio á Creatividade</h3>
+                                        </div>
+                                    </div>
+                                    <div className="grid md:grid-cols-2 gap-4 text-xs text-slate-300">
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                            <strong className="text-emerald-400 block mb-1">Elaboración de Recursos e Micro-Apps</strong>
+                                            Creación de visualizadores, táboas comparativas e bancos de exercicios con datos abertos e revisión humana previa.
+                                        </div>
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                            <strong className="text-emerald-400 block mb-1">Datos Sintéticos e Anonimizados</strong>
+                                            Simulación de casos didácticos sen expoñer a intimidade de ningún membro da comunidade escolar.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* PESTANA 2: BOAS PRÁCTICAS NO ENTREGABLE */}
+                        {activeTab === 'boasPracticas' && (
+                            <div className="space-y-6 animate-fadeIn">
+                                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8">
+                                    <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                                        <span className="text-purple-400">🛡️</span> O Protocolo para o Material que Chega ao Alumnado
+                                    </h3>
+                                    <p className="text-slate-400 text-sm mb-6">
+                                        Cando utilizas un axente para xerar un recurso que despois usarán os teus estudantes (un mapa, un visualizador de datos ou un simulador), debes aplicar estas catro garantías pedagóxicas:
+                                    </p>
+
+                                    <div className="grid md:grid-cols-2 gap-5">
+                                        <div className="bg-slate-950 p-5 rounded-xl border border-slate-800">
+                                            <div className="text-emerald-400 font-bold text-sm mb-2 flex items-center gap-1.5">
+                                                <span>1.</span> Determinismo na Corrección
+                                            </div>
+                                            <p className="text-xs text-slate-300 leading-relaxed">
+                                                O alumno <strong>non debe interactuar cun modelo xerativo en directo</strong> para tarefas de avaliación. A retroalimentación debe basearse en código determinista e bancos validados polo docente, evitando alucinacións e cambios de criterio arbitrarios.
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-slate-950 p-5 rounded-xl border border-slate-800">
+                                            <div className="text-cyan-400 font-bold text-sm mb-2 flex items-center gap-1.5">
+                                                <span>2.</span> Privacidade por Deseño (Zero Telemetría)
+                                            </div>
+                                            <p className="text-xs text-slate-300 leading-relaxed">
+                                                As aplicacións xeradas deben funcionar en formato HTML/JS local ou na Aula Virtual corporativa sen enviar cookies nin telemetría a servidores comerciais de terceiros.
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-slate-950 p-5 rounded-xl border border-slate-800">
+                                            <div className="text-amber-400 font-bold text-sm mb-2 flex items-center gap-1.5">
+                                                <span>3.</span> Trazabilidade e Orixe Documentada
+                                            </div>
+                                            <p className="text-xs text-slate-300 leading-relaxed">
+                                                Todo dato ou texto empregado debe indicar con claridade a súa fonte oficial (ex: IGE, OpenData Xunta, AEMET) e a licenza correspondente, ensinando ao alumnado o valor do rigor informativo.
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-slate-950 p-5 rounded-xl border border-slate-800">
+                                            <div className="text-purple-400 font-bold text-sm mb-2 flex items-center gap-1.5">
+                                                <span>4.</span> Autoría e Responsabilidade Docente
+                                            </div>
+                                            <p className="text-xs text-slate-300 leading-relaxed">
+                                                A IA é o artesán que ensamblou o arquivo; a autoría pedagóxica, o control científico e a responsabilidade profesional corresponden exclusivamente a ti como docente.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* PESTANA 3: DILEMAS REAIS DE AULA */}
+                        {activeTab === 'simulador' && (
+                            <div className="grid lg:grid-cols-3 gap-6 animate-fadeIn">
+                                {/* Lista de Dilemas */}
+                                <div className="space-y-2">
+                                    <span className="text-xs uppercase font-bold tracking-wider text-slate-500 block mb-2">
+                                        Selecciona un caso real:
+                                    </span>
+                                    {cases.map((c, i) => (
+                                        <button
+                                            key={c.id}
+                                            onClick={() => setActiveCase(i)}
+                                            className={`w-full text-left p-3.5 rounded-xl border transition-all text-xs ${
+                                                activeCase === i
+                                                    ? 'bg-slate-800 border-purple-500 shadow-lg shadow-purple-500/10'
+                                                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                                            }`}
+                                        >
+                                            <div className="text-[10px] uppercase font-bold text-purple-400 mb-1">{c.tag}</div>
+                                            <div className="font-semibold text-white truncate">{c.title}</div>
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Panel de Resolución */}
+                                <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 flex flex-col justify-between">
+                                    <div>
+                                        <div className="flex items-center justify-between gap-4 mb-4 pb-4 border-b border-slate-800">
+                                            <span className="text-xs font-bold uppercase tracking-wider text-purple-400">{current.tag}</span>
+                                            <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                                                current.verdictType === 'good'
+                                                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                                                    : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                                            }`}>
+                                                {current.verdict}
+                                            </span>
+                                        </div>
+
+                                        <h3 className="text-xl font-bold text-white mb-4">{current.title}</h3>
+
+                                        <div className="p-4 bg-slate-950 rounded-xl border-l-4 border-amber-500 mb-5">
+                                            <span className="text-xs uppercase font-bold tracking-wider text-amber-400 block mb-1">Situación na Aula:</span>
+                                            <p className="text-xs md:text-sm text-slate-300 italic leading-relaxed">"{current.scenario}"</p>
+                                        </div>
+
+                                        <div className="space-y-3 text-xs">
+                                            <div>
+                                                <span className="text-slate-500 font-bold uppercase tracking-wider block">Base Xurídica:</span>
+                                                <span className="text-amber-300 font-mono">{current.legalBasis}</span>
+                                            </div>
+                                            <div>
+                                                <span className="text-slate-500 font-bold uppercase tracking-wider block">Análise de Risco:</span>
+                                                <p className="text-slate-300 leading-relaxed mt-0.5">{current.explanation}</p>
+                                            </div>
+                                            <div className="p-3 bg-emerald-950/30 border border-emerald-500/30 rounded-xl">
+                                                <span className="text-emerald-400 font-bold uppercase tracking-wider block mb-1">Como actuar correctamente:</span>
+                                                <p className="text-emerald-100 leading-relaxed">{current.recommendation}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500">
+                                        <span>Caso {activeCase + 1} de {cases.length}</span>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => setActiveCase(prev => prev > 0 ? prev - 1 : cases.length - 1)}
+                                                className="px-3 py-1 rounded bg-slate-800 text-white hover:bg-slate-700"
+                                            >
+                                                Anterior
+                                            </button>
+                                            <button
+                                                onClick={() => setActiveCase(prev => prev < cases.length - 1 ? prev + 1 : 0)}
+                                                className="px-3 py-1 rounded bg-purple-600 text-white font-bold hover:bg-purple-500"
+                                            >
+                                                Seguinte
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* PESTANA 4: TEXTOS NORMATIVOS */}
+                        {activeTab === 'normativa' && (
+                            <div className="space-y-6 animate-fadeIn">
+                                <div className="grid md:grid-cols-2 gap-5">
+                                    {documentos.map(doc => (
+                                        <div
+                                            key={doc.id}
+                                            onClick={() => setSelectedDoc(doc)}
+                                            className={`bg-slate-900 border rounded-2xl p-5 cursor-pointer transition-all hover:-translate-y-1 ${
+                                                selectedDoc?.id === doc.id
+                                                    ? 'border-purple-500 bg-slate-850 shadow-lg shadow-purple-500/10'
+                                                    : 'border-slate-800 hover:border-slate-700'
+                                            }`}
+                                        >
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                                                    {doc.ano}
+                                                </span>
+                                                <span className="text-xs text-slate-500 font-mono">Oficial</span>
+                                            </div>
+                                            <h4 className="text-base font-bold text-white mb-1">{doc.titulo}</h4>
+                                            <p className="text-xs text-slate-400 mb-3">{doc.subtitulo}</p>
+                                            <p className="text-xs text-slate-300 leading-relaxed mb-4 line-clamp-2">
+                                                {doc.resumo}
+                                            </p>
+                                            <div className="text-[11px] font-bold text-purple-400 flex items-center gap-1">
+                                                <span>Ver puntos clave</span> &rarr;
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {selectedDoc && (
+                                    <div className="bg-slate-900 border-2 border-purple-500/50 rounded-2xl p-6 relative animate-fadeIn shadow-2xl">
+                                        <button
+                                            onClick={() => setSelectedDoc(null)}
+                                            className="absolute top-4 right-4 text-slate-400 hover:text-white text-lg font-bold w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center"
+                                        >
+                                            ✕
+                                        </button>
+                                        <span className="text-xs font-mono uppercase text-purple-400 font-bold">Documento Oficial</span>
+                                        <h3 className="text-2xl font-bold text-white mt-1 mb-2">{selectedDoc.titulo}</h3>
+                                        <p className="text-slate-300 text-sm leading-relaxed mb-4">{selectedDoc.resumo}</p>
+                                        <div className="border-t border-slate-800 pt-4">
+                                            <h5 className="text-xs uppercase font-bold tracking-wider text-slate-400 mb-3">Puntos Clave para Docentes:</h5>
+                                            <ul className="space-y-2 text-xs text-slate-300">
+                                                {selectedDoc.claves.map((c, i) => (
+                                                    <li key={i} className="flex items-start gap-2">
+                                                        <span className="text-purple-400 font-bold">•</span>
+                                                        <span>{c}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Modulo5App />);
+    </script>
+</body>
+
+</html>

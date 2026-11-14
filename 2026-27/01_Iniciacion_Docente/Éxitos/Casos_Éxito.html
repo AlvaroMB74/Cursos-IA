@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="gl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casos de Éxito IA (Nov-26) - Impacto Transformador</title>
+    <link rel="stylesheet" href="../css/estilos_ia.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: 'var(--bg-dark)',
+                        card: 'var(--card-bg)',
+                        cream: 'var(--text-main)',
+                        dim: 'var(--text-dim)',
+                        gold: 'var(--accent-gold)',
+                        orange: 'var(--accent-orange)',
+                        retro: 'var(--accent-retro)',
+                        cyan: '#06B6D4',
+                        purple: '#8B5CF6',
+                        green: '#10B981',
+                        rose: '#F43F5E'
+                    },
+                    fontFamily: {
+                        sans: ['Open Sans', 'sans-serif']
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+        }
+
+        .bg-glow {
+            background: radial-gradient(circle at 50% 0%, rgba(211, 84, 0, 0.08) 0%, rgba(18, 18, 18, 0) 60%);
+        }
+
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+
+        .backface-hidden {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(211, 84, 0, 0.5);
+            border-radius: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(211, 84, 0, 0.8);
+        }
+    </style>
+</head>
+
+<body class="bg-dark text-cream font-sans overflow-x-hidden bg-glow">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useMemo, useEffect } = React;
+
+        const IconBase = ({ children, className = "", size = 24, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>
+        );
+
+        const Icons = {
+            Play: (p) => <IconBase {...p}><circle cx="12" cy="12" r="10" /><polygon points="10 8 16 12 10 16 10 8" /></IconBase>,
+            X: (p) => <IconBase {...p}><path d="M18 6 6 18" /><path d="m6 6 12 12" /></IconBase>,
+            ArrowRight: (p) => <IconBase {...p}><path d="M5 12h14M12 5l7 7-7 7" /></IconBase>,
+            ChevronDown: (p) => <IconBase {...p}><polyline points="6 9 12 15 18 9" /></IconBase>,
+            ChevronUp: (p) => <IconBase {...p}><polyline points="18 15 12 9 6 15" /></IconBase>,
+            Sparkles: (p) => <IconBase {...p}><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" /></IconBase>,
+            ExternalLink: (p) => <IconBase {...p}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></IconBase>,
+            ShieldAlert: (p) => <IconBase {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></IconBase>
+        };
+
+        const VideoModal = ({ videoUrl, title, onClose }) => {
+            if (!videoUrl) return null;
+            const getYoutubeEmbed = (url) => {
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+                const match = url.match(regExp);
+                return (match && match[2].length === 11) ? `https://www.youtube-nocookie.com/embed/${match[2]}?autoplay=1&rel=0` : null;
+            };
+            const embedLink = getYoutubeEmbed(videoUrl);
+
+            useEffect(() => {
+                const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
+                window.addEventListener('keydown', handleEsc);
+                return () => window.removeEventListener('keydown', handleEsc);
+            }, [onClose]);
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in" onClick={onClose}>
+                    <button onClick={onClose} className="absolute top-5 right-5 text-white/70 hover:text-white transition-colors z-50">
+                        <Icons.X size={40} />
+                    </button>
+                    <div className="w-full max-w-4xl bg-card border border-white/10 rounded-2xl p-6 shadow-[0_0_50px_rgba(211,84,0,0.3)] flex flex-col gap-4 text-center" onClick={e => e.stopPropagation()}>
+                        <h2 className="text-xl md:text-2xl font-bold text-white drop-shadow-md">{title}</h2>
+                        <div className="w-full aspect-video bg-black/80 rounded-xl overflow-hidden relative border border-white/5 flex items-center justify-center">
+                            {embedLink ? (
+                                <iframe 
+                                    src={embedLink} 
+                                    className="w-full h-full" 
+                                    frameBorder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowFullScreen
+                                ></iframe>
+                            ) : null}
+                        </div>
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+                            <p className="text-xs text-dim text-left">
+                                Se o reprodutor amosa o <strong>Erro 153</strong> debido ás políticas de inserción do propietario do vídeo en contornas locais:
+                            </p>
+                            <a 
+                                href={videoUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="px-5 py-2 rounded-full bg-orange hover:bg-orange/80 text-white font-bold text-xs flex items-center gap-2 whitespace-nowrap shadow-lg transition-all"
+                            >
+                                <Icons.ExternalLink size={16} /> Abrir directamente en YouTube
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const FlipCard = ({ item, onOpenVideo }) => {
+            const [isFlipped, setIsFlipped] = useState(false);
+            return (
+                <div 
+                    className="relative w-full h-[375px] perspective-1000 group cursor-pointer animate-fade-in" 
+                    onClick={() => setIsFlipped(!isFlipped)} 
+                    onMouseEnter={() => setIsFlipped(true)} 
+                    onMouseLeave={() => setIsFlipped(false)}
+                >
+                    <div className={`relative w-full h-full duration-700 transform-style-3d transition-transform ${isFlipped ? 'rotate-y-180' : ''}`}>
+                        {/* Cara Frontal */}
+                        <div className={`absolute w-full h-full backface-hidden bg-card border border-white/10 rounded-xl overflow-hidden shadow-xl ${isFlipped ? 'pointer-events-none' : ''}`}>
+                            <div className="absolute inset-0 z-0">
+                                <img 
+                                    src={item.imagePath} 
+                                    alt={item.title} 
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                                    onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.style.backgroundColor = '#1a1a1a'; }} 
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/30 group-hover:via-black/50 transition-colors"></div>
+                            </div>
+                            <div className="relative z-10 h-full flex flex-col p-6">
+                                <div className="flex items-center justify-between gap-2">
+                                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest border bg-black/60 backdrop-blur-md ${item.catColor}`}>
+                                        {item.category}
+                                    </span>
+                                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider border backdrop-blur-md shadow-sm ${item.badgeColor}`}>
+                                        {item.badge}
+                                    </span>
+                                </div>
+                                <div className="mt-auto">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <span className="text-white/40 text-[10px] font-mono">#{item.id < 10 ? `0${item.id}` : item.id}</span>
+                                    </div>
+                                    <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2 leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                                        {item.title}
+                                    </h3>
+                                    <div className="w-12 h-1 bg-orange mb-3 rounded-full"></div>
+                                    <p className="text-cream/90 text-sm font-light italic leading-snug">
+                                        "{item.subtitle}"
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Cara Posterior */}
+                        <div className={`absolute w-full h-full backface-hidden rotate-y-180 bg-card border-t-4 border-orange rounded-xl p-6 flex flex-col shadow-[0_0_30px_rgba(0,0,0,0.6)] ${isFlipped ? '' : 'pointer-events-none'}`}>
+                            <div className="flex items-center justify-between mb-2 gap-2">
+                                <h4 className="text-base font-bold text-orange line-clamp-1">{item.title}</h4>
+                                <span className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase border whitespace-nowrap ${item.badgeColor}`}>
+                                    {item.badge}
+                                </span>
+                            </div>
+                            <p className="text-xs md:text-sm text-dim leading-relaxed flex-grow overflow-y-auto custom-scroll pr-2">
+                                {item.description}
+                            </p>
+                            <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center">
+                                <span className="text-[10px] uppercase font-bold text-dim tracking-wider">Impacto Real</span>
+                                {item.videoUrl && (
+                                    <a 
+                                        href={item.videoUrl} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer" 
+                                        onClick={(e) => e.stopPropagation()} 
+                                        className="flex items-center gap-1.5 bg-white/10 hover:bg-orange hover:text-white px-3 py-1.5 rounded-full text-xs font-bold transition-all text-orange border border-orange/30 hover:border-orange shadow-sm"
+                                        title="Abrir en YouTube nunha nova pestana"
+                                    >
+                                        <Icons.Play size={14} /> Ver Vídeo <Icons.ExternalLink size={12} className="opacity-70 ml-0.5" />
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const SuccessGalleryApp = () => {
+            const [selectedVideo, setSelectedVideo] = useState(null);
+            const [filter, setFilter] = useState('Todos');
+            const [isSpecialOpen, setIsSpecialOpen] = useState(false);
+
+            const cases = [
+                // 1. AlphaFold & ESMFold
+                { 
+                    id: 1, 
+                    category: "Bioloxía & Medicina", 
+                    catColor: "border-emerald-500 text-emerald-300", 
+                    badge: "DEMOSTRADO",
+                    badgeColor: "border-amber-500/60 bg-amber-500/20 text-amber-300",
+                    title: "AlphaFold 3 & ESMFold", 
+                    subtitle: "O mapa de todas as proteínas e o Nobel de Química 2024", 
+                    description: "Durante cinco décadas, deducir a forma 3D dunha proteína a partir da súa secuencia de aminoácidos esixía meses de cristalografía por cada estrutura. AlphaFold (DeepMind) acadou precisión case experimental e a súa base de datos aberta supera xa os 200 millóns de estruturas, fito recoñecido co Premio Nobel de Química 2024 para Demis Hassabis e John Jumper xunto a David Baker. ESMFold (Meta / EvolutionaryScale) engadiu máis de 600 millóns de proteínas metagenómicas con predicións en segundos. Hoxe, AlphaFold 3 abrangue con precisión atómica interaccións complexas con ADN, ARN, ións e fármacos candidatos.", 
+                    imagePath: "./Img/alphafold.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=P_fHJIYENdI" 
+                },
+                // 2. AlphaGenome e OpenCRISPR
+                { 
+                    id: 2, 
+                    category: "Bioloxía & Medicina", 
+                    catColor: "border-emerald-500 text-emerald-300", 
+                    badge: "DEMOSTRADO",
+                    badgeColor: "border-amber-500/60 bg-amber-500/20 text-amber-300",
+                    title: "AlphaGenome e OpenCRISPR", 
+                    subtitle: "Interpretar o 98% escuro do ADN e deseñar editores xenéticos", 
+                    description: "O 98% do xenoma humano non codifica proteínas, pero contén os interruptores que regulan a expresión xénica e as enfermidades. AlphaGenome (DeepMind) procesa ata 1 millón de pares de bases e predice con resolución de base propiedades moleculares (accesibilidade de cromatina, splicing, contactos 3D), superando en 25 de 26 probas aos modelos previos. En paralelo, Profluent creou OpenCRISPR-1 mediante modelos de linguaxe biolóxica: o primeiro editor xenético deseñado de novo por IA con eficacia equiparable a SpCas9, aberto e sen precedentes na evolución natural.", 
+                    imagePath: "./Img/alphagenome.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=P_fHJIYENdI" 
+                },
+                // 3. Rentosertib: Fármaco en Fase III
+                { 
+                    id: 3, 
+                    category: "Bioloxía & Medicina", 
+                    catColor: "border-emerald-500 text-emerald-300", 
+                    badge: "ENSAIO CLÍNICO",
+                    badgeColor: "border-rose-500/60 bg-rose-500/20 text-rose-300",
+                    title: "Rentosertib: Fármaco de IA en Fase III", 
+                    subtitle: "Da diana á molécula: deseño íntegro por IA contra a fibrose pulmonar", 
+                    description: "Desenvolver un fármaco tradicionalmente custa máis dunha década e miles de millóns de euros. Insilico Medicine utilizou IA xerativa en toda a cadea: PandaOmics descubriu a diana biolóxica (TNIK) e Chemistry42 deseñou a molécula inédita (Rentosertib / ISM001-055). Tras demostrar eficacia clínica e mellora da capacidade pulmonar en fase IIa con 71 pacientes (Nature Medicine), o fármaco iniciou a súa fase III definitiva en 47 hospitais, marcando o fito histórico de ser o primeiro fármaco deseñado de extremo a extremo por IA en alcanzar esta fase reguladora.", 
+                    imagePath: "./Img/farmacos.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=stGzhnXtzK0" 
+                },
+                // 4. Antibióticos Xerados por IA
+                { 
+                    id: 4, 
+                    category: "Bioloxía & Medicina", 
+                    catColor: "border-emerald-500 text-emerald-300", 
+                    badge: "DEMOSTRADO",
+                    badgeColor: "border-amber-500/60 bg-amber-500/20 text-amber-300",
+                    title: "Antibióticos Xerados por IA", 
+                    subtitle: "Dúas moléculas inéditas eficaces contra gonorrea e superbacterias", 
+                    description: "A resistencia bacteriana aos antibióticos causa case 5 millóns de mortes anuais e levabamos décadas sen novas clases de fármacos. O equipo de James Collins no MIT e Broad Institute (Cell) deu o salto de cribar moléculas existentes a 'xerar' estruturas que non existen na natureza. Algoritmos xerativos deseñaron máis de 36 millóns de compostos: os dous mellores sintetizados (NG1 contra Neisseria gonorrhoeae multirresistente e DN1 contra SARM/MRSA) erradicaron con éxito as infeccións en cultivos e modelos animais, abrindo unha nova fronteira antimicrobiana.", 
+                    imagePath: "./Img/antibioticos.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=oxVzNcGP7M8" 
+                },
+                // 5. Mamografía Asistida por IA - MASAI
+                { 
+                    id: 5, 
+                    category: "Bioloxía & Medicina", 
+                    catColor: "border-emerald-500 text-emerald-300", 
+                    badge: "ENSAIO CLÍNICO",
+                    badgeColor: "border-rose-500/60 bg-rose-500/20 text-rose-300",
+                    title: "Mamografía con IA: Estudo MASAI", 
+                    subtitle: "Primeiro ensaio clínico aleatorizado: +29% de detección e -44% de sobrecarga", 
+                    description: "O cribado de cancro de mama depende dunha lectura meticulosa de millóns de radiografías con escaseza global de radiólogos. O ensaio clínico MASAI (Universidade de Lund, Suecia; The Lancet), sobre máis de 105.000 mulleres, é o primeiro estudo aleatorizado con evidencia sólida: o cribado asistido polo sistema Transpara detectou un 29% máis de cancros invasivos sen incrementar falsos positivos, reduciu a carga de traballo dos facultativos un 44% e diminuíu os cancros de intervalo agresivos nun 12%.", 
+                    imagePath: "./Img/diagnostico.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=85w_6bHeM6c" 
+                },
+                // 6. Neuropróteses de Fala en ELA (BCI)
+                { 
+                    id: 6, 
+                    category: "Bioloxía & Medicina", 
+                    catColor: "border-emerald-500 text-emerald-300", 
+                    badge: "ENSAIO CLÍNICO",
+                    badgeColor: "border-rose-500/60 bg-rose-500/20 text-rose-300",
+                    title: "Neuropróteses de Fala en ELA (BCI)", 
+                    subtitle: "Dous anos de uso autónomo na casa a 56 palabras por minuto", 
+                    description: "Pacientes con Esclerose Lateral Amiotrófica (ELA) poden perder o control motor da fala conservando intacta a intención de comunicarse. Investigadores de UC Davis Health, BrainGate e Stanford implantaron microelectrodos no córtex motor do paciente Casey Harrell e combinaron redes neuronais con modelos de linguaxe. O sistema acada un 97% de precisión con máis de 125.000 palabras e sintetiza voz inmediata coa súa propia entonación. No primeiro ensaio domiciliario de longo prazo, o paciente empregou a interface durante dous anos para traballar e dialogar cotidiámente.", 
+                    imagePath: "./Img/bci_neuro.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=fS4Hb8qjiOU" 
+                },
+                // 7. GraphCast e WeatherNext
+                { 
+                    id: 7, 
+                    category: "Ciencias da Terra", 
+                    catColor: "border-sky-500 text-sky-300", 
+                    badge: "DESPREGADO",
+                    badgeColor: "border-emerald-500/60 bg-emerald-500/20 text-emerald-300",
+                    title: "GraphCast e WeatherNext", 
+                    subtitle: "Previsión meteorolóxica global a 10 días en menos de 60 segundos", 
+                    description: "A predición numérica clásica esixía horas de supercomputadores resolvendo complexas ecuacións de física de fluídos. Redes neuronais sobre grafos como GraphCast (DeepMind, Science) xeran predicións globais a 10 días en 60 segundos cun só chip TPU, superando ao mellor modelo físico operativo (HRES do ECMWF). En 2026, Nature publicou WeatherNext, desenvolvido xunto ao Centro Nacional de Furacáns (NHC): gaña máis dun día enteiro de antelación na traxectoria e forza de ciclóns e temporais severos, con modelos de código e pesos totalmente abertos.", 
+                    imagePath: "./Img/clima.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=lZlm1YSdQ9E" 
+                },
+                // 8. Waymo: Conducción sen Condutor
+                { 
+                    id: 8, 
+                    category: "Robótica & Embodied AI", 
+                    catColor: "border-orange-500 text-orange-300", 
+                    badge: "DESPREGADO",
+                    badgeColor: "border-emerald-500/60 bg-emerald-500/20 text-emerald-300",
+                    title: "Waymo: Conducción sen Condutor", 
+                    subtitle: "500.000 viaxes semanais comerciais e redución do 85-94% en lesións", 
+                    description: "Tras décadas de promesas, a condución autónoma a escala comercial é unha realidade operativa. Waymo (Alphabet) supera as 500.000 viaxes semanais con pasaxeiros de pago sen ninguén ao volante en Phoenix, San Francisco, Los Ángeles e Austin, acumulando máis de 220 millóns de millas autónomas. Segundo estudos independentes do Insurance Institute for Highway Safety (IIHS) e a reaseguradora Swiss Re, os vehículos autónomos rexistran entre un 81% e un 94% menos de choques con feridos graves e un 88% menos de reclamacións de danos materiais que os condutores humanos.", 
+                    imagePath: "./Img/coche.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=8Szm56z58EM" 
+                },
+                // 9. Figure 02 na Planta de BMW
+                { 
+                    id: 9, 
+                    category: "Robótica & Embodied AI", 
+                    catColor: "border-orange-500 text-orange-300", 
+                    badge: "DESPREGADO",
+                    badgeColor: "border-emerald-500/60 bg-emerald-500/20 text-emerald-300",
+                    title: "Figure 02 na Planta de BMW", 
+                    subtitle: "11 meses, 1.250 horas e 30.000 vehículos montados en produción real", 
+                    description: "A robótica humanoide saltou dos vídeos de exhibición á cadea de montaxe industrial. Na planta de BMW en Spartanburg (EE. UU.), o humanoide Figure 02 completou 11 meses de traballo real en carrozaría: quendas de 10 horas de luns a venres, acumulando máis de 1.250 horas operativas e colocando con precisión milimétrica máis de 90.000 pezas de chapa para máis de 30.000 vehículos BMW X3. Dotado de visión e modelos de acción directa (Helix), representa a consolidación da 'Embodied AI' no tecido produtivo.", 
+                    imagePath: "./Img/robotica.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=NFD0i63FDFk" 
+                },
+                // 10. Baterías Sólidas: Microsoft & PNNL
+                { 
+                    id: 10, 
+                    category: "Enerxía & Materiais", 
+                    catColor: "border-yellow-500 text-yellow-300", 
+                    badge: "DEMOSTRADO",
+                    badgeColor: "border-amber-500/60 bg-amber-500/20 text-amber-300",
+                    title: "Baterías Sólidas: Microsoft & PNNL", 
+                    subtitle: "32 millóns de materiais cribados en 80 horas e 70% menos de litio", 
+                    description: "Desenvolver electrólitos sólidos para baterías de alta densidade requiría tradicionalmente décadas de ensaio e erro en laboratorio. Microsoft Azure Quantum Elements cribou 32 millóns de materiais inorgánicos mediante IA e computación de alto rendemento, reducindo os candidatos viables a 18 en só 80 horas de computación. O laboratorio PNNL sintetizou e validou en 9 meses o electrólito sólido N2116, que substitúe ata un 70% do litio por sodio. En paralelo, o proxecto GNoME de DeepMind predixo 2.2 millóns de novas estruturas cristalinas estables para a ciencia dos materiais.", 
+                    imagePath: "./Img/GNoME.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=y-znQUbhuKo" 
+                },
+                // 11. Fusión Nuclear: Tokamaks
+                { 
+                    id: 11, 
+                    category: "Física & Espazo", 
+                    catColor: "border-indigo-500 text-indigo-300", 
+                    badge: "DEMOSTRADO",
+                    badgeColor: "border-amber-500/60 bg-amber-500/20 text-amber-300",
+                    title: "Fusión Nuclear: IA Domando o Plasma", 
+                    subtitle: "Aprendizaxe por reforzo profundo en tempo real dentro dun tokamak", 
+                    description: "A enerxía de fusión limpa depende de confinar magneticamente un plasma sobrequecido a millóns de graos sen que toque as paredes do reactor. En colaboración co Swiss Plasma Center (EPFL), DeepMind adestrou unha rede de aprendizaxe por reforzo profundo que calcula e axusta as bobinas magnéticas do tokamak TCV en tempo real (miles de veces por segundo). O sistema mantivo con estabilidade inédita diversas configuracións do plasma, eliminando meses de enxeñaría de control manual e achegando o camiño cara a reactores comerciais como ITER.", 
+                    imagePath: "./Img/fusion.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=PWgd-Uhg_kk" 
+                },
+                // 12. Deep Loop Shaping e Ondas Gravitacionais
+                { 
+                    id: 12, 
+                    category: "Física & Espazo", 
+                    catColor: "border-indigo-500 text-indigo-300", 
+                    badge: "DEMOSTRADO",
+                    badgeColor: "border-amber-500/60 bg-amber-500/20 text-amber-300",
+                    title: "Deep Loop Shaping e Gravitación", 
+                    subtitle: "Ruído de control reducido entre 30 e 100 veces no observatorio LIGO", 
+                    description: "Os detectores de ondas gravitacionais miden distorsións espazotemporais inferiores á fracción dun protón causadas pola colisión de buracos negros. O propio ruído electromagnético dos sistemas de estabilización dos espellos limitaba a sensibilidade cuántica. O algoritmo Deep Loop Shaping (DeepMind, Caltech e LIGO; Science) empregou aprendizaxe por reforzo no dominio das frecuencias, logrando reducir o ruído de control entre 30 e 100 veces no bucle máis crítico de LIGO Livingston, multiplicando a capacidade de escoitar eventos cósmicos distantes.", 
+                    imagePath: "./Img/nasa.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=PWgd-Uhg_kk" 
+                },
+                // 13. Vesuvius Challenge e Xeoglifos de Nazca
+                { 
+                    id: 13, 
+                    category: "Historia & Humanidades", 
+                    catColor: "border-amber-500 text-amber-300", 
+                    badge: "DEMOSTRADO",
+                    badgeColor: "border-amber-500/60 bg-amber-500/20 text-amber-300",
+                    title: "Vesuvius Challenge e Nazca", 
+                    subtitle: "Papiro de Herculano lido sen abrilo e descubrimento de 303 xeoglifos", 
+                    description: "A IA permite rescatar o patrimonio histórico sen destruílo fisicamente. En xuño de 2026, o Vesuvius Challenge anunciou a primeira lectura dixital completa (de extremo a extremo) do rolo pechado de Herculano PHerc. 1667 (máis de 20 columnas de grego antigo), grazas a tomografía de raios X 3D e visión artificial que detecta a densidade da tinta carbonizada invisible. En paralelo, modelos de visión aplicados a imaxes aéreas no deserto de Perú aceleraron o achado de 303 novos xeoglifos figurativos en Nazca (estudo de Yamagata, IBM e DLR publicado en PNAS). A IA non 'descobre soa', senón que amplifica a capacidade de arqueólogos e historiadores.", 
+                    imagePath: "./Img/vesubio.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=Z_L1oN8y7Bs" 
+                },
+                // 14. Razoamento Formal: AlphaProof e o1
+                { 
+                    id: 14, 
+                    category: "Matemáticas & Ciencias Formais", 
+                    catColor: "border-purple-500 text-purple-300", 
+                    badge: "INVESTIGACIÓN",
+                    badgeColor: "border-purple-500/60 bg-purple-500/20 text-purple-300",
+                    title: "Razoamento Formal: AlphaProof e o1", 
+                    subtitle: "Da prata (IMO 2024) ao ouro (2025) na Olimpíada Matemática Internacional", 
+                    description: "Os modelos clásicos de linguaxe daban respostas probabilísticas sen verificación lóxica estrita; os modelos de razoamento dedican tempo de cómputo en inferencia a pensar, explorar e verificar pasos. AlphaProof (DeepMind) acoplou a IA ao asistente de proba formal Lean 4, acadando nivel de medalla de prata na IMO 2024 (28/42 puntos) con probas verificadas polo compilador, e alcanzando estándar de ouro en 2025. Advertencia fundamental: a IA non resolveu ningún Problema do Milenio; o salto histórico consiste en que o verificador formal mecánico elimina calquera alucinación ou salto dedutivo incorrecto.", 
+                    imagePath: "./Img/matematicas.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=QJtNQNgGLdM" 
+                },
+                // 15. Algoritmos Descubertos por IA
+                { 
+                    id: 15, 
+                    category: "Matemáticas & Ciencias Formais", 
+                    catColor: "border-purple-500 text-purple-300", 
+                    badge: "DESPREGADO",
+                    badgeColor: "border-emerald-500/60 bg-emerald-500/20 text-emerald-300",
+                    title: "Algoritmos Descubertos por IA", 
+                    subtitle: "AlphaEvolve e FunSearch baten récords de 56 anos en computación", 
+                    description: "O descubrimento de algoritmos fundamentais foi sempre unha tarefa exclusivamente humana. FunSearch (DeepMind, Nature) combinou LLMs con avaliadores automáticos para descubrir novas construcións matemáticas no célebre problema do 'cap set'. O seu sucesor, AlphaEvolve (2025-2026), descubriu un novo algoritmo para multiplicar matrices complexas 4x4 con só 48 multiplicacións, superando por primeira vez o récord histórico establecido por Strassen en 1969. En aplicacións reais, estes algoritmos xa foron incorporados ao planificador dos servidores globais de Google, recuperando un 0,7% do cómputo mundial dos seus centros de datos.", 
+                    imagePath: "./Img/aerospike.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=T0eWBlFhFzc" 
+                },
+                // 16. AlphaChip: IA que Deseña Procesadores
+                { 
+                    id: 16, 
+                    category: "Hardware & Computación", 
+                    catColor: "border-slate-400 text-slate-300", 
+                    badge: "DESPREGADO",
+                    badgeColor: "border-emerald-500/60 bg-emerald-500/20 text-emerald-300",
+                    title: "AlphaChip: IA que Deseña Chips", 
+                    subtitle: "Planificación de circuítos integrados en horas para procesadores TPU e Axion", 
+                    description: "O deseño e emprazamento espacial (floorplanning) dos miles de millóns de compoñentes dun microprocesador esixía meses de cálculo minucioso por equipos de enxeñeiros especializados. AlphaChip (Google DeepMind) formulou o deseño de chips como un xogo de mesa para unha rede de aprendizaxe por reforzo, xerando distribucións óptimas e interconectadas en menos de 6 horas. AlphaChip foi utilizado na produción das últimas tres xeracións de procesadores de IA de Google (TPU v5e, v5p e Trillium), así como na CPU Axion e en chips comerciais de MediaTek.", 
+                    imagePath: "./Img/alphachip.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=IAcmXplu5qs" 
+                },
+                // 17. Erdős e a Matemática con Lean 4
+                { 
+                    id: 17, 
+                    category: "Matemáticas & Ciencias Formais", 
+                    catColor: "border-purple-500 text-purple-300", 
+                    badge: "INVESTIGACIÓN",
+                    badgeColor: "border-purple-500/60 bg-purple-500/20 text-purple-300",
+                    title: "Erdős e a Matemática con Lean 4", 
+                    subtitle: "Conxecturas de 1946 refutadas e problemas abertos resoltos con proba formal", 
+                    description: "En 2026 a IA deu o salto definitivo da resolución de problemas escolares á investigación matemática pura. Un modelo de razoamento de OpenAI refutou a conxectura da distancia unitaria exposta por Paul Erdős en 1946, achando unha nova construción con teoría alxébrica de números (eloxiada pola Medalla Fields Tim Gowers). Paralelamente, AlphaProof Nexus (DeepMind) resolveu 9 problemas abertos de Erdős e 44 conxecturas da OEIS, xerando código rigoroso totalmente verificado polo asistente formal Lean 4 e marcando o novo estándar de rigor colaborativo con matemáticos humanos.", 
+                    imagePath: "./Img/erdos_math.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=QJtNQNgGLdM" 
+                },
+                // 18. Axentes de Software: SWE-bench
+                { 
+                    id: 18, 
+                    category: "Software & Axentes", 
+                    catColor: "border-blue-500 text-blue-300", 
+                    badge: "INVESTIGACIÓN",
+                    badgeColor: "border-purple-500/60 bg-purple-500/20 text-purple-300",
+                    title: "Axentes de Software: SWE-bench", 
+                    subtitle: "Do 2% ao 95% na resolución de incidencias reais de software libre", 
+                    description: "O benchmark SWE-bench (Princeton) converteuse na referencia para avaliar axentes que exploran repositorios, editan código e pasan tests sobre incidencias reais de GitHub. En 2023 os modelos apenas resolvían o 2%; en 2026, os axentes superan o 95% no conxunto verificado de 500 tarefas. Cautela metodolóxica: auditorías de 2026 (OpenAI, Vals.ai) detectaron problemas en tests e risco de contaminación por exposición no adestramento; en contornas profesionais complexas (SWE-bench Pro) a taxa real rolda o 80%. O fito non demostra autonomía sen supervisión, senón a transición cara a delegar tarefas de software completas con revisión humana.", 
+                    imagePath: "./Img/logistica.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=DrLdvbkgmeA" 
+                },
+                // 19. Anthropic: Computer Use e Mapeo Mental
+                { 
+                    id: 19, 
+                    category: "Software & Axentes", 
+                    catColor: "border-blue-500 text-blue-300", 
+                    badge: "INVESTIGACIÓN",
+                    badgeColor: "border-purple-500/60 bg-purple-500/20 text-purple-300",
+                    title: "Anthropic: 'Computer Use' e Mapeo", 
+                    subtitle: "Localizar millóns de conceptos neuronais e controlar o ordenador de forma autónoma", 
+                    description: "Anthropic protagonizou dous fitos esenciais da ciencia da IA: 1) Con 'Mapping the Mind' logrou abrir a 'caixa negra' das redes neuronais mediante autoencoders esparsos (SAEs), identificando e manipulando millóns de conceptos internos (como o célebre experimento Golden Gate Claude) para auditar a súa seguridade e aliñamento. 2) Con 'Computer Use', foi pioneira en dotar á IA da capacidade de interpretar a pantalla, mover o cursor, teclear e executar de forma autónoma fluxos de traballo complexos no sistema operativo.", 
+                    imagePath: "./Img/anthropic_agent.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=vH2f7cjXjKI" 
+                },
+                // 20. Claude Mythos e a Ciberseguridade
+                { 
+                    id: 20, 
+                    category: "Ciberseguridade & Software", 
+                    catColor: "border-rose-500 text-rose-300", 
+                    badge: "INVESTIGACIÓN",
+                    badgeColor: "border-purple-500/60 bg-purple-500/20 text-purple-300",
+                    title: "Claude Mythos e a Ciberdefensa", 
+                    subtitle: "Detección de vulnerabilidades zero-day e o dilema do dobre uso militar-defensivo", 
+                    description: "A ciberseguridade mudou radicalmente coa aparición de modelos capaces de analizar código binario e atopar vulnerabilidades críticas descoñecidas (zero-days) en segundos. Durante as avaliacións do UK AI Security Institute (AISI) e a competición AI Cyber Challenge (AIxCC) de DARPA, o modelo Claude Mythos demostrou capacidades ofensivas e defensivas de nivel estratéxico. Ante o risco de ciberataques automatizados a grande escala, Anthropic restrinxiu o seu acceso público baixo a iniciativa 'Project Glasswing' (abril 2026), bifurcando a tecnoloxía en Claude Fable (público con filtros) e Claude Mythos (reservado para entidades críticas e defensa). O fito inaugurou a era da ciberdefensa automatizada a velocidade de máquina.", 
+                    imagePath: "./Img/ciberseguridade.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=touJ5uLlXjQ" 
+                },
+                // 21. Titorías de IA na Educación
+                { 
+                    id: 21, 
+                    category: "Educación & Sociedade", 
+                    catColor: "border-pink-500 text-pink-300", 
+                    badge: "ENSAIO CLÍNICO",
+                    badgeColor: "border-rose-500/60 bg-rose-500/20 text-rose-300",
+                    title: "Titorías de IA con Pedagoxía", 
+                    subtitle: "Ensaios controlados do Banco Mundial e Harvard que duplican a aprendizaxe", 
+                    description: "A titoría individualizada é unha das intervencións pedagóxicas máis potentes da historia educativa pero inasumible en custos a escala masiva. Ensaio clínico aleatorizado polo Banco Mundial en nove institutos públicos (~800 alumnos en Nigeria) demostrou que 6 semanas de titoría adaptativa de IA supervisada por docentes xeraron unha ganancia equivalente a 1,5-2 anos de escolarización tradicional. Estudos de Harvard en física ratificaron que o titor de IA socrático duplica a aprendizaxe fronte a métodos pasivos, demostrando que a clave non é a ferramenta en si, senón o deseño instrucional e a mediación pedagóxica do profesor.", 
+                    imagePath: "./Img/titorias_ia.jpg", 
+                    videoUrl: "https://www.youtube.com/watch?v=stGzhnXtzK0" 
+                }
+            ];
+
+            const categories = ['Todos', ...new Set(cases.map(c => c.category))];
+            const filteredCases = useMemo(() => { 
+                return filter === 'Todos' ? cases : cases.filter(c => c.category === filter); 
+            }, [filter]);
+
+            return (
+                <div className="min-h-screen pb-24 px-4 sm:px-6 md:px-12">
+                    {/* Cabeceira Principal */}
+                    <header className="pt-10 pb-6 text-center animate-fade-in">
+                        <div className="max-w-4xl mx-auto">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange/10 border border-orange/30 text-orange text-xs font-bold uppercase tracking-widest mb-3">
+                                <span>Módulo 2: Aplicación Real</span>
+                                <span className="w-1 h-1 rounded-full bg-orange"></span>
+                                <span className="font-mono text-gold">Nov-26</span>
+                            </div>
+                            <h1 className="text-4xl md:text-6xl font-extrabold mb-4 text-cream">
+                                Impacto <span className="text-gold">Transformador</span>
+                            </h1>
+                            <p className="text-base md:text-lg text-dim font-light leading-relaxed max-w-3xl mx-auto">
+                                Da teoría á práctica. <strong className="text-cream font-semibold">21 fitos históricos contrastados</strong> onde a Intelixencia Artificial resolve desafíos científicos, médicos, industriais, defensivos e matemáticos antes considerados inalcanzables.
+                            </p>
+                            <div className="flex flex-wrap justify-center items-center gap-2 mt-4 text-[10px] md:text-[11px] font-semibold">
+                                <span className="text-dim uppercase tracking-wider text-[9px] mr-1">Rigor Científico:</span>
+                                <span className="px-2.5 py-0.5 rounded-full border border-emerald-500/60 bg-emerald-500/20 text-emerald-300">● Despregado en Produción</span>
+                                <span className="px-2.5 py-0.5 rounded-full border border-rose-500/60 bg-rose-500/20 text-rose-300">● Ensaio Clínico Real</span>
+                                <span className="px-2.5 py-0.5 rounded-full border border-amber-500/60 bg-amber-500/20 text-amber-300">● Demostrado en Laboratorio</span>
+                                <span className="px-2.5 py-0.5 rounded-full border border-purple-500/60 bg-purple-500/20 text-purple-300">● Investigación de Fronteira</span>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Banner Especial: A Fronteira Matemática e os Problemas do Milenio */}
+                    <div className="max-w-6xl mx-auto mb-10 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+                        <div className="bg-gradient-to-r from-purple/20 via-card to-purple/10 border border-purple/40 rounded-2xl p-5 md:p-6 shadow-[0_0_30px_rgba(139,92,246,0.15)]">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer select-none" onClick={() => setIsSpecialOpen(!isSpecialOpen)}>
+                                <div className="flex items-center gap-3.5">
+                                    <div className="p-2.5 rounded-xl bg-purple/20 text-purple border border-purple/40">
+                                        <Icons.Sparkles size={24} />
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider bg-purple/30 text-purple border border-purple/40">Nota Didáctica</span>
+                                            <h3 className="text-lg md:text-xl font-bold text-cream">A Fronteira Matemática e os Problemas do Milenio</h3>
+                                        </div>
+                                        <p className="text-xs md:text-sm text-dim mt-0.5">Como a IA pasou da intuición probabilística ao rigor formal con Lean 4 (e o estado real de Navier-Stokes a finais de 2026).</p>
+                                    </div>
+                                </div>
+                                <button className="self-end sm:self-center flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-semibold text-cream border border-white/10 transition-colors">
+                                    <span>{isSpecialOpen ? 'Ocultar análise' : 'Despregar análise'}</span>
+                                    {isSpecialOpen ? <Icons.ChevronUp size={16} /> : <Icons.ChevronDown size={16} />}
+                                </button>
+                            </div>
+
+                            {isSpecialOpen && (
+                                <div className="mt-5 pt-5 border-t border-purple/20 grid md:grid-cols-3 gap-5 text-xs md:text-sm text-dim leading-relaxed animate-fade-in">
+                                    <div className="bg-black/30 p-4 rounded-xl border border-white/5">
+                                        <h4 className="font-bold text-purple mb-2 text-sm flex items-center gap-2">
+                                            <span>1.</span> A Tríade do Razoamento Formal
+                                        </h4>
+                                        <p>
+                                            En matemáticas, unha proba «case correcta» é unha proba falsa. O cambio histórico produciuse ao combinar <strong>modelos de razoamento (Sistema 2)</strong> que dedican cómputo a pensar paso a paso, con <strong>asistentes de proba formal (Lean 4)</strong> que actúan como árbitro incorruptible: o compilador valida rigorosamente cada inferencia lóxica, eliminando calquera risco de alucinación probabilística.
+                                        </p>
+                                    </div>
+                                    <div className="bg-black/30 p-4 rounded-xl border border-white/5">
+                                        <h4 className="font-bold text-gold mb-2 text-sm flex items-center gap-2">
+                                            <span>2.</span> Que NON está resolto (Novembro 2026)
+                                        </h4>
+                                        <p>
+                                            <strong>Ningún Problema do Milenio foi oficialmente aceptado como resolto</strong> polo Clay Mathematics Institute. Dos seis abertos tras Poincaré (resolto por Perelman sen IA), ningún está pechado: nin Navier-Stokes (o traballo de OpenAI de setembro 2026 con 10.000 axentes en Lean segue en disputa polo forzamento matemático e discrepancias de expertos como Bastounis ou Hansen), nin a Hipótese de Riemann, nin P vs NP. A IA resolve conxecturas combinatorias abertas e olimpiadas, non os enigmas milenarios.
+                                        </p>
+                                    </div>
+                                    <div className="bg-black/30 p-4 rounded-xl border border-white/5">
+                                        <h4 className="font-bold text-orange mb-2 text-sm flex items-center gap-2">
+                                            <span>3.</span> Reflexión para a Aula Docente
+                                        </h4>
+                                        <p>
+                                            Matemáticos laureados coa Medalla Fields (Terence Tao, Tim Gowers) non actúan como espectadores, senón como <em>directores de orquestra</em>: a IA xera conxecturas, refuta casos límite e automatiza lemas tediosos, pero o criterio epistemolóxico, a formulación da pregunta correcta e a revisión por pares seguen sendo territorio irrenunciablemente humano.
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Filtros de Categoría */}
+                    <div className="flex justify-center flex-wrap gap-2 mb-10 max-w-5xl mx-auto animate-fade-in" style={{ animationDelay: '0.15s' }}>
+                        {categories.map(cat => (
+                            <button 
+                                key={cat} 
+                                onClick={() => setFilter(cat)} 
+                                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all border ${
+                                    filter === cat 
+                                        ? 'bg-cream text-dark border-cream shadow-[0_0_15px_rgba(255,255,255,0.3)]' 
+                                        : 'bg-white/5 text-dim border-transparent hover:border-white/20 hover:text-white'
+                                }`}
+                            >
+                                {cat} {filter === cat && <span className="ml-1.5 px-1.5 py-0.2 rounded-full bg-dark/20 text-[10px]">{filteredCases.length}</span>}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Reixa de Tarxetas (3 columnas en desktop, 2 en tablet, 1 en móbil) */}
+                    <main className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                        {filteredCases.map(item => (
+                            <FlipCard key={item.id} item={item} onOpenVideo={setSelectedVideo} />
+                        ))}
+                    </main>
+
+                    {/* Modal de Vídeo */}
+                    {selectedVideo && (
+                        <VideoModal 
+                            videoUrl={selectedVideo.videoUrl} 
+                            title={selectedVideo.title} 
+                            onClose={() => setSelectedVideo(null)} 
+                        />
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<SuccessGalleryApp />);
+    </script>
+</body>
+
+</html>

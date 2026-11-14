@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="gl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uso Docente e Normativa</title>
+    <link rel="stylesheet" href="../css/estilos_ia.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: 'var(--bg-dark)', card: 'var(--card-bg)', cream: 'var(--text-main)', dim: 'var(--text-dim)',
+                        gold: 'var(--accent-gold)', orange: 'var(--accent-orange)', retro: 'var(--accent-retro)', cyan: '#06B6D4',
+                        purple: '#8B5CF6', green: '#10B981'
+                    },
+                    fontFamily: { sans: ['Open Sans', 'sans-serif'] },
+                    animation: { 'fade-in': 'fadeIn 0.5s ease-out forwards', 'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)' },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,800;1,400&display=swap"
+        rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+        }
+
+        .bg-glow {
+            background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.05) 0%, rgba(18, 18, 18, 0) 60%);
+        }
+    </style>
+</head>
+
+<body class="bg-dark text-cream font-sans overflow-x-hidden bg-glow">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
+        const IconBase = ({ children, className, size = 24, ...props }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>);
+        const Icons = { ShieldAlert: (p) => <IconBase {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" /><path d="M12 8v4" /><path d="M12 16h.01" /></IconBase>, ShieldCheck: (p) => <IconBase {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" /><path d="m9 12 2 2 4-4" /></IconBase>, FileText: (p) => <IconBase {...p}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></IconBase>, UserX: (p) => <IconBase {...p}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><line x1="17" x2="22" y1="8" y2="13" /><line x1="22" x2="17" y1="8" y2="13" /></IconBase>, UserCheck: (p) => <IconBase {...p}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><polyline points="16 11 18 13 22 9" /></IconBase>, Scale: (p) => <IconBase {...p}><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" /><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" /><path d="M7 21h10" /><path d="M12 3v18" /><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2" /></IconBase> };
+
+        const NormativeCard = ({ data }) => {
+            const [isGoodPractice, setIsGoodPractice] = useState(false);
+            return (
+                <div className={`relative transition-all duration-500 border rounded-lg p-6 md:p-8 flex flex-col h-full shadow-lg ${isGoodPractice ? 'bg-card border-green-500/30 shadow-[0_0_20px_rgba(16,185,129,0.1)]' : 'bg-card border-retro/30 shadow-[0_0_20px_rgba(192,57,43,0.1)]'}`}>
+                    <div className="flex justify-between items-start mb-6">
+                        <div className="flex items-center gap-3"><div className={`p-2 rounded-full ${isGoodPractice ? 'bg-green-500/20 text-green-400' : 'bg-retro/20 text-retro'}`}>{isGoodPractice ? <Icons.ShieldCheck size={28} /> : <Icons.ShieldAlert size={28} />}</div><h3 className="text-xl font-bold text-white">{data.title}</h3></div>
+                        <div className="cursor-pointer flex items-center bg-black/40 rounded-full p-1 border border-white/10 w-16 h-8 relative transition-colors hover:border-white/30" onClick={() => setIsGoodPractice(!isGoodPractice)} title="Alternar Práctica">
+                            <div className={`w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${isGoodPractice ? 'translate-x-8 bg-green-500' : 'translate-x-0 bg-retro'}`}></div>
+                        </div>
+                    </div>
+                    <div className="flex-grow">
+                        {isGoodPractice ? (
+                            <div className="animate-slide-up">
+                                <div className="mb-6"><span className="text-xs font-bold text-green-400 uppercase tracking-widest mb-2 block">✅ Práctica Correcta</span><p className="text-lg text-cream font-medium leading-relaxed">{data.goodPractice}</p></div>
+                                <div className="bg-white/5 border-l-4 border-gold rounded-r-md p-4 mt-auto">
+                                    <div className="flex items-center gap-2 mb-2 text-gold opacity-90"><Icons.Scale size={16} /><span className="text-xs font-bold uppercase tracking-widest">Base Legal</span></div>
+                                    <p className="text-sm text-dim italic mb-2">"{data.legalText}"</p><p className="text-xs text-gold font-bold uppercase text-right">— {data.legalSource}</p>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="animate-fade-in">
+                                <span className="text-xs font-bold text-retro uppercase tracking-widest mb-2 block">❌ Práctica de Risco</span>
+                                <p className="text-lg text-dim font-light leading-relaxed mb-4">{data.badPractice}</p>
+                                <div className="p-4 bg-retro/10 rounded border border-retro/20 text-sm text-retro/80"><strong>Consecuencia:</strong> {data.risk}</div>
+                            </div>
+                        )}
+                    </div>
+                    <div className="mt-6 pt-4 border-t border-white/5 text-center"><span className="text-[10px] text-dim uppercase tracking-widest opacity-50">{isGoodPractice ? 'Cumprimento Normativo' : 'Infracción Potencial'}</span></div>
+                </div>
+            );
+        };
+
+        const TeacherGuideApp = () => {
+            const legalScenarios = [
+                {
+                    "id": 1,
+                    "title": "Protección de Datos de Menores",
+                    "badPractice": "Introducir nomes, apelidos ou datos identificables de alumnado menor de 14 anos en ferramentas de IA xenerativa (como ChatGPT) sen o consentimento expreso das familias.",
+                    "risk": "Vulneración da privacidade do menor e tratamento ilícito de datos persoais en servidores externos fóra do control da Administración.",
+                    "goodPractice": "Anonimizar sempre os datos ou usar seudónimos. Para menores de 14 anos, requírese o consentimento dos pais/titores; os maiores de 14 poden consentir por si mesmos salvo lei en contra.",
+                    "legalText": "O tratamento dos datos persoais dun menor de idade unicamente poderá basearse no seu consentimento cando sexa maior de catorce anos.",
+                    "legalSource": "LOPDGDD Art. 7 / Lei 2/2025 Art. 11"
+                },
+                {
+                    "id": 2,
+                    "title": "Avaliación e Toma de Decisións",
+                    "badPractice": "Delegar exclusivamente nun sistema de IA a cualificación final do alumnado ou a decisión de promoción sen revisión docente.",
+                    "risk": "Clasificación do sistema como de 'Alto Risco' con posibles sesgos discriminatorios e falta de transparencia na toma de decisións académicas.",
+                    "goodPractice": "Aplicar o principio de 'Reserva de Humanidade': a IA pode apoiar, pero a decisión e revisión final debe ser sempre humana e explicable.",
+                    "legalText": "A Administración xeral... poderá empregar sistemas de intelixencia artificial... sempre que se apliquen as medidas adecuadas para a protección dos dereitos, liberdades e intereses lexítimos.",
+                    "legalSource": "Lei 2/2025 Art. 12 / Regulamento UE de IA"
+                },
+                {
+                    "id": 3,
+                    "title": "Uso de Ferramentas de Comunicación",
+                    "badPractice": "Realizar videochamadas ou comunicacións telemáticas co alumnado ou familias mediante aplicacións privadas non corporativas (Zoom persoal, WhatsApp, etc.).",
+                    "risk": "Falta de seguridade nas comunicacións e incumprimento do deber de confidencialidade e protección de datos.",
+                    "goodPractice": "Empregar exclusivamente as plataformas corporativas proporcionadas pola Consellería, como 'Falemos' ou 'Webex' institucional.",
+                    "legalText": "Para a conexión a distancia empregaranse aplicacións corporativas ou postas a disposición pola Consellería... como Falemos ou Webex.",
+                    "legalSource": "Resolución do 5 de xuño de 2025 (Instrucións), Ordinal 33"
+                },
+                {
+                    "id": 4,
+                    "title": "Propiedade Intelectual e Transparencia",
+                    "badPractice": "Utilizar materiais, imaxes ou textos xerados por IA para o aula sen revisalos, sen citalos ou facéndoos pasar por creación propia.",
+                    "risk": "Desinformación (alucinacións da IA), vulneración de dereitos de autor e falta de ética académica.",
+                    "goodPractice": "Revisar e verificar sempre o contido. Informar ao alumnado se se interactúa cunha IA e citar a ferramenta utilizada na creación do recurso.",
+                    "legalText": "Toda persoa... terá dereito a recibir a debida información, clara e comprensible... en particular a saber se está interactuando cun sistema de intelixencia artificial.",
+                    "legalSource": "Lei 2/2025 Art. 23 (Dereito de transparencia)"
+                },
+                {
+                    "id": 5,
+                    "title": "Usos Prohibidos (Vixilancia)",
+                    "badPractice": "Empregar sistemas de IA para a identificación biométrica remota (recoñecemento facial) nas aulas ou para a puntuación social do comportamento (social scoring).",
+                    "risk": "Violación de dereitos fundamentais e uso de sistemas catalogados como de 'Risco Inaceptable' ou prohibidos pola normativa europea.",
+                    "goodPractice": "Limitar o uso da IA a fins pedagóxicos e de xestión administrativa autorizada, evitando calquera tecnoloxía de vixilancia masiva.",
+                    "legalText": "Prohíbese o uso de sistemas de IA que manipulen o comportamento... ou realicen 'social scoring' por parte das autoridades públicas.",
+                    "legalSource": "Regulamento UE de IA / Guía Amtega Xunta"
+                },
+                {
+                    "id": 6,
+                    "title": "Sesgos e Discriminación",
+                    "badPractice": "Utilizar ferramentas de orientación ou selección de contidos sen comprobar se os resultados perpetúan estereotipos de xénero, raza ou capacidade.",
+                    "risk": "Vulneración do dereito á igualdade e non discriminación, amplificando prexuízos sociais no ámbito educativo.",
+                    "goodPractice": "Supervisar os resultados da IA para detectar sesgos e garantir a equidade e a inclusión no acceso á educación.",
+                    "legalText": "Nos procesos de deseño... e uso de sistemas de intelixencia artificial adoptaranse as garantías necesarias aos efectos de mitigar calquera resultado discriminatorio.",
+                    "legalSource": "Lei 2/2025 Art. 10 (Imparcialidade)"
+                }
+            ];
+
+            /*[
+                { id: 1, title: "Identidade Dixital", badPractice: "Usar contas persoais (Gmail, Outlook) para rexistrarse en ferramentas ou pedir ao alumnado que se cree contas propias en plataformas externas sen convenio.", risk: "Cesión ilegal de datos a terceiros e perda de control sobre a información do menor.", goodPractice: "Uso exclusivo de contas corporativas @edu.xunta.gal. Se a ferramenta non admite SSO corporativo, non se utiliza con datos reais.", legalText: "Prohíbese o uso de contas persoais para fins profesionais... debendo empregarse as ferramentas corporativas facilitadas pola Consellería.", legalSource: "Instrucións de Inicio de Curso / Plan Dixital de Centro" },
+                { id: 2, title: "Privacidade de Datos", badPractice: "Introducir nomes, apelidos ou notas reais de alumnos en ChatGPT/Gemini para xerar informes ou listas.", risk: "Violación do RGPD ao transferir datos sensibles a servidores internacionais sen garantías.", goodPractice: "Pseudonimización total. Usar 'Alumno A' ou datos sintéticos (inventados) para adestrar ou pedir exemplos á IA.", legalText: "Os datos persoais non deben saír dos sistemas do centro educativo sen medidas de seguridade... Garantir o anonimato en ferramentas externas.", legalSource: "Guía Agueiro / LOPDGDD Art. 92" },
+                { id: 3, title: "Responsabilidade", badPractice: "Copiar e pegar directamente en documentos oficiais (boletíns, actas) os textos xerados pola IA sen revisión crítica.", risk: "Falta de validez administrativa e posibles erros (alucinacións) que afectan ao expediente do alumno.", goodPractice: "Human in the Loop. A IA propón o borrador, pero o docente revisa, edita e asume a autoría legal do documento.", legalText: "Garantía de supervisión humana en todos os procedementos que teñan impacto nas persoas.", legalSource: "Lei 2/2025 IA Galicia (Art. 8) / Orientacións INTEF" },
+                { id: 4, title: "Avaliación", badPractice: "Encargar traballos escritos para casa sen supervisión ou basear a nota en detectores de IA (que fallan moito).", risk: "Imposibilidade de cualificar a competencia real do alumno e falsas acusacións de plaxio.", goodPractice: "Avaliar o proceso e a defensa oral. Se se usa IA, o alumno debe declaralo (transparencia) e xustificar o seu uso.", legalText: "A avaliación debe basearse na adquisición de competencias... Informar claramente cando se use IA (Declaración explícita).", legalSource: "Resolución 5/6/2025 (DOG 112) / INTEF" }
+            ];*/
+
+            return (
+                <div className="min-h-screen pb-24 px-6 md:px-12">
+                    <header className="py-16 text-center animate-fade-in"><div className="max-w-4xl mx-auto"><h4 className="text-green-500 tracking-[0.3em] uppercase font-bold text-xs mb-4">Módulo 4: Marco Legal</h4><h1 className="text-4xl md:text-5xl font-bold mb-6 text-cream">Ética e <span className="text-gold">Normativa</span></h1><p className="text-lg text-dim font-light leading-relaxed max-w-2xl mx-auto">A IA é unha ferramenta poderosa, pero o seu uso na aula está regulado. Coñece as liñas vermellas para protexer ao teu alumnado e a ti mesmo.</p>
+                        <div className="mt-8">
+                            <a href="./Img/Docente.png" target="_blank" className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-gradient-to-r from-orange to-gold text-dark font-bold uppercase tracking-wider shadow-[0_0_20px_rgba(255,165,0,0.3)] hover:shadow-[0_0_30px_rgba(255,165,0,0.5)] transform hover:scale-105 transition-all duration-300 group decoration-0">
+                                <span>Ver Infografía Resumo</span>
+                                <Icons.FileText size={20} className="group-hover:translate-x-1 transition-transform" />
+                            </a>
+                        </div>
+                    </div></header>
+                    <main className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>{legalScenarios.map(scenario => (<NormativeCard key={scenario.id} data={scenario} />))}</main>
+                    <footer className="mt-16 text-center border-t border-white/5 pt-8"><p className="text-dim text-sm italic">* Este resumo ten carácter divulgativo. Ante a dúbida, consulta sempre ao Equipo Directivo ou ao DPO da Consellería.</p></footer>
+                </div>
+            );
+        };
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<TeacherGuideApp />);
+    </script>
+</body>
+
+</html>

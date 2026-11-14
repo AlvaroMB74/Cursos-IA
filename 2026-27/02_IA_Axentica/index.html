@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="gl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Iniciación á IA Axéntica para a Práctica Docente (Edición 2026–2027)</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.css">
+
+    <link rel="stylesheet" href="CSS/estilos_ia.css">
+    <link rel="stylesheet" href="CSS/axentica.css">
+</head>
+
+<body>
+
+    <div class="reveal">
+
+        <!-- Sidebar Global de Navegación -->
+        <aside class="global-sidebar">
+            <a href="#/home" class="nav-item nav-home" title="Inicio">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Portada</span>
+            </a>
+
+            <div style="height: 1px; background: rgba(255,255,255,0.1); width: 75%; margin: 12px 0;"></div>
+
+            <div style="font-size: 0.55rem; text-transform: uppercase; color: var(--text-dim); margin-top: 4px; letter-spacing: 0.5px; opacity: 0.7;">
+                Módulos
+            </div>
+
+            <a href="#/salto" class="nav-item nav-salto" title="1. O Salto Axéntico e Ferramentas">
+                <span class="nav-icon">⚡</span>
+                <span class="nav-label">1. Salto e Ferramentas</span>
+            </a>
+            <a href="#/arquitectura" class="nav-item nav-arquitectura" title="2. Arquitectura e Método">
+                <span class="nav-icon">🧩</span>
+                <span class="nav-label">2. Método e Límites</span>
+            </a>
+            <a href="#/catalogo" class="nav-item nav-catalogo" title="3. Catálogo de Proxectos Propostos">
+                <span class="nav-icon">🚀</span>
+                <span class="nav-label">3. Catálogo Proxectos</span>
+            </a>
+            <a href="#/obradoiro" class="nav-item nav-obradoiro" title="4. Obradoiro: A Ficha do Colaborador">
+                <span class="nav-icon">📋</span>
+                <span class="nav-label">4. Ficha de Deseño</span>
+            </a>
+
+            <div style="height: 1px; background: rgba(255,255,255,0.1); width: 75%; margin: 12px 0;"></div>
+
+            <div style="font-size: 0.55rem; text-transform: uppercase; color: var(--text-dim); margin-top: 4px; letter-spacing: 0.5px; opacity: 0.7;">
+                Goberno
+            </div>
+
+            <a href="#/normativa" class="nav-item nav-normativa" title="5. Normativa e Boas Prácticas no Entregable">
+                <span class="nav-icon">⚖️</span>
+                <span class="nav-label">5. Lei e Entregables</span>
+            </a>
+        </aside>
+
+        <!-- Slides Reveal.js -->
+        <div class="slides">
+
+            <!-- Portada / Dashboard Principal -->
+            <section id="home">
+                <div class="dashboard-container">
+                    <div class="dashboard-text">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                            <span class="badge-chip badge-orange">Formación Avanzada</span>
+                            <span class="badge-chip badge-gold">2026–2027</span>
+                        </div>
+                        <h1>Iniciación á<br><span style="color: var(--accent-orange);">IA Axéntica</span><br>para a Práctica Docente</h1>
+                        <p style="font-size: 1.05rem; color: var(--text-dim); margin-top: 16px; border-left: 3px solid var(--accent-gold); padding-left: 15px; line-height: 1.55;">
+                            Pasamos de pedir unha resposta nun chat a <strong>deseñar, acoutar e supervisar un colaborador dixital</strong> que traballa sobre un espazo de proxecto propio.
+                        </p>
+                        <div style="margin-top: 24px; font-size: 0.85rem; color: #64748b;">
+                            <span>💡 Abre a túa visión: automatizacións útiles para a vida persoal, a cidadanía crítica e a docencia.</span>
+                        </div>
+                    </div>
+
+                    <div class="cards-grid">
+                        <a href="#/salto" class="dashboard-card card-salto">
+                            <div>
+                                <span class="badge-chip badge-orange" style="margin-bottom: 8px;">Módulo 1</span>
+                                <h3 style="color: var(--accent-orange);">O Salto Axéntico e as Ferramentas</h3>
+                                <p>Do chat ao espazo de proxecto. Test das 6 preguntas, seguridade do usuario e catálogo (Escritorio vs. Arneses).</p>
+                            </div>
+                            <div class="card-icon">⚡</div>
+                        </a>
+
+                        <a href="#/arquitectura" class="dashboard-card card-arquitectura">
+                            <div>
+                                <span class="badge-chip badge-cyan" style="margin-bottom: 8px;">Módulo 2</span>
+                                <h3 style="color: var(--accent-cyan);">Arquitectura e Método de Traballo</h3>
+                                <p>Ciclo axéntico, workspace illado, plan previo obrigatorio, patrón «instantánea» e supervisión humana (HITL).</p>
+                            </div>
+                            <div class="card-icon">🧩</div>
+                        </a>
+
+                        <a href="#/catalogo" class="dashboard-card card-catalogo">
+                            <div>
+                                <span class="badge-chip badge-emerald" style="margin-bottom: 8px;">Módulo 3</span>
+                                <h3 style="color: var(--accent-emerald);">Catálogo de Proxectos Propostos</h3>
+                                <p>Horizontes para o usuario non técnico: orzamentos, facturas, decisións con sensibilidade, territorio e aula.</p>
+                            </div>
+                            <div class="card-icon">🚀</div>
+                        </a>
+
+                        <a href="#/obradoiro" class="dashboard-card card-obradoiro">
+                            <div>
+                                <span class="badge-chip badge-gold" style="margin-bottom: 8px;">Módulo 4</span>
+                                <h3 style="color: var(--accent-gold);">Obradoiro: A Ficha do Colaborador</h3>
+                                <p>Metodoloxía práctica de proxecto único: obxectivo, fontes, permisos, plan previo, verificación e incidencias.</p>
+                            </div>
+                            <div class="card-icon">📋</div>
+                        </a>
+
+                        <a href="#/normativa" class="dashboard-card dashboard-card-wide card-normativa">
+                            <div>
+                                <span class="badge-chip badge-purple" style="margin-bottom: 6px;">Módulo 5 · Peche e Garantías</span>
+                                <h3 style="color: var(--accent-purple);">Marco Normativo e Boas Prácticas no Entregable</h3>
+                                <p>AI Act (alto risco), Lei 2/2025 de Galicia, semáforo legal sincronizado e protocolo estrito cando o produto final chega ao alumnado (determinismo, cero datos reais e privacidade).</p>
+                            </div>
+                            <div class="card-icon">⚖️</div>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Módulo 1: O Salto Axéntico e as Ferramentas -->
+            <section id="salto" data-background-iframe="./Modulos/01_Salto_Axentico_Ferramentas/index.html"
+                data-background-interactive data-preload></section>
+
+            <!-- Módulo 2: Arquitectura e Método de Traballo -->
+            <section id="arquitectura" data-background-iframe="./Modulos/02_Arquitectura_e_Metodo/index.html"
+                data-background-interactive data-preload></section>
+
+            <!-- Módulo 3: Catálogo de Proxectos Propostos -->
+            <section id="catalogo" data-background-iframe="./Modulos/03_Catalogo_Proxectos/index.html"
+                data-background-interactive data-preload></section>
+
+            <!-- Módulo 4: Obradoiro de Deseño: A Ficha do Colaborador -->
+            <section id="obradoiro" data-background-iframe="./Modulos/04_Obradoiro_Ficha_Deseño/index.html"
+                data-background-interactive data-preload></section>
+
+            <!-- Módulo 5: Marco Normativo e Boas Prácticas no Entregable -->
+            <section id="normativa" data-background-iframe="./Modulos/05_Normativa_e_Boas_Practicas/index.html"
+                data-background-interactive data-preload></section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            controls: false,
+            progress: true,
+            center: false,
+            width: "100%",
+            height: "100%",
+            margin: 0,
+            minScale: 1,
+            maxScale: 1,
+            transition: 'fade',
+            backgroundTransition: 'fade',
+            preloadIframes: true,
+            viewDistance: 2
+        });
+    </script>
+</body>
+
+</html>

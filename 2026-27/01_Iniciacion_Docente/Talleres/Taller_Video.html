@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="gl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obradoiro de Vídeo Xerativo e Avatares (Nov-26)</title>
+    <link rel="stylesheet" href="../css/estilos_ia.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { dark: 'var(--bg-dark)', card: 'var(--card-bg)', cream: 'var(--text-main)', dim: 'var(--text-dim)', gold: 'var(--accent-gold)', orange: 'var(--accent-orange)', retro: 'var(--accent-retro)', cyan: '#06B6D4', purple: '#8B5CF6', green: '#10B981', pink: '#EC4899', amber: '#F59E0B' }, fontFamily: { sans: ['Open Sans', 'sans-serif'] }, animation: { 'fade-in': 'fadeIn 0.6s ease-out forwards' }, keyframes: { fadeIn: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } } } } }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.js"></script>
+    <style> body { background-color: var(--bg-dark); color: var(--text-main); } .bg-glow { background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.08) 0%, rgba(18, 18, 18, 0) 70%); } .reveal { height: 100vh; } .reveal .slides > section { padding: 0; } .perspective-1000 { perspective: 1000px; } .transform-style-3d { transform-style: preserve-3d; } .backface-hidden { -webkit-backface-visibility: hidden; backface-visibility: hidden; } .rotate-y-180 { transform: rotateY(180deg); } .custom-scroll::-webkit-scrollbar { width: 4px; } .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); } .custom-scroll::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 3px; } </style>
+</head>
+<body class="bg-dark text-cream font-sans overflow-hidden bg-glow">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const Icon = ({ children, className, size = 20 }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>);
+        const Icons = { Video: (p) => <Icon {...p}><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></Icon>, Mic: (p) => <Icon {...p}><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/><line x1="8" x2="16" y1="22" y2="22"/></Icon>, Copy: (p) => <Icon {...p}><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></Icon>, Check: (p) => <Icon {...p}><polyline points="20 6 9 17 4 12"/></Icon>, ChevronLeft: (p) => <Icon {...p}><path d="m15 18-6-6 6-6"/></Icon>, ChevronRight: (p) => <Icon {...p}><path d="m9 18 6-6-6-6"/></Icon>, Unlock: (p) => <Icon {...p}><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></Icon>, Lock: (p) => <Icon {...p}><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></Icon>, User: (p) => <Icon {...p}><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></Icon>, Monitor: (p) => <Icon {...p}><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></Icon>, Clapperboard: (p) => <Icon {...p}><path d="M20.2 6 3 11l-.9-2.4c-.5-1.1.2-2.4 1.3-2.9L13.8 2c1.1-.5 2.4.2 2.9 1.3l3.5 2.7Z"/><path d="m17 7 3.2 8.6c.5 1.1-.2 2.4-1.3 2.9L8.6 22c-1.1.5-2.4-.2-2.9-1.3L2.5 12"/></Icon>, ExternalLink: (p) => <Icon {...p}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></Icon> };
+
+        const ModelFlipCard = ({ model }) => {
+            const [isFlipped, setIsFlipped] = useState(false);
+            return (
+                <div className="relative w-full h-[170px] perspective-1000 group cursor-pointer animate-fade-in" onMouseEnter={() => setIsFlipped(true)} onMouseLeave={() => setIsFlipped(false)} onClick={() => setIsFlipped(!isFlipped)}>
+                    <div className={`relative w-full h-full duration-500 transform-style-3d transition-transform ${isFlipped ? 'rotate-y-180' : ''}`}>
+                        <div className={`absolute w-full h-full backface-hidden rounded-xl p-5 flex flex-col justify-between border-2 bg-card/90 backdrop-blur-sm shadow-lg transition-all duration-300 ${model.color} hover:scale-105 hover:shadow-2xl`}>
+                            <div className="flex justify-between items-start"><h4 className="font-extrabold text-lg tracking-tight">{model.name}</h4><div className="flex gap-2"><a href={model.url} target="_blank" rel="noopener noreferrer" className="text-dim hover:text-white transition-colors z-20" onClick={(e) => e.stopPropagation()} title="Abrir Web"><Icons.ExternalLink size={16} /></a>{model.open ? <Icons.Unlock size={14} className="opacity-80" /> : <Icons.Lock size={14} className="opacity-50" />}</div></div>
+                            <div className="text-xs"><span className="block font-bold uppercase tracking-wider mb-1 opacity-90">{model.cost}</span><span className="opacity-60 italic">{model.company}</span></div>
+                            <div className="mt-2 text-right"><span className="text-[9px] uppercase tracking-widest border border-current px-2 py-1 rounded-full opacity-60">Info +</span></div>
+                        </div>
+                        <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-black/95 border border-white/10 rounded-xl p-5 flex flex-col justify-center text-xs shadow-2xl">
+                            <div className="mb-3"><span className="text-green-400 font-bold block mb-1 uppercase tracking-wider text-[10px]">👍 Fortalezas:</span><p className="text-gray-300 leading-snug">{model.pros}</p></div>
+                            <div><span className="text-retro font-bold block mb-1 uppercase tracking-wider text-[10px]">👎 Debilidades:</span><p className="text-gray-400 leading-snug">{model.cons}</p></div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const MissionCard = ({ title, difficulty, icon: IconComp, tasks, colorClass }) => {
+            const [currentTask, setCurrentTask] = useState(0);
+            const [copied, setCopied] = useState(false);
+            const task = tasks[currentTask];
+            const nextTask = () => setCurrentTask((prev) => (prev + 1) % tasks.length);
+            const prevTask = () => setCurrentTask((prev) => (prev - 1 + tasks.length) % tasks.length);
+            const handleCopy = () => { navigator.clipboard.writeText(task.prompt); setCopied(true); setTimeout(() => setCopied(false), 2000); };
+
+            return (
+                <div className={`bg-card border-t-4 ${colorClass} rounded-lg p-6 flex flex-col h-full shadow-2xl group relative transition-all hover:-translate-y-1 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]`}>
+                    <div className="flex justify-between items-start mb-4 border-b border-white/5 pb-3">
+                        <div className="flex items-center gap-3"><div className="p-2 bg-white/5 rounded-md text-white/80"><IconComp size={24} /></div><div><h3 className="font-bold text-cream text-lg">{title}</h3><span className="text-[10px] uppercase text-dim tracking-widest">{difficulty}</span></div></div>
+                        <div className="text-xs font-mono text-dim bg-white/5 px-3 py-1 rounded whitespace-nowrap min-w-[60px] text-center">{currentTask + 1} / {tasks.length}</div>
+                    </div>
+                    <div className="mb-4 min-h-[40px]"><h4 className="text-white font-bold text-sm mb-1">{task.name}</h4><p className="text-xs text-dim italic">{task.context}</p></div>
+                    <div className="bg-black/40 rounded border border-white/10 p-4 relative flex-grow group-hover:border-white/20 transition-colors mb-4 flex flex-col">
+                        <div className="absolute top-2 right-2 z-10"><button onClick={handleCopy} className="text-dim hover:text-gold transition-colors p-1" title="Copiar Prompt">{copied ? <Icons.Check size={16} className="text-green-500" /> : <Icons.Copy size={16} />}</button></div>
+                        <p className="text-[11px] text-amber-100/80 font-mono leading-relaxed whitespace-pre-line custom-scroll overflow-y-auto h-full pr-2">{task.prompt}</p>
+                    </div>
+                    <div className="flex justify-between items-center mt-auto pt-2 border-t border-white/5">
+                        <button onClick={prevTask} className="text-dim hover:text-white p-2 hover:bg-white/5 rounded"><Icons.ChevronLeft /></button><span className="text-[9px] uppercase text-dim tracking-widest opacity-50">Navegar Tarefas</span><button onClick={nextTask} className="text-dim hover:text-white p-2 hover:bg-white/5 rounded"><Icons.ChevronRight /></button>
+                    </div>
+                </div>
+            );
+        };
+
+        const WorkshopApp = () => {
+            const models = [
+                { name: "Google Veo", url: "https://labs.google/flow", company: "Google DeepMind", open: false, cost: "Freemium / Flow", color: "border-blue-500/50 text-blue-300 shadow-[0_0_15px_rgba(59,130,246,0.15)]", pros: "Veo 3.1: calidade cinematográfica, resolución 1080p nativa con audio ambiental integrado e gran coherencia espacial e física.", cons: "Despregue rexional gradual suxeito ás cotas de Google Labs e Flow." },
+                { name: "Kling AI", url: "https://klingai.com/", company: "Kuaishou (China)", open: false, cost: "Freemium", color: "border-retro/50 text-retro shadow-[0_0_15px_rgba(244,63,94,0.15)]", pros: "Kling 4.0: referente mundial en movemento orgánico e física de corpos; tomas continuas de ata 30 segundos con control preciso de traxectorias.", cons: "Interface con cotas de créditos en modos de renderizado de máxima calidade." },
+                { name: "Runway", url: "https://runwayml.com/", company: "Runway", open: false, cost: "Freemium", color: "border-purple/50 text-purple shadow-[0_0_15px_rgba(168,85,247,0.15)]", pros: "Gen-4.5: a suite máis profesional de dirección e control de cámara (pan, tilt, zoom, pincel de movemento) e edición multicapa.", cons: "Plan gratuíto moi restrinxido para exportación intensiva de vídeo." },
+                { name: "Luma Dream Machine", url: "https://lumalabs.ai/dream-machine", company: "Luma AI", open: false, cost: "Freemium", color: "border-cyan/50 text-cyan shadow-[0_0_15px_rgba(6,182,212,0.15)]", pros: "Ray3.14: xeración de vídeo con foco na coherencia visual e saída nativa a 1080p, excelente renderizando transformacions e escenas con dinamismo.", cons: "Menor control granular de personaxes falantes fronte a suites de avatares dedicadas." },
+                { name: "HeyGen & Hedra", url: "https://www.heygen.com/", company: "HeyGen / Hedra", open: false, cost: "Freemium", color: "border-emerald-500/50 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.15)]", pros: "Avatares docentes e personaxes: sincronización labial perfecta en +175 linguas (HeyGen) e animación de calquera retrato histórico ou foto a partir de voz (Hedra).", cons: "Versións gratuítas con marcas de auga e límites de duración por vídeo." }
+            ];
+
+            const missionData = {
+                burocracia: [
+                    { name: "Plano Aula Científica e Avatar", context: "Xeración dun clip cinemático de aula e posterior avatar explicativo.", prompt: `Plano cinematográfico de 8 segundos: unha clase de ciencias nun instituto rural galego, luz de media mañá, alumnado de espaldas observando un experimento con plantas, sen caras identificables nin texto lexible. Camiño lento cara adiante, ambiente sonoro suave. Crea despois un avatar presentador (non real) que lea en galego un aviso de 15 segundos sobre a saída ao museo e dobra o resultado ao castelán.` },
+                    { name: "Benvida ao Curso", context: "Crear un avatar amable para a web do centro saudando ás familias.", prompt: `(Para usar en HeyGen / Hedra)
+Imaxe base: Subir foto dun docente sorrindo ou xerar "friendly teacher portrait".
+Guión (Texto): "Ola familias! Benvidos ao novo curso escolar no noso centro. Este ano estreamos aula de robótica e reforzo dixital. Esperámosvos na reunión de comezo de curso."
+Voz: Galego, ton cálido, próximo e profesional.` },
+                    { name: "Titorial Aula Virtual", context: "Voz en off para explicar como entrar na Aula Virtual.", prompt: `(Para usar en ElevenLabs / HeyGen)
+Texto: "Paso 1: Entrade na web do centro. Paso 2: Facede clic na icona azul 'Aula Virtual'. Paso 3: Usade as credenciais oficiais enviadas a cada familia. Se tedes calquera dúbida, o equipo TIC está á vosa disposición."
+Configuración de Voz: Ton claro, pausado, didáctico.` }
+                ],
+                pedagogia: [
+                    { name: "Entrevista Histórica", context: "Facer que unha foto de Rosalía de Castro recite o seu poema.", prompt: `(Para usar en Hedra)
+1. Imaxe: Subir retrato clásico de Rosalía de Castro.
+2. Audio: Subir gravación do poema "Adiós ríos, adiós fontes" ou xeralo con ElevenLabs (Voz muller madura, acento galego suave).
+3. Acción: Xerar vídeo con lipsync expresivo.` },
+                    { name: "Trailer de Lectura", context: "Xerar unha escena para animar a ler 'O Quixote'.", prompt: `(Para usar en Luma / Kling)
+Prompt: Un cabaleiro medieval con armadura oxidada montando un cabalo fraco contra xigantes que en realidade son muíños de vento. Estilo pintura ao óleo en movemento, dramático, tormenta eléctrica no ceo. 4k. --ar 16:9` },
+                    { name: "Debate Virtual", context: "Crear dous personaxes opinando sobre o Cambio Climático.", prompt: `(Para usar en Hedra - Crear 2 vídeos por separado)
+Personaxe A (Científica): "Os datos son claros, a temperatura subiu 1.5 graos."
+Personaxe B (Escéptico/Cidadán): "Pero na miña aldea segue facendo frío no inverno."
+Obxectivo: Montar ambos os vídeos en Canva/CapCut simulando un telexornal.` }
+                ],
+                personal: [
+                    { name: "Felicitación Máxica", context: "Sorprender a un sobriño/fillo cunha mensaxe de Papá Noel ou o seu peluche.", prompt: `(Para usar en Hedra)
+1. Foto: Subir foto do seu peluche favorito ou de Papá Noel.
+2. Texto: "Ola Hugo! Díxome un paxariño que aprobaches todo. Segue así campión!"
+3. Voz: "Santa Claus" (profunda, alegre).` },
+                    { name: "Animar Foto Antiga", context: "Dar vida a unha foto dos avós (estilo Harry Potter).", prompt: `(Para usar en Runway / Luma con imaxe inicial)
+Input Image: Subir foto antiga restaurada.
+Prompt: A persoa da foto sorrí suavemente e pestanexa, mirando a cámara. Movemento moi sutil e natural. Sen distorsións. Manter estilo vintage.` },
+                    { name: "Meme Video", context: "Crear un GIF de reacción divertido para o grupo de WhatsApp.", prompt: `(Para usar en Luma / Pika)
+Prompt: Un gato gordo con traxe e gravata tecleando furiosamente nun ordenador portátil mentres o ordenador explota. Estilo debuxos animados 3D (Pixar). Loop. --ar 1:1` }
+                ]
+            };
+
+            useEffect(() => { if (window.Reveal) { window.Reveal.initialize({ controls: true, progress: true, center: true, hash: false, transition: 'slide' }); } }, []);
+
+            return (
+                <div className="reveal"><div className="slides">
+                    <section data-background-color="var(--bg-dark)">
+                        <div className="h-full flex flex-col justify-center px-6 md:px-10 max-w-7xl mx-auto">
+                            <header className="text-center mb-6">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-widest mb-2">
+                                    <span>Obradoiro 4</span>
+                                    <span className="w-1 h-1 rounded-full bg-amber-500"></span>
+                                    <span className="font-mono text-gold">Nov-26</span>
+                                </div>
+                                <h2 className="text-3xl md:text-5xl font-bold text-cream mb-2">O Universo <span className="text-amber-500">Audiovisual</span></h2>
+                                <p className="text-dim text-xs md:text-sm">Vídeo cinematográfico, coherencia visual e avatares docentes con sincronización labial.</p>
+                            </header>
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">{models.map((m, i) => (<ModelFlipCard key={i} model={m} />))}</div>
+                            <div className="mt-6 text-center text-dim text-xs max-w-3xl mx-auto space-y-1">
+                                <p className="text-amber-400/90 text-[11px] font-medium">⚠️ <strong>Nota histórica sobre Sora:</strong> Retirada do catálogo tras o peche definitivo da súa web e app o 26 de abril de 2026 e a súa API o 24 de setembro de 2026. Hailuo/MiniMax e Pika fican como suites alternativas.</p>
+                                <div className="animate-bounce pt-1 text-amber-500">Desliza para Misións de Cine ➜</div>
+                            </div>
+                        </div>
+                    </section>
+                    <section data-background-color="var(--bg-dark)">
+                        <div className="h-full flex flex-col justify-center px-8 max-w-7xl mx-auto">
+                            <header className="flex justify-between items-end mb-6 border-b border-white/10 pb-4">
+                                <div><h2 className="text-3xl font-bold text-cream">Estudo de Gravación</h2><p className="text-amber-500 text-xs font-bold uppercase tracking-widest">Luces, cámara, prompt. Copia e proba.</p></div>
+                            </header>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[65vh]">
+                                <MissionCard title="Burocracia Viva" difficulty="Nivel: Comunicación" icon={Icons.Monitor} colorClass="border-retro" tasks={missionData.burocracia} />
+                                <MissionCard title="Historia Falada" difficulty="Nivel: Aula" icon={Icons.User} colorClass="border-gold" tasks={missionData.pedagogia} />
+                                <MissionCard title="Cine Persoal" difficulty="Nivel: Diversión" icon={Icons.Clapperboard} colorClass="border-cyan" tasks={missionData.personal} />
+                            </div>
+                        </div>
+                    </section>
+                </div></div>
+            );
+        };
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<WorkshopApp />);
+    </script>
+</body>
+</html>

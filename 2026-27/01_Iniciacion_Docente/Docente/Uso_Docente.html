@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="gl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula, Lei e Ética: A IA na Educación</title>
+    <link rel="stylesheet" href="../css/estilos_ia.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: 'var(--bg-dark)',
+                        card: 'var(--card-bg)',
+                        cream: 'var(--text-main)',
+                        dim: 'var(--text-dim)',
+                        gold: 'var(--accent-gold)',
+                        orange: 'var(--accent-orange)',
+                        retro: 'var(--accent-retro)',
+                        cyan: '#06B6D4',
+                        purple: '#8B5CF6'
+                    },
+                    fontFamily: { sans: ['Open Sans', 'sans-serif'] },
+                    animation: {
+                        'fade-in': 'fadeIn 0.4s ease-out forwards',
+                        'slide-up': 'slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { transform: 'translateY(16px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } }
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+        }
+        .bg-glow-law {
+            background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.08) 0%, rgba(18, 18, 18, 0) 70%);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        /* Liñas Vermellas Vivas */
+        .card-red-container {
+            border: 2px solid #EF4444 !important;
+            background: linear-gradient(135deg, rgba(127, 29, 29, 0.4) 0%, rgba(20, 20, 20, 0.95) 50%, rgba(127, 29, 29, 0.35) 100%) !important;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.25) !important;
+        }
+        .box-red-card {
+            border: 1.5px solid #EF4444 !important;
+            background: rgba(127, 29, 29, 0.35) !important;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15) !important;
+            transition: all 0.25s ease-in-out;
+        }
+        .box-red-card:hover {
+            border-color: #F87171 !important;
+            box-shadow: 0 0 20px rgba(248, 113, 113, 0.35) !important;
+            transform: translateY(-2px);
+        }
+
+        /* Liñas Amarelas Vivas */
+        .card-amber-container {
+            border: 2px solid #F59E0B !important;
+            background: linear-gradient(135deg, rgba(120, 53, 15, 0.4) 0%, rgba(20, 20, 20, 0.95) 50%, rgba(120, 53, 15, 0.35) 100%) !important;
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.25) !important;
+        }
+        .box-amber-card {
+            border: 1.5px solid #F59E0B !important;
+            background: rgba(120, 53, 15, 0.35) !important;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.15) !important;
+            transition: all 0.25s ease-in-out;
+        }
+        .box-amber-card:hover {
+            border-color: #FBBF24 !important;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.35) !important;
+            transform: translateY(-2px);
+        }
+
+        /* Liñas Verdes Vivas e Luminosas */
+        .card-green-container {
+            border: 2px solid #10B981 !important;
+            background: linear-gradient(135deg, rgba(6, 78, 59, 0.4) 0%, rgba(20, 20, 20, 0.95) 50%, rgba(6, 78, 59, 0.35) 100%) !important;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.25) !important;
+        }
+        .box-green-card {
+            border: 1.5px solid #10B981 !important;
+            background: rgba(6, 78, 59, 0.35) !important;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15) !important;
+            transition: all 0.25s ease-in-out;
+        }
+        .box-green-card:hover {
+            border-color: #34D399 !important;
+            box-shadow: 0 0 20px rgba(52, 211, 153, 0.35) !important;
+            transform: translateY(-2px);
+        }
+        .text-green-accent {
+            color: #34D399 !important;
+        }
+        .badge-green {
+            border: 1.5px solid #10B981 !important;
+            background: rgba(16, 185, 129, 0.25) !important;
+            color: #34D399 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-dark text-cream font-sans overflow-x-hidden bg-glow-law">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
+
+        const IconBase = ({ children, className = "", size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>
+        );
+
+        const Icons = {
+            Scale: (p) => <IconBase {...p}><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" /><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" /><path d="M7 21h10" /><path d="M12 3v18" /><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2" /></IconBase>,
+            TrafficLight: (p) => <IconBase {...p}><rect x="6" y="2" width="12" height="20" rx="3" /><circle cx="12" cy="6" r="2" /><circle cx="12" cy="12" r="2" /><circle cx="12" cy="18" r="2" /></IconBase>,
+            FileText: (p) => <IconBase {...p}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></IconBase>,
+            Download: (p) => <IconBase {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></IconBase>,
+            ShieldAlert: (p) => <IconBase {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" /><path d="M12 8v4" /><path d="M12 16h.01" /></IconBase>,
+            ShieldCheck: (p) => <IconBase {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" /><path d="m9 12 2 2 4-4" /></IconBase>,
+            HelpCircle: (p) => <IconBase {...p}><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></IconBase>,
+            BookOpen: (p) => <IconBase {...p}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></IconBase>,
+            ExternalLink: (p) => <IconBase {...p}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></IconBase>,
+            AlertOctagon: (p) => <IconBase {...p}><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></IconBase>
+        };
+
+        const SemaforoView = () => {
+            return (
+                <div className="space-y-8 animate-slide-up">
+                    {/* ZONA VERMELLA */}
+                    <div className="card-red-container rounded-xl p-6 md:p-8 backdrop-blur-md">
+                        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-red-500/30">
+                            <span className="p-3 rounded-full bg-red-500/25 text-red-400 border border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+                                <Icons.AlertOctagon size={28} />
+                            </span>
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-red-500/25 text-red-300 border border-red-500">Nivel 1</span>
+                                    <h3 className="text-2xl font-bold text-red-400">Liñas Vermellas: Risco Inaceptable (PROHIBIDO)</h3>
+                                </div>
+                                <p className="text-dim text-sm mt-1">Vulneran dereitos fundamentais. A súa aplicación nas aulas está terminantemente prohibida pola lei.</p>
+                            </div>
+                        </div>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="box-red-card p-5 rounded-xl">
+                                <h4 className="font-bold text-red-300 flex items-center gap-2 mb-2 text-sm md:text-base">
+                                    <span className="w-5 h-5 rounded-full bg-red-500/30 text-red-300 flex items-center justify-center text-xs font-bold border border-red-400">✕</span> Inferencia de Emocións na Aula
+                                </h4>
+                                <p className="text-dim text-xs leading-relaxed">
+                                    Prohíbese o uso de cámaras ou software de IA para medir a atención, o estado de ánimo ou as emocións do alumnado nas aulas (Art. 5.1.f do AI Act).
+                                </p>
+                            </div>
+                            <div className="box-red-card p-5 rounded-xl">
+                                <h4 className="font-bold text-red-300 flex items-center gap-2 mb-2 text-sm md:text-base">
+                                    <span className="w-5 h-5 rounded-full bg-red-500/30 text-red-300 flex items-center justify-center text-xs font-bold border border-red-400">✕</span> Avaliación 100% Automatizada
+                                </h4>
+                                <p className="text-dim text-xs leading-relaxed">
+                                    Ningunha nota, promoción ou decisión sobre o expediente pode ser tomada por un algoritmo sen revisión docente (Principio de <em>Reserva de Humanidade</em>, Lei 2/2025).
+                                </p>
+                            </div>
+                            <div className="box-red-card p-5 rounded-xl">
+                                <h4 className="font-bold text-red-300 flex items-center gap-2 mb-2 text-sm md:text-base">
+                                    <span className="w-5 h-5 rounded-full bg-red-500/30 text-red-300 flex items-center justify-center text-xs font-bold border border-red-400">✕</span> Introdución de Datos de Menores
+                                </h4>
+                                <p className="text-dim text-xs leading-relaxed">
+                                    Prohíbese subir nomes reais, DNI, datos de saúde ou informes NEAE a ferramentas comerciais de IA externas fóra da contorna corporativa (RGPD e LOPDGDD).
+                                </p>
+                            </div>
+                            <div className="box-red-card p-5 rounded-xl">
+                                <h4 className="font-bold text-red-300 flex items-center gap-2 mb-2 text-sm md:text-base">
+                                    <span className="w-5 h-5 rounded-full bg-red-500/30 text-red-300 flex items-center justify-center text-xs font-bold border border-red-400">✕</span> Canles de Comunicación Privadas
+                                </h4>
+                                <p className="text-dim text-xs leading-relaxed">
+                                    A Lei de Educación Dixital prohibe a comunicación oficial e titorías con alumnado/familias por WhatsApp, Telegram ou redes sociais; uso obrigatorio de canles @edu.xunta.gal.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ZONA AMARELA */}
+                    <div className="card-amber-container rounded-xl p-6 md:p-8 backdrop-blur-md">
+                        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-amber-500/30">
+                            <span className="p-3 rounded-full bg-amber-500/25 text-amber-400 border border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                                <Icons.ShieldAlert size={28} />
+                            </span>
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-amber-500/25 text-amber-300 border border-amber-500">Nivel 2</span>
+                                    <h3 className="text-2xl font-bold text-amber-400">Liñas Amarelas: Alto Risco (Supervisión Estrita)</h3>
+                                </div>
+                                <p className="text-dim text-sm mt-1">Clasificados como de Alto Risco no Anexo III do AI Act. Permitidos só con control humano, transparencia e auditoría.</p>
+                            </div>
+                        </div>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="box-amber-card p-5 rounded-xl">
+                                <h4 className="font-bold text-amber-300 flex items-center gap-2 mb-2 text-sm md:text-base">
+                                    <span className="w-5 h-5 rounded-full bg-amber-500/30 text-amber-300 flex items-center justify-center text-xs font-bold border border-amber-400">⚠</span> Corrección de Exames e Probas
+                                </h4>
+                                <p className="text-dim text-xs leading-relaxed">
+                                    A IA pode propoñer borradores de rúbricas ou correccións, pero o docente debe revisar persoalmente cada exame. O alumnado ten dereito a esixir unha revisión humana explicable.
+                                </p>
+                            </div>
+                            <div className="box-amber-card p-5 rounded-xl">
+                                <h4 className="font-bold text-amber-300 flex items-center gap-2 mb-2 text-sm md:text-base">
+                                    <span className="w-5 h-5 rounded-full bg-amber-500/30 text-amber-300 flex items-center justify-center text-xs font-bold border border-amber-400">⚠</span> "Detectores de Plaxio" por IA
+                                </h4>
+                                <p className="text-dim text-xs leading-relaxed">
+                                    Non teñen fiabilidade científica nin validez xurídica para sancionar. Nunca se debe suspender a un alumno baseándose na porcentaxe dun detector automático.
+                                </p>
+                            </div>
+                            <div className="box-amber-card p-5 rounded-xl">
+                                <h4 className="font-bold text-amber-300 flex items-center gap-2 mb-2 text-sm md:text-base">
+                                    <span className="w-5 h-5 rounded-full bg-amber-500/30 text-amber-300 flex items-center justify-center text-xs font-bold border border-amber-400">⚠</span> Orientación Académica e Itinerarios
+                                </h4>
+                                <p className="text-dim text-xs leading-relaxed">
+                                    Calquera recomendación algorítmica sobre materias optativas, ciclos ou itinerarios debe ser auditada para evitar sesgos de xénero ou prexuízos socioeconómicos.
+                                </p>
+                            </div>
+                            <div className="box-amber-card p-5 rounded-xl">
+                                <h4 className="font-bold text-amber-300 flex items-center gap-2 mb-2 text-sm md:text-base">
+                                    <span className="w-5 h-5 rounded-full bg-amber-500/30 text-amber-300 flex items-center justify-center text-xs font-bold border border-amber-400">⚠</span> Contas de Alumnos Maiores de 14 Anos
+                                </h4>
+                                <p className="text-dim text-xs leading-relaxed">
+                                    Aínda que poden consentir o uso de aplicacións (LOPDGDD Art. 7), un docente non pode facer obrigatorio o rexistro en servizos de pago ou que cedan datos fóra da UE.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ZONA VERDE - VISIBLEMENTE ESMERALDA E VERDE */}
+                    <div className="card-green-container rounded-xl p-6 md:p-8 backdrop-blur-md">
+                        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-emerald-500/40">
+                            <span className="p-3 rounded-full bg-emerald-500/25 text-emerald-300 border border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.5)]">
+                                <Icons.ShieldCheck size={28} />
+                            </span>
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <span className="badge-green px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest">Nivel 3</span>
+                                    <h3 className="text-2xl font-extrabold text-green-accent drop-shadow-[0_0_12px_rgba(16,185,129,0.4)]">Liñas Verdes: Boas Prácticas e Oportunidades</h3>
+                                </div>
+                                <p className="text-emerald-100/90 text-sm mt-1">Usos didácticos e pedagóxicos plenamente autorizados e promovidos para enriquecer a aprendizaxe.</p>
+                            </div>
+                        </div>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="box-green-card p-5 rounded-xl">
+                                <h4 className="font-bold text-green-accent flex items-center gap-2 mb-2 text-sm md:text-base">
+                                    <span className="w-5 h-5 rounded-full bg-emerald-500/30 text-emerald-300 flex items-center justify-center text-xs font-extrabold border border-emerald-400">✓</span> Cocreación de Materiais Didácticos
+                                </h4>
+                                <p className="text-emerald-100/90 text-xs md:text-sm leading-relaxed">
+                                    Deseño de situacións de aprendizaxe, actividades multinivel, proxectos interdisciplinares e fichas de traballo enriquecidas con supervisión e autoría docente.
+                                </p>
+                            </div>
+                            <div className="box-green-card p-5 rounded-xl">
+                                <h4 className="font-bold text-green-accent flex items-center gap-2 mb-2 text-sm md:text-base">
+                                    <span className="w-5 h-5 rounded-full bg-emerald-500/30 text-emerald-300 flex items-center justify-center text-xs font-extrabold border border-emerald-400">✓</span> Alfabetización Crítica do Alumnado
+                                </h4>
+                                <p className="text-emerald-100/90 text-xs md:text-sm leading-relaxed">
+                                    Ensinar aos estudantes como funcionan os modelos de IA, como identificar alucinacións, como verificar fontes contrastadas e como detectar contidos sintéticos e desinformación (*deepfakes*).
+                                </p>
+                            </div>
+                            <div className="box-green-card p-5 rounded-xl">
+                                <h4 className="font-bold text-green-accent flex items-center gap-2 mb-2 text-sm md:text-base">
+                                    <span className="w-5 h-5 rounded-full bg-emerald-500/30 text-emerald-300 flex items-center justify-center text-xs font-extrabold border border-emerald-400">✓</span> Adaptación Lingüística e Inclusiva
+                                </h4>
+                                <p className="text-emerald-100/90 text-xs md:text-sm leading-relaxed">
+                                    Adaptación de complexidade lectora para alumnado con necesidades de apoio educativo (NEAE), xeración de textos de calidade en lingua galega e recursos accesibles sen datos persoais.
+                                </p>
+                            </div>
+                            <div className="box-green-card p-5 rounded-xl">
+                                <h4 className="font-bold text-green-accent flex items-center gap-2 mb-2 text-sm md:text-base">
+                                    <span className="w-5 h-5 rounded-full bg-emerald-500/30 text-emerald-300 flex items-center justify-center text-xs font-extrabold border border-emerald-400">✓</span> Cultura da Transparencia e Proceso
+                                </h4>
+                                <p className="text-emerald-100/90 text-xs md:text-sm leading-relaxed">
+                                    Normalizar que o alumnado declare o uso da IA nos seus proxectos (achegando os prompts e a reflexión crítica posterior), desprazando a avaliación cara ao proceso, a defensa oral e o espírito crítico.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const SimulatorView = () => {
+            const [activeCase, setActiveCase] = useState(0);
+
+            const cases = [
+                {
+                    id: 0,
+                    tag: "Privacidade e NEAE",
+                    title: "Redactar un informe de adaptación cunha IA comercial",
+                    scenario: "Un docente quere gañar tempo e introduce en ChatGPT: 'O meu alumno Mateo Fernández ten TDAH e dificultades de cálculo en 2º ESO. Faimi unha proposta de adaptación curricular para a súa nai Ana'.",
+                    question: "É correcto este procedemento?",
+                    verdict: "INCORRECTO E GRAVEMENTE ILEGAL",
+                    verdictType: "bad",
+                    legalBasis: "Artigo 7 da LOPDGDD, RGPD e Art. 11 da Lei de Educación Dixital de Galicia",
+                    explanation: "Introducíronse datos persoais reais (nome do menor, nai, curso) e datos sensibles de saúde/diagnóstico (TDAH) nun servidor comercial internacional fóra da rede educativa da Xunta de Galicia.",
+                    recommendation: "Emprega datos completamente anonimizados ou perfís abstractos: 'Crea unha proposta de estratexias didácticas para un alumno xenérico de 2º ESO con dificultades de atención no cálculo algebraico'."
+                },
+                {
+                    id: 1,
+                    tag: "Avaliación e Sancións",
+                    title: "Suspender un traballo polo resultado dun 'Detector de IA'",
+                    scenario: "Unha alumna entrega unha redacción impecable. O profesor pásaa por un detector online gratuíto que marca '88% probabilidade de IA' e decide cualificar o traballo cun cero por plaxio.",
+                    question: "Pode o centro sancionar á alumna con esta proba?",
+                    verdict: "NULO DE PLENO DEREITO E DESACONSELLADO",
+                    verdictType: "bad",
+                    legalBasis: "Regulamento (UE) 2024/1689 (Anexo III - Alto Risco) e Principio de Presunción de Inocencia",
+                    explanation: "Os detectores de texto xerado por IA carecen de rigor científico e xeran abundantes falsos positivos, especialmente en textos formais ou redactados por alumnado brillante. Non teñen validez probatoria legal.",
+                    recommendation: "Pide á alumna que faga unha breve defensa oral de 3 minutos, explique a súa liña argumental, amose borradores previos ou faga unha proba presencial. Avalía a adquisición da competencia, non a estatística dun detector."
+                },
+                {
+                    id: 2,
+                    tag: "Identidade e Dispositivos",
+                    title: "Obrigar a rexistrarse nunha ferramenta con contas persoais",
+                    scenario: "Para un proxecto de creación gráfica en 4º ESO, o docente esixe que cada alumno cree unha conta en Midjourney ou Runway usando a súa conta persoal de Gmail.",
+                    question: "Pódese esixir este rexistro como obrigatorio?",
+                    verdict: "PROHIBIDO POLA NOVA NORMATIVA",
+                    verdictType: "bad",
+                    legalBasis: "Proxecto de Lei de Educación Dixital de Galicia (Identidade corporativa @edu.xunta.gal)",
+                    explanation: "A nova normativa galega prohibe obrigar ao alumnado a crear contas en plataformas comerciais privadas que impliquen cesión de datos sen convenio coa Consellería.",
+                    recommendation: "Utiliza ferramentas que non requiran rexistro persoal do alumno, servizos corporativos integrados no proxecto Edixgal/Agueiro ou fai demostracións colectivas desde o computador de aula."
+                },
+                {
+                    id: 3,
+                    tag: "Canles de Comunicación",
+                    title: "Crear un bot de IA en Telegram ou WhatsApp para dúbidas",
+                    scenario: "Un profesor de Tecnoloxía crea un grupo de WhatsApp cos alumnos e conecta un axente conversacional para resolver dúbidas das tarefas pola noite e fins de semana.",
+                    question: "Está permitida esta canle de comunicación?",
+                    verdict: "VULNERA A LEI DE EDUCACIÓN DIXITAL",
+                    verdictType: "bad",
+                    legalBasis: "Dereito á Desconexión Dixital e Canles Oficiais (Lei de Educación Dixital de Galicia)",
+                    explanation: "Prohíbese o uso de mensaxería comercial persoal para fins docentes. Ademais, vulnera o dereito á desconexión dixital de alumnado e profesorado fóra da xornada lectiva.",
+                    recommendation: "Canaliza as titorías e recursos a través da Aula Virtual oficial (Moodle/Webex/Falemos). As dúbidas resólvense en horario escolar axeitado, promovendo a hixiene dixital."
+                },
+                {
+                    id: 4,
+                    tag: "Elaboración de Exames",
+                    title: "Empregar a IA para xerar probas de avaliación",
+                    scenario: "O departamento usa un modelo de IA para xerar un banco de 50 preguntas tipo test sobre o temario da materia, revisando as preguntas antes de imprimilas.",
+                    question: "É legal e conforme á normativa este uso?",
+                    verdict: "TOTALMENTE PERMITIDO E EXEMPLAR",
+                    verdictType: "good",
+                    legalBasis: "Principio de Human-in-the-Loop (Lei 2/2025 de Galicia)",
+                    explanation: "A IA actúa como apoio auxiliar á creatividade docente, e a revisión e validación final é realizada polo profesorado humano, quen asume a autoría pedagóxica.",
+                    recommendation: "Asegúrate sempre de verificar que as preguntas non conteñan alucinacións nin formulacións ambiguas, adaptando o vocabulario ao nivel específico do teu grupo."
+                }
+            ];
+
+            const current = cases[activeCase];
+
+            return (
+                <div className="grid lg:grid-cols-3 gap-8 animate-slide-up">
+                    <div className="space-y-3">
+                        <span className="text-xs uppercase font-bold tracking-widest text-dim block mb-2">Selecciona un Dilema de Aula:</span>
+                        {cases.map((c, i) => (
+                            <button
+                                key={c.id}
+                                onClick={() => setActiveCase(i)}
+                                className={`w-full text-left p-4 rounded-xl border transition-all duration-200 flex flex-col gap-1 ${activeCase === i ? 'bg-white/10 border-gold shadow-[0_0_15px_rgba(212,175,55,0.2)]' : 'bg-card/50 border-white/5 hover:border-white/20 text-dim hover:text-white'}`}
+                            >
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-gold">{c.tag}</span>
+                                <h4 className="text-sm font-semibold text-cream line-clamp-1">{c.title}</h4>
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="lg:col-span-2 bg-card border border-white/10 rounded-xl p-6 md:p-8 flex flex-col justify-between shadow-2xl backdrop-blur-md">
+                        <div>
+                            <div className="flex items-center justify-between gap-4 mb-4 pb-4 border-b border-white/10">
+                                <span className="text-xs font-bold uppercase tracking-widest text-gold">{current.tag}</span>
+                                <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${current.verdictType === 'good' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
+                                    {current.verdict}
+                                </span>
+                            </div>
+                            <h3 className="text-2xl font-bold text-cream mb-4">{current.title}</h3>
+                            
+                            <div className="p-4 bg-white/5 rounded-lg border-l-4 border-orange mb-6">
+                                <span className="text-xs uppercase font-bold tracking-wider text-orange block mb-1">Situación Real na Aula:</span>
+                                <p className="text-sm md:text-base text-cream italic leading-relaxed">"{current.scenario}"</p>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <h4 className="text-xs font-bold uppercase tracking-widest text-dim mb-1">Base Xurídica e Legal:</h4>
+                                    <p className="text-sm text-gold font-medium">{current.legalBasis}</p>
+                                </div>
+                                <div>
+                                    <h4 className="text-xs font-bold uppercase tracking-widest text-dim mb-1">Análise do Risco:</h4>
+                                    <p className="text-sm text-cream leading-relaxed">{current.explanation}</p>
+                                </div>
+                                <div className="p-4 bg-green-950/30 border border-green-500/30 rounded-lg">
+                                    <h4 className="text-xs font-bold uppercase tracking-widest text-green-400 mb-1 flex items-center gap-1">
+                                        <Icons.ShieldCheck size={16} /> Como actuar correctamente (Boas Prácticas):
+                                    </h4>
+                                    <p className="text-xs md:text-sm text-green-200 leading-relaxed">{current.recommendation}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-6 pt-4 border-t border-white/10 flex justify-between items-center text-xs text-dim">
+                            <span>Caso {activeCase + 1} de {cases.length}</span>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => setActiveCase((prev) => (prev > 0 ? prev - 1 : cases.length - 1))}
+                                    className="px-3 py-1 rounded bg-white/5 hover:bg-white/10 text-white"
+                                >
+                                    Anterior
+                                </button>
+                                <button
+                                    onClick={() => setActiveCase((prev) => (prev < cases.length - 1 ? prev + 1 : 0))}
+                                    className="px-3 py-1 rounded bg-white/10 hover:bg-gold hover:text-dark font-bold text-white transition-colors"
+                                >
+                                    Seguinte
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const NormativaView = () => {
+            const [selectedDoc, setSelectedDoc] = useState(null);
+
+            const documents = [
+                {
+                    id: 1,
+                    title: "Regulamento (UE) 2024/1689 (AI Act)",
+                    subtitle: "Marco Europeo de Intelixencia Artificial",
+                    scope: "Unión Europea (DOUE)",
+                    date: "Xullo 2024 / Vigor progresivo 2025-2026",
+                    keyPoints: [
+                        "Clasifica a IA en educación como SISTEMA DE ALTO RISCO (Anexo III).",
+                        "Prohibición expresa de inferir emocións nas aulas (Artigo 5.1.f).",
+                        "Supervisión humana cualificada e explicable obrigatoria (Human-in-the-loop).",
+                        "Etiquetado e transparencia de contidos xerados artificialmente (Artigo 50)."
+                    ],
+                    filePath: "./Normativa/01_Regulamento_UE_2024_1689_AI_Act_Educacion.md",
+                    externalUrl: "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+                },
+                {
+                    id: 2,
+                    title: "Lei 2/2025 de Galicia (Intelixencia Artificial)",
+                    subtitle: "Desenvolvemento e Impulso Ético da IA en Galicia",
+                    scope: "Comunidade Autónoma de Galicia (DOG nº 66)",
+                    date: "Publicada o 4 de abril de 2025",
+                    keyPoints: [
+                        "Principio de Reserva de Humanidade: prohibición de decisións automatizadas sobre persoas.",
+                        "Dereito a saber que se interactúa cunha IA e dereito a impugnar con revisión humana.",
+                        "Garantías de imparcialidade e mitigación activa de sesgos.",
+                        "Creación do Consello Galego de Intelixencia Artificial."
+                    ],
+                    filePath: "./Normativa/02_Lei_2_2025_Galicia_Intelixencia_Artificial_DOG.md",
+                    externalUrl: "https://www.xunta.gal/dog/Publicados/2025/20250404/AnuncioG0595-020425-0001_gl.html"
+                },
+                {
+                    id: 3,
+                    title: "Proxecto de Lei de Educación Dixital de Galicia",
+                    subtitle: "Regulación Integral da Dixitalización e IA nas Aulas",
+                    scope: "Parlamento de Galicia / Sistema Educativo Galego",
+                    date: "Tramitación parlamentaria (Setembro 2026)",
+                    keyPoints: [
+                        "A IA é ferramenta de apoio: prohibición de que substitúa o labor docente ou avalíe soa.",
+                        "Identidade corporativa oficial obrigatoria (@edu.xunta.gal a partir de 5º EP).",
+                        "Prohibición de comunicacións oficiais en canles privadas informais (WhatsApp/redes).",
+                        "Dereito á desconexión dixital de alumnado e profesorado e regulación do móbil."
+                    ],
+                    filePath: "./Normativa/03_Proxecto_Lei_Educacion_Dixital_Galicia_2026.md",
+                    externalUrl: "https://www.parlamentodegalicia.es"
+                },
+                {
+                    id: 4,
+                    title: "Guía Práctica e Decálogo Docente de Seguridade",
+                    subtitle: "Protección de Datos de Menores e Boas Prácticas na Aula",
+                    scope: "Aplicación directa en Educación Secundaria",
+                    date: "Baseada no RGPD (UE 2016/679) e LOPDGDD 3/2018",
+                    keyPoints: [
+                        "Regra dos 14 anos: capacidade de consentimento e prohibición de forzar rexistros privados.",
+                        "Bandeexa Vermella: listaxe de datos prohibidos (nomes, fotos, diagnósticos NEAE).",
+                        "Rexeitamento dos detectores automáticos de plaxio por falta de fiabilidade.",
+                        "Transparencia docente e pedagóxica: avaliar procesos e defensa oral."
+                    ],
+                    filePath: "./Normativa/04_Guia_Prac_Proteccion_Datos_Menores_Aulas.md",
+                    externalUrl: "https://www.aepd.es/es/guias-y-herramientas/guias/guia-centros-educativos"
+                }
+            ];
+
+            return (
+                <div className="space-y-8 animate-slide-up">
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {documents.map((doc) => (
+                            <div key={doc.id} className="bg-card border border-white/10 rounded-xl p-6 md:p-8 flex flex-col justify-between hover:border-gold/50 transition-all duration-300 shadow-xl">
+                                <div>
+                                    <div className="flex items-center justify-between text-xs text-dim mb-3">
+                                        <span className="font-semibold text-gold uppercase tracking-wider">{doc.scope}</span>
+                                        <span>{doc.date}</span>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-cream mb-2">{doc.title}</h3>
+                                    <p className="text-dim text-sm italic mb-4">{doc.subtitle}</p>
+                                    
+                                    <ul className="space-y-2 mb-6">
+                                        {doc.keyPoints.map((kp, idx) => (
+                                            <li key={idx} className="text-xs md:text-sm text-dim flex items-start gap-2">
+                                                <span className="text-gold mt-0.5">•</span>
+                                                <span>{kp}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <div className="pt-4 border-t border-white/10 flex flex-wrap gap-3 items-center justify-between">
+                                    <a
+                                        href={doc.filePath}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-gold hover:text-dark font-bold text-xs text-cream transition-colors"
+                                    >
+                                        <Icons.FileText size={16} />
+                                        <span>Descargar Texto Íntegro</span>
+                                    </a>
+                                    <a
+                                        href={doc.externalUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1 text-xs text-dim hover:text-white transition-colors"
+                                    >
+                                        <span>Boletín Oficial</span>
+                                        <Icons.ExternalLink size={14} />
+                                    </a>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="p-6 bg-card/40 border border-white/10 rounded-xl text-center">
+                        <h4 className="text-lg font-bold text-gold mb-2">Compromiso Ético e Legal do Centro</h4>
+                        <p className="text-sm text-dim max-w-3xl mx-auto leading-relaxed">
+                            A normativa non pretende frear a innovación, senón ofrecer un chan seguro: protexer a intimidade dos menores, dotar de respaldo xurídico ás decisións docentes e garantir que a intelixencia artificial sexa sempre un motor pedagóxico ao servizo da persoa.
+                        </p>
+                    </div>
+                </div>
+            );
+        };
+
+        const TeacherGuideApp = () => {
+            const [activeTab, setActiveTab] = useState('semaforo');
+
+            return (
+                <div className="min-h-screen pb-24 px-6 md:px-12">
+                    <header className="py-12 text-center animate-fade-in">
+                        <div className="max-w-4xl mx-auto">
+                            <h4 className="text-emerald-400 tracking-[0.3em] uppercase font-bold text-xs mb-3 border-b border-emerald-500/30 inline-block pb-1">
+                                Módulo 4: Marco Ético e Legal
+                            </h4>
+                            <h1 className="text-4xl md:text-6xl font-extrabold mb-4 text-cream">
+                                Aula, Lei e <span className="text-emerald-400 font-black drop-shadow-[0_0_20px_rgba(52,211,153,0.7)]">Ética</span>
+                            </h1>
+                            <p className="text-base md:text-lg text-dim font-light leading-relaxed max-w-3xl mx-auto">
+                                A tríade normativa nas aulas de Galicia: <strong>AI Act Europeo (2024/1689)</strong>, <strong>Lei 2/2025 de Galicia (IA)</strong> e o novo <strong>Proxecto de Lei de Educación Dixital de Galicia (2026)</strong>.
+                            </p>
+                        </div>
+                    </header>
+
+                    <div className="max-w-5xl mx-auto mb-10 flex justify-center">
+                        <div className="p-1.5 bg-black/40 border border-white/10 rounded-full flex flex-wrap gap-2 backdrop-blur-md">
+                            <button
+                                onClick={() => setActiveTab('semaforo')}
+                                className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-xs md:text-sm font-bold transition-all duration-300 ${activeTab === 'semaforo' ? 'bg-gradient-to-r from-emerald-600 to-green-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)]' : 'text-dim hover:text-white'}`}
+                            >
+                                <Icons.TrafficLight size={18} />
+                                <span>O Semáforo da Aula</span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('simulador')}
+                                className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-xs md:text-sm font-bold transition-all duration-300 ${activeTab === 'simulador' ? 'bg-gradient-to-r from-gold to-orange text-dark shadow-[0_0_20px_rgba(212,175,55,0.4)]' : 'text-dim hover:text-white'}`}
+                            >
+                                <Icons.Scale size={18} />
+                                <span>Simulador de Dilemas</span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('normativa')}
+                                className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-xs md:text-sm font-bold transition-all duration-300 ${activeTab === 'normativa' ? 'bg-gradient-to-r from-purple to-cyan text-white shadow-[0_0_20px_rgba(139,92,246,0.4)]' : 'text-dim hover:text-white'}`}
+                            >
+                                <Icons.BookOpen size={18} />
+                                <span>Normativa e Descargas</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <main className="max-w-6xl mx-auto">
+                        {activeTab === 'semaforo' && <SemaforoView />}
+                        {activeTab === 'simulador' && <SimulatorView />}
+                        {activeTab === 'normativa' && <NormativaView />}
+                    </main>
+
+                    <footer className="mt-16 text-center border-t border-white/10 pt-8 max-w-4xl mx-auto">
+                        <p className="text-dim text-xs italic">
+                            * Esta guía recolle a normativa vixente e proxectos de lei a setembro de 2026. Ante calquera dúbida xurídica sobre datos de menores ou incidencias no centro, acude sempre á Dirección do centro ou á Asesoría Xurídica da Consellería de Educación.
+                        </p>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<TeacherGuideApp />);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,310 @@
+/* =========================================
+   PALETA DE COLORES (Dark 70s Retro-Tech)
+   ========================================= */
+:root {
+    --bg-dark: #121212;         /* Negro carbón suave */
+    --card-bg: #1E1E1E;         /* Gris oscuro para tarjetas */
+    --text-main: #EAE0C8;       /* Crema / Hueso (muy legible en oscuro) */
+    --text-dim: #A8A090;        /* Beige apagado para textos secundarios */
+    
+    /* Acentos Cálidos */
+    --accent-gold: #D4AF37;     /* Oro viejo */
+    --accent-orange: #D35400;   /* Naranja quemado */
+    --accent-retro: #C0392B;    /* Rojo ladrillo */
+    
+    --border-color: #333333;
+    --glow-gold: 0 0 15px rgba(212, 175, 55, 0.15);
+}
+
+/* =========================================
+   ESTILOS GENERALES
+   ========================================= */
+body, .reveal {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+/* Títulos */
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+    font-family: 'Open Sans', sans-serif !important;
+    color: var(--text-main);
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Sombra suave para profundidad */
+}
+
+/* Textos */
+.reveal p, .reveal li, .reveal a {
+    color: var(--text-main);
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.reveal strong {
+    color: var(--accent-gold); /* Negritas en dorado */
+    font-weight: 600;
+}
+
+/* =========================================
+   COMPONENTES DE REVEAL.JS
+   ========================================= */
+.reveal .slides section {
+    text-align: left;
+    padding: 20px 40px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.slide-center-content {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+/* =========================================
+   GRID DE MENÚ (PORTADA)
+   ========================================= */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+    width: 100%;
+    max-width: 900px;
+}
+
+.menu-card {
+    display: block;
+    text-decoration: none;
+    padding: 30px 20px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px; /* Bordes menos redondeados, más técnicos */
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-gold);
+    box-shadow: var(--glow-gold);
+}
+
+.menu-card h3 {
+    font-size: 1.4em !important;
+    margin-bottom: 10px;
+    color: var(--text-main) !important;
+}
+
+.menu-card p {
+    font-size: 0.9em;
+    color: var(--text-dim) !important;
+}
+
+/* Bordes superiores de colores retro */
+.card-1 { border-top: 3px solid var(--accent-gold); }
+.card-2 { border-top: 3px solid var(--accent-orange); }
+.card-3 { border-top: 3px solid var(--accent-retro); }
+
+/* =========================================
+   CONTENEDORES Y CAJAS
+   ========================================= */
+.content-wrapper {
+    max-width: 1600px; 
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Cajas de contenido (Intro y Actualidad) */
+.info-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.info-box h3, .info-box h4 {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+/* Listas estilizadas */
+.custom-list li {
+    margin-bottom: 30px;
+    padding-left: 20px;
+    border-left: 2px solid var(--accent-orange); /* Línea fina naranja */
+}
+
+/* Iframe */
+.iframe-container {
+    width: 100%;
+    flex-grow: 1;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5); /* Sombra interna para profundidad */
+}
+/* =========================================
+   NUEVA SIDEBAR GLOBAL (Navegación)
+   ========================================= */
+.global-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 60px; /* Estrecha para no molestar */
+    background: rgba(18, 18, 18, 0.95); /* Semi-transparente */
+    border-right: 1px solid var(--border-color);
+    z-index: 1000; /* Por encima de todo, incluso iframes */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    backdrop-filter: blur(5px);
+    transition: width 0.3s ease;
+}
+
+.global-sidebar:hover {
+    width: 200px; /* Se expande al pasar el ratón */
+}
+
+.nav-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: all 0.2s;
+    overflow: hidden;
+    white-space: nowrap;
+    border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-main);
+}
+
+/* Iconos centrados en la barra contraída */
+.nav-icon {
+    min-width: 60px; 
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.nav-label {
+    opacity: 0;
+    transition: opacity 0.2s;
+    margin-left: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.global-sidebar:hover .nav-label {
+    opacity: 1;
+}
+
+/* Colores específicos por sección al hacer hover */
+.nav-home:hover { border-left-color: var(--text-main); }
+.nav-intro:hover { border-left-color: var(--accent-retro); }
+.nav-time:hover  { border-left-color: var(--accent-gold); }
+.nav-success:hover { border-left-color: var(--accent-orange); }
+.nav-teach:hover { border-left-color: #8B5CF6; } /* Purple */
+
+/* =========================================
+   PORTADA: DASHBOARD GRID
+   ========================================= */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* Asimetría: Texto | Tarjetas */
+    gap: 40px;
+    height: 100%;
+    align-items: center;
+    padding-left: 60px; /* Compensar la sidebar */
+}
+
+.dashboard-text h1 {
+    font-size: 3.5em !important;
+    line-height: 0.9 !important;
+    margin-bottom: 20px !important;
+    text-align: left !important;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+}
+
+.dashboard-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px;
+    text-align: left;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 180px;
+}
+
+.dashboard-card h3 {
+    font-size: 1.2em !important;
+    margin: 0 !important;
+    z-index: 2;
+}
+
+.dashboard-card .card-icon {
+    font-size: 3em;
+    position: absolute;
+    bottom: -10px;
+    right: 10px;
+    opacity: 0.1;
+    transition: all 0.3s;
+    z-index: 1;
+}
+
+.dashboard-card p {
+    font-size: 0.8em !important;
+    color: var(--text-dim);
+    margin: 5px 0 0 0 !important;
+    z-index: 2;
+}
+
+/* EFECTOS HOVER LLAMATIVOS */
+.dashboard-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+.dashboard-card:hover .card-icon {
+    opacity: 0.3;
+    transform: rotate(-10deg) scale(1.2);
+}
+
+/* Colores de borde y brillo por tarjeta */
+.card-intro:hover { border-color: var(--accent-retro); box-shadow: 0 0 20px rgba(192, 57, 43, 0.2); }
+.card-time:hover { border-color: var(--accent-gold); box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+.card-success:hover { border-color: var(--accent-orange); box-shadow: 0 0 20px rgba(211, 84, 0, 0.2); }
+.card-teach:hover { border-color: #8B5CF6; box-shadow: 0 0 20px rgba(139, 92, 246, 0.2); }
+/* Colores Hover para Talleres */
+.nav-llm:hover { border-left-color: #10B981; color: #10B981; }   /* Verde Matrix */
+.nav-img:hover { border-left-color: #EC4899; color: #EC4899; }   /* Rosa Arte */
+.nav-video:hover { border-left-color: #F59E0B; color: #F59E0B; } /* Naranja Cine */
+.nav-music:hover { border-left-color: #3B82F6; color: #3B82F6; } /* Azul Nota */

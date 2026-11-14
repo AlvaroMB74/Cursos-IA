@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="gl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obradoiro Práctico: Música</title>
+    <link rel="stylesheet" href="../css/estilos_ia.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { dark: 'var(--bg-dark)', card: 'var(--card-bg)', cream: 'var(--text-main)', dim: 'var(--text-dim)', gold: 'var(--accent-gold)', orange: 'var(--accent-orange)', retro: 'var(--accent-retro)', cyan: '#06B6D4', purple: '#8B5CF6', green: '#10B981', pink: '#EC4899', amber: '#F59E0B', blue: '#3B82F6' }, fontFamily: { sans: ['Open Sans', 'sans-serif'] }, animation: { 'fade-in': 'fadeIn 0.6s ease-out forwards' }, keyframes: { fadeIn: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } } } } }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.js"></script>
+    <style> body { background-color: var(--bg-dark); color: var(--text-main); } .bg-glow { background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.08) 0%, rgba(18, 18, 18, 0) 70%); } .reveal { height: 100vh; } .reveal .slides > section { padding: 0; } .perspective-1000 { perspective: 1000px; } .transform-style-3d { transform-style: preserve-3d; } .backface-hidden { -webkit-backface-visibility: hidden; backface-visibility: hidden; } .rotate-y-180 { transform: rotateY(180deg); } .custom-scroll::-webkit-scrollbar { width: 4px; } .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); } .custom-scroll::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 3px; } </style>
+</head>
+<body class="bg-dark text-cream font-sans overflow-hidden bg-glow">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const Icon = ({ children, className, size = 20 }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>);
+        const Icons = { Music: (p) => <Icon {...p}><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></Icon>, Headphones: (p) => <Icon {...p}><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></Icon>, Mic: (p) => <Icon {...p}><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/><line x1="8" x2="16" y1="22" y2="22"/></Icon>, Radio: (p) => <Icon {...p}><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></Icon>, Copy: (p) => <Icon {...p}><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></Icon>, Check: (p) => <Icon {...p}><polyline points="20 6 9 17 4 12"/></Icon>, ChevronLeft: (p) => <Icon {...p}><path d="m15 18-6-6 6-6"/></Icon>, ChevronRight: (p) => <Icon {...p}><path d="m9 18 6-6-6-6"/></Icon>, Unlock: (p) => <Icon {...p}><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></Icon>, Lock: (p) => <Icon {...p}><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></Icon>, ExternalLink: (p) => <Icon {...p}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></Icon> };
+
+        const ModelFlipCard = ({ model }) => {
+            const [isFlipped, setIsFlipped] = useState(false);
+            return (
+                <div className="relative w-full h-[170px] perspective-1000 group cursor-pointer animate-fade-in" onMouseEnter={() => setIsFlipped(true)} onMouseLeave={() => setIsFlipped(false)} onClick={() => setIsFlipped(!isFlipped)}>
+                    <div className={`relative w-full h-full duration-500 transform-style-3d transition-transform ${isFlipped ? 'rotate-y-180' : ''}`}>
+                        <div className={`absolute w-full h-full backface-hidden rounded-xl p-5 flex flex-col justify-between border-2 bg-card/90 backdrop-blur-sm shadow-lg transition-all duration-300 ${model.color} hover:scale-105 hover:shadow-2xl`}>
+                            <div className="flex justify-between items-start"><h4 className="font-extrabold text-lg tracking-tight">{model.name}</h4><div className="flex gap-2"><a href={model.url} target="_blank" rel="noopener noreferrer" className="text-dim hover:text-white transition-colors z-20" onClick={(e) => e.stopPropagation()} title="Abrir Web"><Icons.ExternalLink size={16} /></a>{model.open ? <Icons.Unlock size={14} className="opacity-80" /> : <Icons.Lock size={14} className="opacity-50" />}</div></div>
+                            <div className="text-xs"><span className="block font-bold uppercase tracking-wider mb-1 opacity-90">{model.cost}</span><span className="opacity-60 italic">{model.company}</span></div>
+                            <div className="mt-2 text-right"><span className="text-[9px] uppercase tracking-widest border border-current px-2 py-1 rounded-full opacity-60">Info +</span></div>
+                        </div>
+                        <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-black/95 border border-white/10 rounded-xl p-5 flex flex-col justify-center text-xs shadow-2xl">
+                            <div className="mb-3"><span className="text-green-400 font-bold block mb-1 uppercase tracking-wider text-[10px]">👍 Fortalezas:</span><p className="text-gray-300 leading-snug">{model.pros}</p></div>
+                            <div><span className="text-retro font-bold block mb-1 uppercase tracking-wider text-[10px]">👎 Debilidades:</span><p className="text-gray-400 leading-snug">{model.cons}</p></div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const MissionCard = ({ title, difficulty, icon: IconComp, tasks, colorClass }) => {
+            const [currentTask, setCurrentTask] = useState(0);
+            const [copied, setCopied] = useState(false);
+            const task = tasks[currentTask];
+            const nextTask = () => setCurrentTask((prev) => (prev + 1) % tasks.length);
+            const prevTask = () => setCurrentTask((prev) => (prev - 1 + tasks.length) % tasks.length);
+            const handleCopy = () => { navigator.clipboard.writeText(task.prompt); setCopied(true); setTimeout(() => setCopied(false), 2000); };
+
+            return (
+                <div className={`bg-card border-t-4 ${colorClass} rounded-lg p-6 flex flex-col h-full shadow-2xl group relative transition-all hover:-translate-y-1 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]`}>
+                    <div className="flex justify-between items-start mb-4 border-b border-white/5 pb-3">
+                        <div className="flex items-center gap-3"><div className="p-2 bg-white/5 rounded-md text-white/80"><IconComp size={24} /></div><div><h3 className="font-bold text-cream text-lg">{title}</h3><span className="text-[10px] uppercase text-dim tracking-widest">{difficulty}</span></div></div>
+                        <div className="text-xs font-mono text-dim bg-white/5 px-3 py-1 rounded whitespace-nowrap min-w-[60px] text-center">{currentTask + 1} / {tasks.length}</div>
+                    </div>
+                    <div className="mb-4 min-h-[40px]"><h4 className="text-white font-bold text-sm mb-1">{task.name}</h4><p className="text-xs text-dim italic">{task.context}</p></div>
+                    <div className="bg-black/40 rounded border border-white/10 p-4 relative flex-grow group-hover:border-white/20 transition-colors mb-4 flex flex-col">
+                        <div className="absolute top-2 right-2 z-10"><button onClick={handleCopy} className="text-dim hover:text-gold transition-colors p-1" title="Copiar Prompt">{copied ? <Icons.Check size={16} className="text-green-500" /> : <Icons.Copy size={16} />}</button></div>
+                        <p className="text-[11px] text-blue-100/80 font-mono leading-relaxed whitespace-pre-line custom-scroll overflow-y-auto h-full pr-2">{task.prompt}</p>
+                    </div>
+                    <div className="flex justify-between items-center mt-auto pt-2 border-t border-white/5">
+                        <button onClick={prevTask} className="text-dim hover:text-white p-2 hover:bg-white/5 rounded"><Icons.ChevronLeft /></button><span className="text-[9px] uppercase text-dim tracking-widest opacity-50">Navegar Tarefas</span><button onClick={nextTask} className="text-dim hover:text-white p-2 hover:bg-white/5 rounded"><Icons.ChevronRight /></button>
+                    </div>
+                </div>
+            );
+        };
+
+        const WorkshopApp = () => {
+            const models = [
+                { name: "Suno AI", url: "https://suno.com/", company: "Suno", open: false, cost: "Freemium", color: "border-blue-500/50 text-blue-300 shadow-[0_0_15px_rgba(59,130,246,0.15)]", pros: "O ChatGPT da música. Crea cancións completas con letra e voz incribles.", cons: "Plan gratuíto dá créditos diarios limitados. Copyright estrito." },
+                { name: "Udio", url: "https://www.udio.com/", company: "Udio", open: false, cost: "Freemium", color: "border-purple/50 text-purple shadow-[0_0_15px_rgba(168,85,247,0.15)]", pros: "Calidade de audio Hi-Fi superior. Control avanzado de seccións (intro, coro).", cons: "Xeracións máis lentas ca Suno." },
+                { name: "AIVA", url: "https://www.aiva.ai/", company: "AIVA", open: false, cost: "Freemium", color: "border-pink-500/50 text-pink-400 shadow-[0_0_15px_rgba(236,72,153,0.15)]", pros: "Especializado en música clásica e bandas sonoras cinemáticas.", cons: "Interface máis complexa (tipo editor MIDI)." },
+                { name: "ElevenLabs SFX", url: "https://elevenlabs.io/sound-effects", company: "ElevenLabs", open: false, cost: "Freemium", color: "border-orange/50 text-orange shadow-[0_0_15px_rgba(234,179,8,0.15)]", pros: "Xerador de efectos de son (pasos, explosións, choiva) a partir de texto.", cons: "Duración curta por defecto." },
+                { name: "Beatoven.ai", url: "https://www.beatoven.ai/", company: "Beatoven", open: false, cost: "Freemium", color: "border-green-500/50 text-green-400 shadow-[0_0_15px_rgba(34,197,94,0.15)]", pros: "Música de fondo libre de dereitos para vídeos. Personalizable por 'mood'.", cons: "Non xera voces nin letras." },
+                { name: "MusicFX", url: "https://aitestkitchen.withgoogle.com/tools/music-fx", company: "Google", open: false, cost: "Gratis (Labs)", color: "border-blue-300/50 text-blue-200 shadow-[0_0_15px_rgba(147,197,253,0.15)]", pros: "Ferramenta experimental de Google. Bucle infinito tipo DJ.", cons: "Marcas de auga dixitais. Calidade variable." },
+                { name: "Stable Audio", url: "https://stableaudio.com/", company: "Stability AI", open: false, cost: "Freemium", color: "border-cyan/50 text-cyan shadow-[0_0_15px_rgba(6,182,212,0.15)]", pros: "Permite definir a duración exacta. Bo para loops instrumentais.", cons: "Modelo 2.0 require créditos." },
+                { name: "CassetteAI", url: "https://cassetteai.com/", company: "Cassette", open: false, cost: "Freemium", color: "border-retro/50 text-retro shadow-[0_0_15px_rgba(244,63,94,0.15)]", pros: "Interface simple para 'beatmakers'. Xeración baseada en xéneros.", cons: "Menos versátil para lírica." },
+            ];
+
+            const missionData = {
+                burocracia: [
+                    { name: "Música de Fondo", context: "Crear unha base instrumental suave para o vídeo institucional do colexio.", prompt: `(Para usar en AIVA / Beatoven)
+Estilo: Corporativo, inspirador, suave.
+Instrumentos: Piano acústico, cordas suaves, sintetizador ambiental.
+Tempo: Medio (90 BPM).
+Emoción: Esperanza, futuro, educación.
+Duración: 2 minutos. Sen voz.` },
+                    { name: "Sinal de Megafonía", context: "Xerar unha sintonía curta para os cambios de clase ou avisos.", prompt: `(Para usar en Suno / Stable Audio)
+Estilo: Jingle curto, alegre, xilófono e campás.
+Duración: 10 segundos.
+Descrición: Un son brillante e positivo que chame a atención sen asustar. Estilo anuncio de televisión matinal.` },
+                    { name: "Modo Concentración", context: "Playlist Lo-Fi para poñer en clase mentres traballan en silencio.", prompt: `(Para usar en Udio / Suno)
+Estilo: Lo-fi Hip Hop, Study Beats.
+Instrumentos: Batería suave, piano eléctrico Rhodes, son de choiva de fondo.
+Sen letra.
+Atmosfera: Relaxada, nostálxica, cálida.
+Estrutura: Loop infinito.` }
+                ],
+                pedagogia: [
+                    { name: "Rap Mnemotécnico", context: "Canción pegadiza para que os alumnos memoricen o Ciclo da Auga.", prompt: `(Para usar en Suno - Modo Custom)
+Estilo: Rap dos 90, ritmo marcado, estilo 'Fresh Prince'.
+Letra (Exemplo):
+"O sol quenta o mar, comeza a evaporar,
+sobe como vapor, que calor, que calor!
+Fórmanse as nubes, condensación total,
+e cando pesan moito... precipitación fatal!"` },
+                    { name: "Paisaxe Sonora Historia", context: "Son ambiente para mergullar á clase nun Mercado Medieval.", prompt: `(Para usar en ElevenLabs SFX / Stable Audio)
+Son ambiente dun mercado medieval no ano 1200.
+Elementos: Ruído de multitude afastada, galiñas cacarexando, martelo de ferreiro golpeando metal, carretas de madeira rodando sobre pedras, vento suave.
+Sen música, só efectos de son realistas.` },
+                    { name: "Atmosfera Relaxante (NEE)", context: "Son para volta á calma tras o recreo (Apoio NEE).", prompt: `(Para usar en AIVA / MusicFX)
+Estilo: Ambient, Meditación, Spa.
+Frecuencias: 432Hz (relaxante).
+Instrumentos: Concas tibetanas, frauta nativa moi suave, son de auga fluíndo.
+Tempo: Moi lento. Sen percusión.
+Obxectivo: Calma profunda e respiración.` }
+                ],
+                personal: [
+                    { name: "Himno Aniversario", context: "Canción personalizada estilo Disney para o aniversario do teu fillo/a.", prompt: `(Para usar en Suno)
+Estilo: Banda sonora de película Disney, orquestral, máxico, voz feminina potente.
+Letra: "Hoxe é o día de Lucas, seis anos xa cumpriu,
+cos seus legos e os seus contos, un mundo construíu..."
+Coro épico final.` },
+                    { name: "BSO Partida Rol", context: "Música de tensión para unha partida de xogos de mesa ou rol.", prompt: `(Para usar en Udio / AIVA)
+Estilo: Dark Fantasy, Orquestral Épica.
+Situación: Batalla contra un dragón final.
+Instrumentos: Tambores de guerra (Taiko), coros en latín agresivos, violíns rápidos (staccato), metais fortes.
+Tempo: Rápido e urxente.` },
+                    { name: "Adestramento Rock", context: "Canción motivadora para saír a correr.", prompt: `(Para usar en Suno)
+Estilo: High Energy Punk Rock, estilo California 2000s.
+Tempo: 160 BPM (rápido).
+Temática: Superación, non renderse, correr ata a meta.
+Instrumentos: Guitarras distorsionadas, batería rápida.` }
+                ]
+            };
+
+            useEffect(() => { if (window.Reveal) { window.Reveal.initialize({ controls: true, progress: true, center: true, hash: false, transition: 'slide' }); } }, []);
+
+            return (
+                <div className="reveal"><div className="slides">
+                    <section data-background-color="var(--bg-dark)">
+                        <div className="h-full flex flex-col justify-center px-8 max-w-7xl mx-auto">
+                            <header className="text-center mb-8"><h2 className="text-4xl font-bold text-cream mb-2">A Orquestra <span className="text-blue-500">Algorítmica</span></h2><p className="text-dim text-sm">Compoñer sen saber solfexo. Instrumentais, voces e efectos.</p></header>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">{models.map((m, i) => (<ModelFlipCard key={i} model={m} />))}</div>
+                            <div className="mt-8 text-center text-dim opacity-50 text-xs"><p className="mb-2 italic">* Nota: Verifica sempre a licenza da ferramenta antes de publicar a música (Copyright).</p><div className="animate-bounce">Desliza para Estudo de Son ➜</div></div>
+                        </div>
+                    </section>
+                    <section data-background-color="var(--bg-dark)">
+                        <div className="h-full flex flex-col justify-center px-8 max-w-7xl mx-auto">
+                            <header className="flex justify-between items-end mb-6 border-b border-white/10 pb-4">
+                                <div><h2 className="text-3xl font-bold text-cream">Estudo de Son</h2><p className="text-blue-500 text-xs font-bold uppercase tracking-widest">Ritmo, letra e ambiente. Copia e proba.</p></div>
+                            </header>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[65vh]">
+                                <MissionCard title="Burocracia Zen" difficulty="Nivel: Ambiente" icon={Icons.Headphones} colorClass="border-retro" tasks={missionData.burocracia} />
+                                <MissionCard title="Pedagoxía Sonora" difficulty="Nivel: Aula" icon={Icons.Music} colorClass="border-gold" tasks={missionData.pedagogia} />
+                                <MissionCard title="Radio Persoal" difficulty="Nivel: Diversión" icon={Icons.Radio} colorClass="border-cyan" tasks={missionData.personal} />
+                            </div>
+                        </div>
+                    </section>
+                </div></div>
+            );
+        };
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<WorkshopApp />);
+    </script>
+</body>
+</html>

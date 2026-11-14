@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="gl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 1: O Salto Axéntico e as Ferramentas (Edición 2026–2027)</title>
+    <link rel="stylesheet" href="../../CSS/estilos_ia.css">
+    <link rel="stylesheet" href="../../CSS/axentica.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0f172a',
+                        card: '#1e293b',
+                        'card-elevated': '#334155',
+                        cream: '#f8fafc',
+                        dim: '#94a3b8',
+                        orange: '#f97316',
+                        gold: '#f59e0b',
+                        cyan: '#06b6d4',
+                        emerald: '#10b981',
+                        purple: '#8b5cf6',
+                        rose: '#f43f5e'
+                    },
+                    fontFamily: {
+                        sans: ['Open Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body class="custom-scroll selection:bg-orange-500 selection:text-white">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const Modulo1App = () => {
+            const [activeTab, setActiveTab] = useState('salto');
+            const [selectedToolCategory, setSelectedToolCategory] = useState('escritorio');
+            const [selectedTool, setSelectedTool] = useState(null);
+            const [testSelectedCase, setTestSelectedCase] = useState(0);
+
+            // Banco de casos para o Test das 6 preguntas
+            const casosTest = [
+                {
+                    tipo: "cuasi-chat",
+                    titulo: "Menú semanal intelixente",
+                    prompt: "Actúa como nutricionista. Fai un menú semanal para dúas persoas, sen gluten e con 60 € de orzamento. Inclúe a lista da compra.",
+                    analise: "Unha soa mensaxe, unha soa resposta. Non consulta prezos reais nun supermercado, non calcula nutrientes de forma comprobable e a revisión é só ler e dicir 'parece bo'. O orzamento de 60 € é unha invención verosímil sen contrastar.",
+                    respostas: [false, false, false, false, false, false],
+                    veredicto: "Retirado: Cuasi-Chat (0/6 preguntas). Non require axente."
+                },
+                {
+                    tipo: "cuasi-chat",
+                    titulo: "Xestor de orzamento familiar",
+                    prompt: "Somos catro persoas con ingresos de 2.800 € ao mes. Fai un plan de aforro e unha táboa de gastos por categorías.",
+                    analise: "Non hai un extracto bancario nin CSV que ler. O modelo enche cadros con números inventados. Non conserva estado, non hai cálculo que reconciliar nin punto onde poida fallar de verdade.",
+                    respostas: [false, false, false, false, false, false],
+                    veredicto: "Retirado: Cuasi-Chat (0/6 preguntas). É unha simple plantilla de texto."
+                },
+                {
+                    tipo: "axentico",
+                    titulo: "Visualizador do orzamento público",
+                    prompt: "Le o CSV de orzamentos do concello. Limpa a táboa de ingresos/gastos, calcula porcentaxes por área, constrúe un visualizador HTML con gráficas e redacta as conclusións.",
+                    analise: "Obxectivo multifase: ler CSV real, transformar datos, xerar código executable e redixir texto. A suma das partidas debe cadrar matematicamente co publicado (fallo obxectivo). O usuario decide se o plan de gráficas é válido antes de xerar o ficheiro.",
+                    respostas: [true, true, true, true, true, true],
+                    veredicto: "Proxecto Axéntico Pleno (6/6 preguntas). Cumpre todos os requisitos."
+                },
+                {
+                    tipo: "axentico",
+                    titulo: "Detective da factura da luz",
+                    prompt: "Le o arquivo CSV de consumos horarios descargado da distribuidora (i-DE / UFD). Analiza potencias punta/valle, calcula se compensa cambiar de tarifa e xera unha simulación comparativa.",
+                    analise: "Traballa sobre datos de consumo reais e locais do usuario. Emprega ferramentas de cálculo matemático estrito. O fallo é obxectivo (erro de cálculo en kWh ou euros). O usuario valida as tarifas a cotexar.",
+                    respostas: [true, true, true, true, true, true],
+                    veredicto: "Proxecto Axéntico Pleno (6/6 preguntas). Valor real sen inventiva."
+                }
+            ];
+
+            const preguntasTest = [
+                "¿Ten varios pasos encadeados cun obxectivo persistente?",
+                "¿Consulta fontes ou datos externos ao modelo?",
+                "¿Usa ferramentas que actúan (código, ficheiros, consultas, cálculo)?",
+                "¿Conserva estado entre pasos (ficheiros intermedios, rexistro)?",
+                "¿Hai un punto onde algo pode fallar de verdade e comprobarse de xeito obxectivo?",
+                "¿Hai unha decisión humana que cambia o resultado final?"
+            ];
+
+            // Ferramentas de Escritorio (Gran Público / Docentes)
+            const ferramentasEscritorio = [
+                {
+                    id: "claude",
+                    nome: "Claude Desktop",
+                    empresa: "Anthropic",
+                    badge: "Pioneiro en MCP",
+                    cor: "orange",
+                    descricion: "Cliente de escritorio deseñado para traballo documental profundo e orquestración de ferramentas locais mediante o protocolo aberto Model Context Protocol (MCP).",
+                    capacidades: [
+                        "Conexión con cartafoles locais mediante servidores MCP locais (filesystem, sqlite, git).",
+                        "Xestión de 'Projects' con fontes documentais estables e instrucións acoutadas.",
+                        "Capacidade 'Computer Use' (en contornas experimentais supervisadas).",
+                        "Excelente comprensión contextual de textos normativos e código limpo."
+                    ],
+                    seguridade: "O protocolo MCP esixe confirmación explícita para ler ou escribir fóra dos cartafoles permitidos.",
+                    idealPara: "Análise de grandes documentos, xestión de arquivos locais e xeración de informes estruturados."
+                },
+                {
+                    id: "chatgpt",
+                    nome: "ChatGPT Desktop / Workspaces",
+                    empresa: "OpenAI",
+                    badge: "Maior difusión",
+                    cor: "emerald",
+                    descricion: "A contorna de escritorio de ChatGPT evoluciona de simple ventá de mensaxes a un espazo de traballo con soporte de proxectos, Canvas e execución de código Python en sandbox.",
+                    capacidades: [
+                        "Canvas interactivo para edición paralela de texto e código en tempo real.",
+                        "Espazos 'Workspaces' para illar proxectos docentes e bibliotecas documentais.",
+                        "Advanced Data Analysis (intérprete de Python illado para cálculo, gráficas e CSVs).",
+                        "Modos axénticos integrados para tarefas encadeadas e conexión de servizos."
+                    ],
+                    seguridade: "O intérprete de Python execútase nun contedor illado na nube, non no teu disco duro local.",
+                    idealPara: "Análise rápida de follas de cálculo, deseño interactivo con Canvas e tarefas guiadas paso a paso."
+                },
+                {
+                    id: "antigravity",
+                    nome: "Google Antigravity",
+                    empresa: "Google DeepMind",
+                    badge: "Ecosistema Axéntico Integrado",
+                    cor: "cyan",
+                    descricion: "A plataforma axéntica de nova xeración que integra espazos de traballo locais, arquitectura de subaxentes especializados, navegador web interactivo e habilidades (skills).",
+                    capacidades: [
+                        "Workspace acotado con illamento estrito de carpetas de traballo.",
+                        "Sistema modular de Subaxentes (deseño, código, navegación e verificación).",
+                        "Navegador incorporado que inspecciona, proba e valida as aplicacións xeradas.",
+                        "Ecosistema de 'Skills' e protocolos MCP con permisos granulares."
+                    ],
+                    seguridade: "Cada subaxente ten ferramentas acoutadas. Require confirmación para accións de risco e xestión de tarefas en segundo plano.",
+                    idealPara: "Construción de proxectos complexos, creación de micro-apps completas e fluxos de traballo supervisados."
+                },
+                {
+                    id: "cursor",
+                    nome: "Cursor / Windsurf",
+                    empresa: "Anysphere / Codeium",
+                    badge: "Axente sobre Proxecto",
+                    cor: "purple",
+                    descricion: "Aínda que naceron como editores de programación, convertéronse no estándar de axente que entende a totalidade dun espazo de proxecto (arquivos, dependencias e cambios).",
+                    capacidades: [
+                        "Modo 'Agent / Composer': le todo o cartafol e aplica edicións en múltiples arquivos simultaneamente.",
+                        "Uso non-técnico: pódese pedir a creación dunha web educativa ou un conversor CSV en linguaxe natural.",
+                        "Control visual de diferenzas ('diff') antes de aceptar calquera cambio no proxecto.",
+                        "Capacidade de detectar erros en tempo de compilación ou previsualización."
+                    ],
+                    seguridade: "Control liña a liña: o usuario pode rexeitar calquera modificación antes de gardar no disco.",
+                    idealPara: "Docentes e usuarios que queiran crear as súas propias ferramentas interactivas (HTML/JS) sen programar a man."
+                },
+                {
+                    id: "local",
+                    nome: "LM Studio / Ollama + AnythingLLM",
+                    empresa: "Open Source / Comunidade",
+                    badge: "100% Local e Privado",
+                    cor: "gold",
+                    descricion: "A opción de máxima privacidade: execución de modelos abertos (Llama 3, Mistral, Qwen, DeepSeek) directamente na tarxeta gráfica ou procesador do teu propio equipo.",
+                    capacidades: [
+                        "Cero chamadas a servidores externos: funciona completamente sen conexión a Internet.",
+                        "AnythingLLM actúa como axente RAG sobre os teus documentos PDF, Word ou follas de cálculo.",
+                        "Integración de axentes locais con navegación e conexión de ficheiros locais.",
+                        "Totalmente gratuíto e sen límites nin cotas de pago."
+                    ],
+                    seguridade: "Privacidade absoluta: ideal para tarefas que impliquen datos internos do centro que nunca deben subir á nube.",
+                    idealPara: "Centros con esixencia estrita de soberanía de datos e docentes que queiran traballar offline."
+                }
+            ];
+
+            // Arneses e Frameworks Avanzados (Público Técnico / Minoritario)
+            const ferramentasArneses = [
+                {
+                    id: "openclaw",
+                    nome: "OpenClaw / Hermes / DeepSeek Harness",
+                    tipo: "Arneses de Execución e Avaliación",
+                    badge: "Evaluación e Benchmarks",
+                    cor: "rose",
+                    descricion: "Contornas deseñadas para probar, estresar e avaliar modelos axénticos fronte a retos reais de razoamento, navegación web e manexo de terminais.",
+                    caracteristicas: [
+                        "Execución en caixas de area (sandboxes) reproducibles con rexistro de trazas.",
+                        "Bancos de probas para medir a taxa de éxito en plans de múltiples pasos.",
+                        "Supervisión do uso de ferramentas e detección de bucles infinitos ou alucinacións.",
+                        "Empregado en investigación avanzada e deseño de axentes autónomos de alta fidelidade."
+                    ],
+                    perfil: "Investigadores, administradores de sistemas educativos e desenvolvedores de solucións axénticas."
+                },
+                {
+                    id: "dify",
+                    nome: "Dify / Flowise",
+                    tipo: "Orquestadores Visuais de Fluxos",
+                    badge: "No-Code / Low-Code",
+                    cor: "cyan",
+                    descricion: "Plataformas visuais que permiten deseñar axentes conectando caixas nun lenzo: fontes de coñecemento (RAG), modelos, APIs externas e fluxos condicionais (se/entón).",
+                    caracteristicas: [
+                        "Deseño visual intuitivo con nodos de lóxica, recuperación e ferramentas.",
+                        "Publicación do axente como páxina web ou integración mediante API nun clic.",
+                        "Xestión centralizada de claves de API e roles de acceso.",
+                        "Excelente para visualizar a arquitectura interna dun sistema axéntico na aula."
+                    ],
+                    perfil: "Coordinadores TIC, formadores que queiran amosar a mecánica interna sen picar código."
+                },
+                {
+                    id: "crewai",
+                    nome: "CrewAI / LangGraph / AutoGen",
+                    tipo: "Frameworks Multiaxente de Código",
+                    badge: "Enxeñaría de Axentes",
+                    cor: "purple",
+                    descricion: "Librarías profesionais en Python/TypeScript para orquestrar frotas de axentes con roles definidos que colaboran entre si (ex: un axente investigador, un redactor e un auditor).",
+                    caracteristicas: [
+                        "Modelado de fluxos cíclicos con memoria de estado compartido (LangGraph).",
+                        "Asignación de roles, obxectivos e ferramentas especializadas a cada membro do equipo (CrewAI).",
+                        "Sistemas de deliberación e conversa autónoma entre axentes (AutoGen).",
+                        "Máxima flexibilidade para automatizacións empresariais ou proxectos de investigación."
+                    ],
+                    perfil: "Programadores avanzados e creadores de automatizacións complexas a grande escala."
+                }
+            ];
+
+            return (
+                <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 pl-20 md:pl-24">
+                    {/* Cabeceira do Módulo */}
+                    <div className="max-w-6xl mx-auto mb-8 border-b border-slate-800 pb-6">
+                        <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
+                            <div className="flex items-center gap-3">
+                                <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                                    Módulo 1
+                                </span>
+                                <span className="text-slate-400 text-sm">Formación Docente 2026–2027</span>
+                            </div>
+                            <div className="text-xs text-slate-500 font-mono">
+                                Paradigma: Proxecto &gt; Chat
+                            </div>
+                        </div>
+                        <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+                            O Salto Axéntico e o Ecosistema de Ferramentas
+                        </h1>
+                        <p className="text-slate-400 text-base md:text-lg mt-2 max-w-4xl">
+                            Abandonamos a lóxica do chat reactivo para converter a IA nun <strong className="text-amber-400">colaborador dixital con obxectivo, memoria e ferramentas</strong> que opera de xeito seguro sobre o teu espazo de proxecto.
+                        </p>
+
+                        {/* Barra de lapelas do módulo */}
+                        <div className="flex flex-wrap gap-2 mt-6">
+                            {[
+                                { id: 'salto', label: '1. O Salto Cualitativo', icon: '⚡' },
+                                { id: 'test', label: '2. O Test das 6 Preguntas', icon: '🔍' },
+                                { id: 'seguridade', label: '3. Seguridade do Usuario no PC', icon: '🛡️' },
+                                { id: 'ferramentas', label: '4. Catálogo de Ferramentas', icon: '🧰' }
+                            ].map(tab => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 ${
+                                        activeTab === tab.id
+                                            ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20'
+                                            : 'bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-slate-800'
+                                    }`}
+                                >
+                                    <span>{tab.icon}</span>
+                                    <span>{tab.label}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Contido segundo a lapela activa */}
+                    <div className="max-w-6xl mx-auto">
+
+                        {/* LAPELA 1: O SALTO CUALITATIVO */}
+                        {activeTab === 'salto' && (
+                            <div className="space-y-8 animate-fadeIn">
+                                {/* Comparativa Visual Directa */}
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    {/* Paradigma Antigo */}
+                                    <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 px-4 py-1 bg-red-500/10 text-red-400 text-xs font-bold rounded-bl-xl border-l border-b border-red-500/20">
+                                            O Modelo Chat (Curso Básico)
+                                        </div>
+                                        <div className="text-3xl mb-3">💬</div>
+                                        <h3 className="text-xl font-bold text-white mb-2">Unha pregunta $\rightarrow$ Unha resposta</h3>
+                                        <p className="text-slate-400 text-sm leading-relaxed mb-4">
+                                            O usuario escribe un prompt, o modelo responde nun só turno a partir dos seus pesos internos. Se algo está mal, hai que reformular todo o prompt.
+                                        </p>
+                                        <div className="space-y-2 text-xs text-slate-400">
+                                            <div className="flex items-start gap-2 bg-slate-950/50 p-2 rounded border border-slate-800">
+                                                <span className="text-red-400 font-bold">✕</span>
+                                                <span><strong>Sen persistencia:</strong> a información pérdese ao pechar o navegador.</span>
+                                            </div>
+                                            <div className="flex items-start gap-2 bg-slate-950/50 p-2 rounded border border-slate-800">
+                                                <span className="text-red-400 font-bold">✕</span>
+                                                <span><strong>Sen ferramentas:</strong> non le ficheiros locais nin calcula; só xera texto verosímil.</span>
+                                            </div>
+                                            <div className="flex items-start gap-2 bg-slate-950/50 p-2 rounded border border-slate-800">
+                                                <span className="text-red-400 font-bold">✕</span>
+                                                <span><strong>Fallo invisible:</strong> se alucina un dato nun texto longo, pasa desapercibido.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Paradigma Novo */}
+                                    <div className="bg-slate-900 border-2 border-orange-500/40 rounded-2xl p-6 relative overflow-hidden shadow-xl shadow-orange-500/5">
+                                        <div className="absolute top-0 right-0 px-4 py-1 bg-orange-500/20 text-orange-400 text-xs font-bold rounded-bl-xl border-l border-b border-orange-500/30">
+                                            O Paradigma Axéntico (2026–2027)
+                                        </div>
+                                        <div className="text-3xl mb-3">⚡</div>
+                                        <h3 className="text-xl font-bold text-white mb-2">Un encargo acoutado $\rightarrow$ Un plan con ferramentas</h3>
+                                        <p className="text-slate-300 text-sm leading-relaxed mb-4">
+                                            O usuario define a finalidade e as fontes. O colaborador le os arquivos, propón un plan, executa tarefas por fases e entrega produtos comprobables.
+                                        </p>
+                                        <div className="space-y-2 text-xs text-slate-300">
+                                            <div className="flex items-start gap-2 bg-slate-950/80 p-2 rounded border border-orange-500/20">
+                                                <span className="text-emerald-400 font-bold">✓</span>
+                                                <span><strong>Espazo de proxecto:</strong> traballa sobre un cartafol con fontes locais estables.</span>
+                                            </div>
+                                            <div className="flex items-start gap-2 bg-slate-950/80 p-2 rounded border border-orange-500/20">
+                                                <span className="text-emerald-400 font-bold">✓</span>
+                                                <span><strong>Uso de ferramentas:</strong> executa scripts, calcula con rigor e xera arquivos reais.</span>
+                                            </div>
+                                            <div className="flex items-start gap-2 bg-slate-950/80 p-2 rounded border border-orange-500/20">
+                                                <span className="text-emerald-400 font-bold">✓</span>
+                                                <span><strong>Verificación humana:</strong> o docente supervisa o plan e valida cada produto intermedio.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* O que xa xestiona un LLM moderno por dentro */}
+                                <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 md:p-8">
+                                    <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                                        <span className="text-cyan-400">🧩</span> O que oculta a experiencia conversacional moderna
+                                    </h3>
+                                    <p className="text-slate-400 text-sm mb-6">
+                                        Non necesitas programar nin construír sistemas complexos de nodos para dirixir un axente. Un modelo moderno xa orquestra internamente este ciclo cando se lle dá un espazo de traballo:
+                                    </p>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center">
+                                            <div className="w-8 h-8 mx-auto mb-2 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-sm">1</div>
+                                            <h4 className="text-xs font-bold text-white mb-1">Comprender</h4>
+                                            <p className="text-[11px] text-slate-400">Interpreta o encargo e identifica os requisitos e restricións.</p>
+                                        </div>
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center">
+                                            <div className="w-8 h-8 mx-auto mb-2 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold text-sm">2</div>
+                                            <h4 className="text-xs font-bold text-white mb-1">Consultar Fontes</h4>
+                                            <p className="text-[11px] text-slate-400">Le os documentos e táboas autorizados no workspace.</p>
+                                        </div>
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center">
+                                            <div className="w-8 h-8 mx-auto mb-2 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">3</div>
+                                            <h4 className="text-xs font-bold text-white mb-1">Planificar</h4>
+                                            <p className="text-[11px] text-slate-400">Estrutura os pasos lóxicos e agarda aprobación se se lle esixe.</p>
+                                        </div>
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center">
+                                            <div className="w-8 h-8 mx-auto mb-2 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">4</div>
+                                            <h4 className="text-xs font-bold text-white mb-1">Executar</h4>
+                                            <p className="text-[11px] text-slate-400">Usa ferramentas: procesa datos, xera código ou redacta entregables.</p>
+                                        </div>
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center">
+                                            <div className="w-8 h-8 mx-auto mb-2 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm">5</div>
+                                            <h4 className="text-xs font-bold text-white mb-1">Supervisión</h4>
+                                            <p className="text-[11px] text-slate-400">O docente audita, valida os resultados e asume a autoría.</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3">
+                                        <span className="text-xl">💡</span>
+                                        <div className="text-xs text-amber-200/90 leading-relaxed">
+                                            <strong>A clave docente:</strong> O teu rol xa non é escribir o prompt perfecto na primeira mensaxe, senón <strong>definir o obxectivo, acoutar as fontes permitidas, esixir un plan previo e auditar os resultados intermedios</strong>.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* LAPELA 2: O TEST DAS 6 PREGUNTAS */}
+                        {activeTab === 'test' && (
+                            <div className="space-y-6 animate-fadeIn">
+                                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                                    <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                                        <span className="text-orange-400">🔍</span> Como distinguir un verdadeiro axente dun «cuasi-chat»
+                                    </h3>
+                                    <p className="text-slate-400 text-sm mb-6">
+                                        Unha tarefa é <strong>realmente axéntica</strong> cando cumpre polo menos catro das seis condicións seguintes. Se só cumpre unha ou ningunha, un simple prompt nun chat faría exactamente o mesmo.
+                                    </p>
+
+                                    {/* Selector de Casos de Proba */}
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                                        {casosTest.map((caso, idx) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() => setTestSelectedCase(idx)}
+                                                className={`p-3 rounded-xl text-left transition-all border text-xs font-semibold ${
+                                                    testSelectedCase === idx
+                                                        ? caso.tipo === 'axentico'
+                                                            ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300 shadow-lg shadow-emerald-500/10'
+                                                            : 'bg-red-500/20 border-red-500 text-red-300 shadow-lg shadow-red-500/10'
+                                                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
+                                                }`}
+                                            >
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <span className={`px-1.5 py-0.5 rounded text-[10px] uppercase font-bold ${
+                                                        caso.tipo === 'axentico' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+                                                    }`}>
+                                                        {caso.tipo === 'axentico' ? 'Axéntico' : 'Cuasi-Chat'}
+                                                    </span>
+                                                </div>
+                                                <div className="font-bold text-white truncate">{caso.titulo}</div>
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    {/* Detalle do Caso Seleccionado */}
+                                    {(() => {
+                                        const c = casosTest[testSelectedCase];
+                                        return (
+                                            <div className="bg-slate-950 rounded-xl p-5 border border-slate-800 space-y-4">
+                                                <div>
+                                                    <div className="text-xs uppercase tracking-wider text-slate-500 font-bold mb-1">O encargo analizado</div>
+                                                    <div className="bg-slate-900 p-3 rounded-lg border border-slate-800 font-mono text-xs text-amber-300">
+                                                        "{c.prompt}"
+                                                    </div>
+                                                </div>
+
+                                                {/* As 6 Preguntas para este caso */}
+                                                <div>
+                                                    <div className="text-xs uppercase tracking-wider text-slate-500 font-bold mb-2">Avaliación das 6 preguntas:</div>
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                                        {preguntasTest.map((p, pIdx) => {
+                                                            const pasa = c.respostas[pIdx];
+                                                            return (
+                                                                <div
+                                                                    key={pIdx}
+                                                                    className={`p-2.5 rounded-lg border text-xs flex items-center justify-between ${
+                                                                        pasa
+                                                                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-200'
+                                                                            : 'bg-red-500/5 border-red-500/20 text-slate-400'
+                                                                    }`}
+                                                                >
+                                                                    <span>{p}</span>
+                                                                    <span className={`font-bold ml-2 text-sm ${pasa ? 'text-emerald-400' : 'text-red-400'}`}>
+                                                                        {pasa ? 'SÍ' : 'NON'}
+                                                                    </span>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+
+                                                <div className={`p-4 rounded-xl border text-xs leading-relaxed ${
+                                                    c.tipo === 'axentico'
+                                                        ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-300'
+                                                        : 'bg-red-950/40 border-red-500/30 text-red-300'
+                                                }`}>
+                                                    <div className="font-bold mb-1 flex items-center gap-1.5">
+                                                        <span>{c.tipo === 'axentico' ? '✅' : '⚠️'}</span>
+                                                        <span>{c.veredicto}</span>
+                                                    </div>
+                                                    <p>{c.analise}</p>
+                                                </div>
+                                            </div>
+                                        );
+                                    })()}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* LAPELA 3: SEGURIDADE DO USUARIO NO PC */}
+                        {activeTab === 'seguridade' && (
+                            <div className="space-y-6 animate-fadeIn">
+                                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-xl font-bold">
+                                            🛡️
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold text-white">Seguridade Directa para o Usuario / Docente</h3>
+                                            <p className="text-slate-400 text-xs">Cando un axente opera sobre o teu ordenador, ti es o administrador responsable.</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid md:grid-cols-2 gap-6 mt-6">
+                                        {/* Risco 1: Permisos de Arquivos */}
+                                        <div className="bg-slate-950 p-5 rounded-xl border border-slate-800">
+                                            <div className="flex items-center gap-2 text-orange-400 font-bold text-sm mb-2">
+                                                <span>📁</span> 1. Acoutamento do Sistema de Arquivos
+                                            </div>
+                                            <p className="text-xs text-slate-300 leading-relaxed mb-3">
+                                                Nunca abras un axente apuntando á raíz do teu disco duro (<code className="text-amber-300 font-mono">C:\</code> ou <code className="text-amber-300 font-mono">/home/usuario</code>) nin á túa carpeta persoal de Documentos sen compartimentar.
+                                            </p>
+                                            <div className="p-3 rounded bg-slate-900 border border-slate-800 text-[11px] text-slate-400">
+                                                <strong className="text-white">Protocolo seguro:</strong> Crea sempre unha subcarpeta específica para o proxecto (ex: <code className="text-emerald-400">/Proxecto_Orzamento</code>) con só os arquivos necesarios. O axente só debe ver ese espazo.
+                                            </div>
+                                        </div>
+
+                                        {/* Risco 2: O Terminal Desatendido */}
+                                        <div className="bg-slate-950 p-5 rounded-xl border border-slate-800">
+                                            <div className="flex items-center gap-2 text-rose-400 font-bold text-sm mb-2">
+                                                <span>⚡</span> 2. A Liña Vermella do Terminal Libre
+                                            </div>
+                                            <p className="text-xs text-slate-300 leading-relaxed mb-3">
+                                                Moitas ferramentas avanzadas ofrecen un modo de execución automática en terminal. Na primeira edición do curso, <strong>prohíbese o terminal desatendido</strong>.
+                                            </p>
+                                            <div className="p-3 rounded bg-slate-900 border border-slate-800 text-[11px] text-slate-400">
+                                                <strong className="text-white">Por que:</strong> Un script con alucinacións pode sobreescribir ficheiros, instalar dependencias conflitivas ou borrar datos sen posibilidade de desfacer.
+                                            </div>
+                                        </div>
+
+                                        {/* Risco 3: Claves de API e Credenciais */}
+                                        <div className="bg-slate-950 p-5 rounded-xl border border-slate-800">
+                                            <div className="flex items-center gap-2 text-amber-400 font-bold text-sm mb-2">
+                                                <span>🔑</span> 3. Protección de Credenciais e Tokens
+                                            </div>
+                                            <p className="text-xs text-slate-300 leading-relaxed mb-3">
+                                                As claves de API son equivalentes ao teu contrasinal e tarxeta bancaria. Nunca pegues unha clave de API nun prompt nin subas arquivos <code className="text-amber-300 font-mono">.env</code> a servizos públicos.
+                                            </p>
+                                            <div className="p-3 rounded bg-slate-900 border border-slate-800 text-[11px] text-slate-400">
+                                                <strong className="text-white">Solución da aula:</strong> No curso traballarase con instancias xestionadas ou con modelos de subscrición de escritorio que non expoñen credenciais directas ao usuario.
+                                            </div>
+                                        </div>
+
+                                        {/* Risco 4: Plan Previo e Confirmación */}
+                                        <div className="bg-slate-950 p-5 rounded-xl border border-slate-800">
+                                            <div className="flex items-center gap-2 text-cyan-400 font-bold text-sm mb-2">
+                                                <span>✋</span> 4. Aprobación Antes de Sobreescribir
+                                            </div>
+                                            <p className="text-xs text-slate-300 leading-relaxed mb-3">
+                                                Ningún colaborador dixital debe modificar, sobrescribir ou borrar un ficheiro orixinal sen presentar antes un plan de acción e pedir confirmación humana expresa.
+                                            </p>
+                                            <div className="p-3 rounded bg-slate-900 border border-slate-800 text-[11px] text-slate-400">
+                                                <strong className="text-white">Regra de ouro:</strong> Conserva sempre unha copia intacta dos datos fonte nun arquivo independente e fai que o axente xere os seus resultados nun arquivo novo.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* LAPELA 4: CATÁLOGO DE FERRAMENTAS */}
+                        {activeTab === 'ferramentas' && (
+                            <div className="space-y-6 animate-fadeIn">
+                                {/* Sub-selector de categoría */}
+                                <div className="flex items-center justify-between bg-slate-900 p-2 rounded-xl border border-slate-800">
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => { setSelectedToolCategory('escritorio'); setSelectedTool(null); }}
+                                            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                                                selectedToolCategory === 'escritorio'
+                                                    ? 'bg-orange-500 text-white shadow-md'
+                                                    : 'text-slate-400 hover:text-white'
+                                            }`}
+                                        >
+                                            🖥️ IAs de Escritorio (Gran Público / Docentes)
+                                        </button>
+                                        <button
+                                            onClick={() => { setSelectedToolCategory('arneses'); setSelectedTool(null); }}
+                                            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                                                selectedToolCategory === 'arneses'
+                                                    ? 'bg-purple-600 text-white shadow-md'
+                                                    : 'text-slate-400 hover:text-white'
+                                            }`}
+                                        >
+                                            ⚙️ Arneses e Frameworks (Avanzado / Minoritario)
+                                        </button>
+                                    </div>
+                                    <span className="text-[11px] text-slate-500 hidden md:inline">
+                                        {selectedToolCategory === 'escritorio' ? '5 plataformas recomendadas' : '3 contornas para perfís técnicos'}
+                                    </span>
+                                </div>
+
+                                {/* Listado de Ferramentas: ESCRITORIO */}
+                                {selectedToolCategory === 'escritorio' && (
+                                    <div className="grid md:grid-cols-3 gap-4">
+                                        {ferramentasEscritorio.map(tool => (
+                                            <div
+                                                key={tool.id}
+                                                onClick={() => setSelectedTool(tool)}
+                                                className={`bg-slate-900 border rounded-xl p-5 cursor-pointer transition-all hover:-translate-y-1 ${
+                                                    selectedTool?.id === tool.id
+                                                        ? 'border-orange-500 shadow-lg shadow-orange-500/10 bg-slate-850'
+                                                        : 'border-slate-800 hover:border-slate-700'
+                                                }`}
+                                            >
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <span className="text-xs font-mono text-slate-500">{tool.empresa}</span>
+                                                    <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-amber-400 border border-slate-700">
+                                                        {tool.badge}
+                                                    </span>
+                                                </div>
+                                                <h4 className="text-lg font-bold text-white mb-2">{tool.nome}</h4>
+                                                <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed mb-4">
+                                                    {tool.descricion}
+                                                </p>
+                                                <div className="text-[11px] text-orange-400 font-semibold flex items-center gap-1">
+                                                    <span>Ver capacidades e seguridade</span> &rarr;
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Listado de Ferramentas: ARNESES */}
+                                {selectedToolCategory === 'arneses' && (
+                                    <div className="grid md:grid-cols-3 gap-4">
+                                        {ferramentasArneses.map(tool => (
+                                            <div
+                                                key={tool.id}
+                                                onClick={() => setSelectedTool(tool)}
+                                                className={`bg-slate-900 border rounded-xl p-5 cursor-pointer transition-all hover:-translate-y-1 ${
+                                                    selectedTool?.id === tool.id
+                                                        ? 'border-purple-500 shadow-lg shadow-purple-500/10'
+                                                        : 'border-slate-800 hover:border-slate-700'
+                                                }`}
+                                            >
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <span className="text-xs font-mono text-slate-500">{tool.tipo}</span>
+                                                    <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-purple-400 border border-slate-700">
+                                                        {tool.badge}
+                                                    </span>
+                                                </div>
+                                                <h4 className="text-lg font-bold text-white mb-2">{tool.nome}</h4>
+                                                <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed mb-4">
+                                                    {tool.descricion}
+                                                </p>
+                                                <div className="text-[11px] text-purple-400 font-semibold flex items-center gap-1">
+                                                    <span>Detalle técnico e perfil</span> &rarr;
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Modal / Panel de Detalle da Ferramenta Seleccionada */}
+                                {selectedTool && (
+                                    <div className="bg-slate-900 border-2 border-slate-700 rounded-2xl p-6 relative animate-fadeIn shadow-2xl">
+                                        <button
+                                            onClick={() => setSelectedTool(null)}
+                                            className="absolute top-4 right-4 text-slate-400 hover:text-white text-lg font-bold w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center"
+                                        >
+                                            ✕
+                                        </button>
+
+                                        <div className="flex flex-wrap items-center gap-3 mb-3">
+                                            <h3 className="text-2xl font-bold text-white">{selectedTool.nome}</h3>
+                                            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase bg-slate-800 text-amber-400 border border-slate-700">
+                                                {selectedTool.badge}
+                                            </span>
+                                        </div>
+
+                                        <p className="text-sm text-slate-300 leading-relaxed mb-6 max-w-4xl">
+                                            {selectedTool.descricion}
+                                        </p>
+
+                                        <div className="grid md:grid-cols-2 gap-6 pt-4 border-t border-slate-800">
+                                            {selectedTool.capacidades ? (
+                                                <div>
+                                                    <h5 className="text-xs uppercase font-bold tracking-wider text-slate-400 mb-3">Capacidades Destacadas:</h5>
+                                                    <ul className="space-y-2 text-xs text-slate-300">
+                                                        {selectedTool.capacidades.map((cap, i) => (
+                                                            <li key={i} className="flex items-start gap-2">
+                                                                <span className="text-emerald-400">✓</span>
+                                                                <span>{cap}</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <h5 className="text-xs uppercase font-bold tracking-wider text-slate-400 mb-3">Características Técnicas:</h5>
+                                                    <ul className="space-y-2 text-xs text-slate-300">
+                                                        {selectedTool.caracteristicas.map((car, i) => (
+                                                            <li key={i} className="flex items-start gap-2">
+                                                                <span className="text-purple-400">⚙</span>
+                                                                <span>{car}</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+
+                                            <div className="space-y-4">
+                                                {selectedTool.seguridade && (
+                                                    <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                                        <h5 className="text-xs uppercase font-bold tracking-wider text-rose-400 mb-1 flex items-center gap-1">
+                                                            <span>🛡️</span> Criterio de Seguridade:
+                                                        </h5>
+                                                        <p className="text-xs text-slate-300 leading-relaxed">
+                                                            {selectedTool.seguridade}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                                {selectedTool.idealPara && (
+                                                    <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                                        <h5 className="text-xs uppercase font-bold tracking-wider text-amber-400 mb-1 flex items-center gap-1">
+                                                            <span>🎯</span> Ideal Para a Aula / Práctica:
+                                                        </h5>
+                                                        <p className="text-xs text-slate-300 leading-relaxed">
+                                                            {selectedTool.idealPara}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                                {selectedTool.perfil && (
+                                                    <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                                        <h5 className="text-xs uppercase font-bold tracking-wider text-cyan-400 mb-1">
+                                                            Perfil Destinatario:
+                                                        </h5>
+                                                        <p className="text-xs text-slate-300 leading-relaxed">
+                                                            {selectedTool.perfil}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Modulo1App />);
+    </script>
+</body>
+
+</html>

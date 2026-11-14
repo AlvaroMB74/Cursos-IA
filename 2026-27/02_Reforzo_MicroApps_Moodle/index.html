@@ -1,0 +1,2705 @@
+<!DOCTYPE html>
+<html lang="gl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hitos IA 2026 e Micro-Apps para Moodle | Obradoiro Docente</title>
+    
+    <!-- Tipografía Open Sans e JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           PALETA DE CORES (Dark 70s Retro-Tech Coherente)
+           ========================================= */
+        :root {
+            --bg-dark: #121212;
+            --card-bg: #1E1E1E;
+            --card-bg-elevated: #282828;
+            --text-main: #EAE0C8;
+            --text-dim: #A8A090;
+            --text-bright: #FFFFFF;
+            
+            /* Acentos Cálidos e Tecnolóxicos */
+            --accent-gold: #D4AF37;
+            --accent-orange: #D35400;
+            --accent-retro: #C0392B;
+            --accent-purple: #8B5CF6;
+            --accent-green: #10B981;
+            --accent-blue: #3B82F6;
+            --accent-cyan: #06B6D4;
+            
+            --border-color: #333333;
+            --border-highlight: rgba(212, 175, 55, 0.4);
+            --glow-gold: 0 0 20px rgba(212, 175, 55, 0.25);
+            --glow-blue: 0 0 20px rgba(59, 130, 246, 0.25);
+            --sidebar-width-collapsed: 68px;
+            --sidebar-width-expanded: 240px;
+            --header-height: 50px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Open Sans', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* =========================================
+           BARRA DE PROGRESO SUPERIOR E CABECEIRA
+           ========================================= */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width-collapsed);
+            right: 0;
+            height: var(--header-height);
+            background: rgba(18, 18, 18, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 900;
+            transition: left 0.3s ease;
+        }
+
+        .progress-bar-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 12.5%;
+            background: linear-gradient(90deg, var(--accent-orange), var(--accent-gold));
+            box-shadow: 0 0 10px var(--accent-gold);
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .top-course-tag {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-course-tag .live-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+            display: inline-block;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slide-counter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            background: var(--card-bg);
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .slide-counter strong {
+            color: var(--accent-gold);
+        }
+
+        .btn-index {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 5px 14px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-index:hover {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+            transform: translateY(-1px);
+        }
+
+        /* =========================================
+           BARRA LATERAL GLOBAL (Idéntica á do curso 25-26)
+           ========================================= */
+        .global-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: var(--sidebar-width-collapsed);
+            background: rgba(18, 18, 18, 0.96);
+            border-right: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 15px;
+            backdrop-filter: blur(8px);
+            transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            overflow-x: hidden;
+        }
+
+        .global-sidebar:hover {
+            width: var(--sidebar-width-expanded);
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.7);
+        }
+
+        .sidebar-brand {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            margin-bottom: 10px;
+            color: var(--accent-gold);
+            text-decoration: none;
+        }
+
+        .sidebar-brand .brand-icon {
+            min-width: var(--sidebar-width-collapsed);
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .sidebar-brand .brand-text {
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: var(--text-main);
+        }
+
+        .global-sidebar:hover .brand-text {
+            opacity: 1;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            width: 75%;
+            margin: 10px 0;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            letter-spacing: 1.5px;
+            margin: 10px 0 5px 0;
+            opacity: 0;
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+
+        .global-sidebar:hover .sidebar-section-title {
+            opacity: 0.7;
+        }
+
+        .nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background: rgba(212, 175, 55, 0.12);
+            color: var(--accent-gold);
+            border-left-color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            min-width: var(--sidebar-width-collapsed);
+            text-align: center;
+            font-size: 1.25rem;
+            display: inline-block;
+        }
+
+        .nav-label {
+            opacity: 0;
+            transition: opacity 0.2s;
+            margin-left: 5px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .global-sidebar:hover .nav-label {
+            opacity: 1;
+        }
+
+        /* Hover de cores específicas nas seccións */
+        .nav-item:hover { border-left-color: var(--accent-gold); }
+
+        /* =========================================
+           CONTEDOR PRINCIPAL DE DIAPOSITIVAS
+           ========================================= */
+        .viewport {
+            position: absolute;
+            top: var(--header-height);
+            left: var(--sidebar-width-collapsed);
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: radial-gradient(circle at 85% 15%, rgba(212, 175, 55, 0.04) 0%, transparent 60%),
+                        radial-gradient(circle at 15% 85%, rgba(211, 84, 0, 0.04) 0%, transparent 60%),
+                        var(--bg-dark);
+            scroll-behavior: smooth;
+        }
+
+        .slides-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            min-height: 100%;
+            padding: 40px 60px 80px 60px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-header {
+            margin-bottom: 30px;
+        }
+
+        .slide-eyebrow {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-orange);
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .slide-title {
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .slide-title span {
+            color: var(--accent-gold);
+        }
+
+        .slide-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-dim);
+            margin-top: 10px;
+            max-width: 1000px;
+            line-height: 1.5;
+        }
+
+        /* =========================================
+           DIAPOSITIVA 1: PORTADA (DASHBOARD GRID)
+           ========================================= */
+        .hero-layout {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            min-height: calc(100vh - var(--header-height) - 140px);
+        }
+
+        .hero-content h1 {
+            font-size: 3.4rem;
+            line-height: 1.05;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 25px;
+        }
+
+        .hero-content h1 span.gold {
+            color: var(--accent-gold);
+            display: block;
+        }
+
+        .hero-content h1 span.orange {
+            color: var(--accent-orange);
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 35px;
+            border-left: 3px solid var(--accent-gold);
+            padding-left: 20px;
+        }
+
+        .hero-meta-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .meta-badge {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meta-badge strong {
+            color: var(--accent-gold);
+        }
+
+        .hero-cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 26px;
+            text-align: left;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 175px;
+            cursor: pointer;
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-main);
+            z-index: 2;
+        }
+
+        .dashboard-card p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+            z-index: 2;
+        }
+
+        .dashboard-card .card-icon {
+            font-size: 3.5rem;
+            position: absolute;
+            bottom: -8px;
+            right: 12px;
+            opacity: 0.12;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            background: var(--card-bg-elevated);
+        }
+
+        .dashboard-card:hover .card-icon {
+            opacity: 0.3;
+            transform: rotate(-8deg) scale(1.15);
+        }
+
+        .card-c1 { border-top: 3px solid var(--accent-retro); }
+        .card-c1:hover { border-color: var(--accent-retro); box-shadow: 0 0 20px rgba(192, 57, 43, 0.25); }
+        
+        .card-c2 { border-top: 3px solid var(--accent-gold); }
+        .card-c2:hover { border-color: var(--accent-gold); box-shadow: 0 0 20px rgba(212, 175, 55, 0.25); }
+
+        .card-c3 { border-top: 3px solid var(--accent-orange); }
+        .card-c3:hover { border-color: var(--accent-orange); box-shadow: 0 0 20px rgba(211, 84, 0, 0.25); }
+
+        .card-c4 { border-top: 3px solid var(--accent-purple); }
+        .card-c4:hover { border-color: var(--accent-purple); box-shadow: 0 0 20px rgba(139, 92, 246, 0.25); }
+
+        /* =========================================
+           DIAPOSITIVA 2: COMPARATIVA 2025 vs 2026
+           ========================================= */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 25px;
+            align-items: stretch;
+            margin-top: 10px;
+        }
+
+        .comparison-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .card-2025 {
+            border-top: 4px solid var(--text-dim);
+        }
+
+        .card-2026 {
+            border-top: 4px solid var(--accent-gold);
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.04) 0%, var(--card-bg) 100%);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        }
+
+        .comp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .comp-year {
+            font-size: 2.2rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .card-2025 .comp-year { color: var(--text-dim); }
+        .card-2026 .comp-year { color: var(--accent-gold); text-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
+
+        .comp-paradigm {
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-2025 .comp-paradigm { color: #888; }
+        .card-2026 .comp-paradigm { color: var(--accent-orange); }
+
+        .comp-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            flex-grow: 1;
+        }
+
+        .comp-list li {
+            position: relative;
+            padding-left: 28px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .comp-list li::before {
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1.1rem;
+        }
+
+        .card-2025 .comp-list li::before {
+            content: "✕";
+            color: var(--accent-retro);
+        }
+
+        .card-2026 .comp-list li::before {
+            content: "✓";
+            color: var(--accent-green);
+            font-weight: 800;
+        }
+
+        .comparison-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-gold);
+            font-size: 2rem;
+            padding: 0 10px;
+        }
+
+        .comparison-arrow span {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            margin-top: 10px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .role-shift-box {
+            margin-top: 30px;
+            background: linear-gradient(90deg, rgba(211, 84, 0, 0.12), rgba(212, 175, 55, 0.12));
+            border: 1px solid var(--accent-gold);
+            border-radius: 10px;
+            padding: 22px 30px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .role-shift-icon {
+            font-size: 2.8rem;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .role-shift-text h4 {
+            font-size: 1.15rem;
+            color: var(--accent-gold);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .role-shift-text p {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        /* =========================================
+           DIAPOSITIVA 3: ARQUITECTURA TÉCNICA
+           ========================================= */
+        .arch-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 30px;
+        }
+
+        .arch-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 28px;
+        }
+
+        .arch-card h3 {
+            font-size: 1.25rem;
+            color: var(--accent-gold);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .tech-pillars {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .pillar {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .pillar .pillar-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .pillar.html .pillar-tag { background: rgba(227, 79, 38, 0.2); color: #E34F26; }
+        .pillar.css .pillar-tag { background: rgba(21, 114, 182, 0.2); color: #2965F1; }
+        .pillar.js .pillar-tag { background: rgba(247, 223, 30, 0.2); color: #F7DF1E; }
+
+        .pillar p {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .cdn-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .cdn-badge {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: border-color 0.2s;
+        }
+
+        .cdn-badge:hover {
+            border-color: var(--accent-gold);
+        }
+
+        .cdn-badge .cdn-icon {
+            font-size: 1.4rem;
+        }
+
+        .cdn-badge strong {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        .cdn-badge span {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .moodle-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .method-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            border-left: 4px solid var(--accent-orange);
+        }
+
+        .method-item h4 {
+            font-size: 1rem;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .method-item h4 .method-tag {
+            font-size: 0.7rem;
+            background: rgba(211, 84, 0, 0.2);
+            color: var(--accent-orange);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .method-item p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        .code-snippet-small {
+            margin-top: 10px;
+            background: #0D0D0D;
+            border: 1px solid #222;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #A0ECFF;
+            overflow-x: auto;
+        }
+
+        /* =========================================
+           DIAPOSITIVA 4: FLUXO BIDIRECCIONAL (PRIVACIDADE)
+           ========================================= */
+        .flow-visual-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .flow-steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            position: relative;
+        }
+
+        .flow-step-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 22px 18px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .flow-step-card.step-1 { border-top: 3px solid var(--accent-green); }
+        .flow-step-card.step-2 { border-top: 3px solid var(--accent-blue); }
+        .flow-step-card.step-3 { border-top: 3px solid var(--accent-gold); }
+        .flow-step-card.step-4 { border-top: 3px solid var(--accent-purple); }
+
+        .flow-step-card:hover {
+            transform: translateY(-5px);
+            background: var(--card-bg-elevated);
+        }
+
+        .step-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            align-self: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .step-1 .step-num { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+        .step-2 .step-num { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); }
+        .step-3 .step-num { background: rgba(212, 175, 55, 0.2); color: var(--accent-gold); }
+        .step-4 .step-num { background: rgba(139, 92, 246, 0.2); color: var(--accent-purple); }
+
+        .flow-step-card h4 {
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .flow-step-card p {
+            font-size: 0.83rem;
+            color: var(--text-dim);
+            line-height: 1.45;
+            flex-grow: 1;
+        }
+
+        .flow-step-badge {
+            margin-top: 14px;
+            font-size: 0.72rem;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 4px 8px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+            color: var(--text-dim);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .privacy-guarantee-banner {
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.08));
+            border: 1px solid var(--accent-green);
+            border-radius: 10px;
+            padding: 22px 30px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .privacy-icon {
+            font-size: 3rem;
+            color: var(--accent-green);
+        }
+
+        .privacy-text h4 {
+            font-size: 1.15rem;
+            color: var(--accent-green);
+            margin-bottom: 4px;
+        }
+
+        .privacy-text p {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        /* =========================================
+           DIAPOSITIVAS 5 E 6: CATÁLOGO DE PROXECTOS
+           ========================================= */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+            margin-top: 10px;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 26px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.45);
+            background: var(--card-bg-elevated);
+        }
+
+        .project-card.p-meteo { border-top: 4px solid var(--accent-blue); }
+        .project-card.p-quake { border-top: 4px solid var(--accent-retro); }
+        .project-card.p-energy { border-top: 4px solid var(--accent-gold); }
+        .project-card.p-history { border-top: 4px solid var(--accent-purple); }
+        .project-card.p-art { border-top: 4px solid #EC4899; }
+        .project-card.p-words { border-top: 4px solid var(--accent-cyan); }
+
+        .proj-meta-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .proj-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .p-meteo .proj-tag { background: rgba(59, 130, 246, 0.2); color: #60A5FA; }
+        .p-quake .proj-tag { background: rgba(192, 57, 43, 0.2); color: #F87171; }
+        .p-energy .proj-tag { background: rgba(212, 175, 55, 0.2); color: var(--accent-gold); }
+        .p-history .proj-tag { background: rgba(139, 92, 246, 0.2); color: #A78BFA; }
+        .p-art .proj-tag { background: rgba(236, 72, 153, 0.2); color: #F472B6; }
+        .p-words .proj-tag { background: rgba(6, 182, 212, 0.2); color: #22D3EE; }
+
+        .proj-icon-large {
+            font-size: 1.8rem;
+        }
+
+        .project-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-main);
+            line-height: 1.3;
+        }
+
+        .proj-api-badge {
+            background: rgba(255,255,255,0.04);
+            border: 1px dashed var(--border-color);
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-gold);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .project-card p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.45;
+            margin-bottom: 16px;
+        }
+
+        .proj-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 12px;
+        }
+
+        .proj-features li {
+            font-size: 0.78rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .proj-features li::before {
+            content: "•";
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+        }
+
+        .btn-project-prompt {
+            margin-top: 16px;
+            width: 100%;
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+        }
+
+        .btn-project-prompt:hover {
+            background: var(--accent-gold);
+            color: #121212;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(212, 175, 55, 0.35);
+        }
+
+        .modal-card.modal-card-large {
+            max-width: 920px;
+            max-height: 88vh;
+        }
+
+        /* =========================================
+           DIAPOSITIVA 7: CAPA DE ARQUIVOS (DRAG & DOWNLOAD)
+           ========================================= */
+        .file-layer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .file-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-box h3 {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .drop-preview-zone {
+            border: 2px dashed var(--accent-orange);
+            background: rgba(211, 84, 0, 0.05);
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
+            margin: 15px 0 20px 0;
+            transition: all 0.2s ease;
+        }
+
+        .drop-preview-zone:hover {
+            background: rgba(211, 84, 0, 0.1);
+            border-color: var(--accent-gold);
+        }
+
+        .drop-preview-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .drop-preview-zone strong {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            margin-bottom: 5px;
+        }
+
+        .drop-preview-zone span {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .export-buttons-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .export-btn-mock {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .export-btn-mock:hover {
+            border-color: var(--accent-gold);
+            transform: translateX(4px);
+        }
+
+        .export-btn-mock .btn-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .export-btn-mock.excel .icon { color: var(--accent-green); font-size: 1.3rem; }
+        .export-btn-mock.pdf .icon { color: var(--accent-retro); font-size: 1.3rem; }
+
+        .export-btn-mock .lib-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            background: rgba(255,255,255,0.07);
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: var(--text-dim);
+        }
+
+        /* =========================================
+           DIAPOSITIVA 8: O PROMPT MESTRE
+           ========================================= */
+        .prompt-layout {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .code-box-container {
+            background: #0F0F0F;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .code-box-header {
+            background: #181818;
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .code-title::before {
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-orange);
+        }
+
+        .btn-copy {
+            background: var(--accent-gold);
+            color: #121212;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-copy:hover {
+            background: #fff;
+            transform: scale(1.03);
+        }
+
+        .btn-copy.copied {
+            background: var(--accent-green);
+            color: #fff;
+        }
+
+        .code-editor-area {
+            padding: 18px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.55;
+            color: #E2E8F0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            max-height: 520px;
+            user-select: text;
+        }
+
+        .code-editor-area .keyword { color: #F59E0B; font-weight: 600; }
+        .code-editor-area .bracket { color: #60A5FA; }
+        .code-editor-area .bullet { color: var(--accent-gold); font-weight: 700; }
+
+        .prompt-layers-guide {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .layer-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            border-left: 3px solid var(--accent-gold);
+        }
+
+        .layer-item h4 {
+            font-size: 0.95rem;
+            color: var(--accent-gold);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .layer-item p {
+            font-size: 0.82rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        /* =========================================
+           BOTÓNS FLUTUANTES DE NAVEGACIÓN
+           ========================================= */
+        .floating-nav {
+            position: fixed;
+            bottom: 25px;
+            right: 35px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 950;
+            background: rgba(18, 18, 18, 0.9);
+            padding: 6px 12px;
+            border-radius: 40px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .nav-btn {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: var(--accent-gold);
+            color: #121212;
+            border-color: var(--accent-gold);
+            transform: scale(1.08);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .keyboard-hint {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+            padding: 0 8px;
+        }
+
+        /* =========================================
+           MODAL DE ÍNDICE COMPLETO
+           ========================================= */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            border: 1px solid var(--accent-gold);
+            box-shadow: var(--glow-gold);
+            border-radius: 14px;
+            width: 100%;
+            max-width: 720px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalPop 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #181818;
+        }
+
+        .modal-header h3 {
+            font-size: 1.2rem;
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .modal-body {
+            padding: 20px 24px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .index-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .index-row:hover {
+            background: var(--card-bg-elevated);
+            border-color: var(--accent-gold);
+            transform: translateX(6px);
+        }
+
+        .index-row.current {
+            border-color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .index-row-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .index-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+
+        .index-name {
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        /* =========================================
+           RESPONSIVIDADE (Tablets e Pantallas Pequenas)
+           ========================================= */
+        @media (max-width: 1100px) {
+            .hero-layout, .comparison-container, .arch-grid, .file-layer-grid, .prompt-layout {
+                grid-template-columns: 1fr;
+            }
+            .projects-grid, .flow-steps-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .comparison-arrow {
+                display: none;
+            }
+            .slide {
+                padding: 30px 30px 100px 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width-collapsed: 0px;
+            }
+            .global-sidebar {
+                display: none;
+            }
+            .top-bar {
+                left: 0;
+                padding: 0 15px;
+            }
+            .viewport {
+                left: 0;
+            }
+            .projects-grid, .flow-steps-grid, .hero-cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA SUPERIOR CON PROGRESO E METADATOS -->
+    <header class="top-bar">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="top-course-tag">
+            <span class="live-dot"></span>
+            <span>CURSO REFORZO IA 2026-27 &bull; SECUNDARIA</span>
+        </div>
+
+        <div class="top-actions">
+            <button class="btn-index" onclick="openIndexModal()" title="Abrir índice completo de diapositivas">
+                <span>☰</span>
+                <span>Índice</span>
+            </button>
+            <div class="slide-counter" id="slideCounter">
+                Diapositiva <strong id="currentSlideNum">1</strong> de <span id="totalSlidesNum">8</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- BARRA LATERAL GLOBAL INTERACTIVA (Estilo do curso 25-26) -->
+    <aside class="global-sidebar">
+        <a href="javascript:void(0)" onclick="goToSlide(0)" class="sidebar-brand" title="Inicio do Obradoiro">
+            <span class="brand-icon">⚡</span>
+            <span class="brand-text">IA DOCENTE 26</span>
+        </a>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section-title">Contidos</div>
+
+        <div class="nav-item active" onclick="goToSlide(0)" id="nav-0" title="1. Portada">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Portada</span>
+        </div>
+        <div class="nav-item" onclick="goToSlide(1)" id="nav-1" title="2. Fitos 2026">
+            <span class="nav-icon">🚀</span>
+            <span class="nav-label">Fitos 2026</span>
+        </div>
+        <div class="nav-item" onclick="goToSlide(2)" id="nav-2" title="3. Arquitectura Moodle">
+            <span class="nav-icon">🏗️</span>
+            <span class="nav-label">Arquitectura</span>
+        </div>
+        <div class="nav-item" onclick="goToSlide(3)" id="nav-3" title="4. Privacidade e Fluxo">
+            <span class="nav-icon">🔒</span>
+            <span class="nav-label">Fluxo e RGPD</span>
+        </div>
+
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-title">Proxectos</div>
+
+        <div class="nav-item" onclick="goToSlide(4)" id="nav-4" title="5. Ciencias e Contorno">
+            <span class="nav-icon">🔬</span>
+            <span class="nav-label">Ciencias</span>
+        </div>
+        <div class="nav-item" onclick="goToSlide(5)" id="nav-5" title="6. Humanidades e Letras">
+            <span class="nav-icon">📜</span>
+            <span class="nav-label">Humanidades</span>
+        </div>
+
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-title">Práctica</div>
+
+        <div class="nav-item" onclick="goToSlide(6)" id="nav-6" title="7. Entrada e Descargas">
+            <span class="nav-icon">📂</span>
+            <span class="nav-label">Arquivos</span>
+        </div>
+        <div class="nav-item" onclick="goToSlide(7)" id="nav-7" title="8. Prompt Mestre">
+            <span class="nav-icon">✨</span>
+            <span class="nav-label">Prompt Mestre</span>
+        </div>
+    </aside>
+
+    <!-- ZONA PRINCIPAL DE DIAPOSITIVAS -->
+    <main class="viewport">
+        <div class="slides-container">
+
+            <!-- ========================================================
+                 DIAPOSITIVA 1: PORTADA
+                 ======================================================== -->
+            <section class="slide active" id="slide-0">
+                <div class="hero-layout">
+                    <div class="hero-content">
+                        <div class="slide-eyebrow">
+                            <span>🎓</span> FORMAÇÃO DOCENTE DE REFORZO &bull; 3 HORAS
+                        </div>
+                        <h1>
+                            Da Consulta de Texto<br>
+                            <span class="gold">á Factoría de Software</span><br>
+                            <span class="orange">Educativo</span>
+                        </h1>
+                        <p class="hero-description">
+                            Aprende a deseñar e incrustar micro-aplicacións interactivas e cadros de mando en tempo real na aula virtual Moodle, sen xestión de servidores nin custos adicionais.
+                        </p>
+                        <div class="hero-meta-badges">
+                            <div class="meta-badge">⏱️ Duración: <strong>3 horas</strong></div>
+                            <div class="meta-badge">🎯 Enfoque: <strong>100% Práctico</strong></div>
+                            <div class="meta-badge">🛡️ Requisito: <strong>Sen servidores nin licenzas</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="hero-cards-grid">
+                        <div class="dashboard-card card-c1" onclick="goToSlide(1)">
+                            <div>
+                                <h3>O Salto Cualitativo</h3>
+                                <p>Do chat conversacional aos modelos que executan código funcional.</p>
+                            </div>
+                            <div class="card-icon">🚀</div>
+                        </div>
+
+                        <div class="dashboard-card card-c2" onclick="goToSlide(2)">
+                            <div>
+                                <h3>Arquitectura Moodle</h3>
+                                <p>Artefacto autocontido nun só arquivo HTML con CDN reactivo.</p>
+                            </div>
+                            <div class="card-icon">🏗️</div>
+                        </div>
+
+                        <div class="dashboard-card card-c3" onclick="goToSlide(4)">
+                            <div>
+                                <h3>Catálogo de Proxectos</h3>
+                                <p>6 modelos listos para Ciencias, Sociais, Letras e Eficiencia.</p>
+                            </div>
+                            <div class="card-icon">💡</div>
+                        </div>
+
+                        <div class="dashboard-card card-c4" onclick="goToSlide(7)">
+                            <div>
+                                <h3>O Prompt Mestre</h3>
+                                <p>A fórmula en 4 capas para xerar calquera app educativa con IA.</p>
+                            </div>
+                            <div class="card-icon">✨</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 2: EL SALTO CUALITATIVO (HITOS 2026)
+                 ======================================================== -->
+            <section class="slide" id="slide-1">
+                <div class="slide-header">
+                    <div class="slide-eyebrow">EVOLUCIÓN TECNOLÓXICA</div>
+                    <h2 class="slide-title">O Salto Cualitativo: <span>Fitos de IA en 2026</span></h2>
+                    <p class="slide-subtitle">Como pasamos de manter conversas ementadas a construír solucións de software interactivas funcionais á primeira tentativa.</p>
+                </div>
+
+                <div class="comparison-container">
+                    <!-- 2025 -->
+                    <div class="comparison-card card-2025">
+                        <div class="comp-header">
+                            <div class="comp-year">2025</div>
+                            <div class="comp-paradigm">O Paradigma Conversacional</div>
+                        </div>
+                        <ul class="comp-list">
+                            <li><strong>Entorno de chat pechado:</strong> Interacción lineal baseada en preguntas e respostas de texto solto.</li>
+                            <li><strong>Fluxo manual e fragmentado:</strong> Copiar e pegar respostas, reformular múltiples veces para obter un resultado aceptable.</li>
+                            <li><strong>Saída estática:</strong> Xeración de táboas, esquemas ou textos que requiren aplicacións de terceiros para ser útiles.</li>
+                            <li><strong>Limitación de cálculo e lóxica:</strong> Erros frecuentes en código complexo e inconsistencias estruturais.</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-arrow">
+                        ➔
+                        <span>Transición</span>
+                    </div>
+
+                    <!-- 2026 -->
+                    <div class="comparison-card card-2026">
+                        <div class="comp-header">
+                            <div class="comp-year">2026</div>
+                            <div class="comp-paradigm">O Paradigma de Execución e Artefactos</div>
+                        </div>
+                        <ul class="comp-list">
+                            <li><strong>Modelos con razoamento guiado:</strong> Capacidade de planificar, validar e depurar antes de entregar o código final.</li>
+                            <li><strong>Artefactos executables completos:</strong> Xeración directa de aplicacións completas autocontidas nun único arquivo <code>.html</code>.</li>
+                            <li><strong>Funcionalidade ao primeiro intento:</strong> Interfaces reactivas con estilos CSS modernos, xestión de erros e librarías interactivas.</li>
+                            <li><strong>Autonomía axéntica:</strong> Capacidade para consumir APIs en tempo real e procesar ficheiros locais sen escribir código manual.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="role-shift-box">
+                    <div class="role-shift-icon">🧭</div>
+                    <div class="role-shift-text">
+                        <h4>O novo rol docente: Da redacción á dirección técnica</h4>
+                        <p>
+                            O noso traballo xa non consiste en buscar "o prompt máxico de texto", senón en <strong>actuar como directores de proxecto</strong>: definir claramente a orixe dos datos, os criterios didácticos e as interaccións visuais que o alumnado necesita na aula.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 3: ARQUITECTURA TÉCNICA PARA MOODLE
+                 ======================================================== -->
+            <section class="slide" id="slide-2">
+                <div class="slide-header">
+                    <div class="slide-eyebrow">ESTRUTURA E INTEGRACIÓN</div>
+                    <h2 class="slide-title">Arquitectura Técnica dun <span>Artefacto para Moodle</span></h2>
+                    <p class="slide-subtitle">Como construír micro-aplicacións robustas sen necesidade de servidores, bases de datos nin permisos de administrador de sistemas.</p>
+                </div>
+
+                <div class="arch-grid">
+                    <div class="arch-card">
+                        <h3>📦 O Concepto de Arquivo Único (Autocontido)</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 20px;">
+                            Todo o software vive nun só ficheiro <code>index.html</code> que o navegador interpreta directamente no equipo do alumno.
+                        </p>
+
+                        <div class="tech-pillars">
+                            <div class="pillar html">
+                                <span class="pillar-tag">&lt;HTML5&gt;</span>
+                                <p>Estrutura semántica, tarxetas e áreas de arrastro.</p>
+                            </div>
+                            <div class="pillar css">
+                                <span class="pillar-tag">CSS3</span>
+                                <p>Deseño adaptado, variables e modos de contraste.</p>
+                            </div>
+                            <div class="pillar js">
+                                <span class="pillar-tag">JS ES6+</span>
+                                <p>Consumo de APIs, FileReader e reactividade.</p>
+                            </div>
+                        </div>
+
+                        <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">
+                            📚 Librarías sen instalación previa (vía CDN Oficial):
+                        </div>
+                        <div class="cdn-grid">
+                            <div class="cdn-badge">
+                                <div class="cdn-icon">📈</div>
+                                <div>
+                                    <strong>Chart.js</strong>
+                                    <span>Gráficas interactivas</span>
+                                </div>
+                            </div>
+                            <div class="cdn-badge">
+                                <div class="cdn-icon">🗺️</div>
+                                <div>
+                                    <strong>Leaflet.js</strong>
+                                    <span>Mapas xeográficos abertos</span>
+                                </div>
+                            </div>
+                            <div class="cdn-badge">
+                                <div class="cdn-icon">📊</div>
+                                <div>
+                                    <strong>SheetJS (xlsx)</strong>
+                                    <span>Lectura e exportación Excel</span>
+                                </div>
+                            </div>
+                            <div class="cdn-badge">
+                                <div class="cdn-icon">📑</div>
+                                <div>
+                                    <strong>jsPDF</strong>
+                                    <span>Xeración de informes en PDF</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="arch-card">
+                        <h3>🔌 Integración Nativa en Moodle</h3>
+                        <div class="moodle-methods">
+                            <div class="method-item">
+                                <h4>
+                                    <span>Método 1: Recurso Arquivo</span>
+                                    <span class="method-tag">Máis Rápido</span>
+                                </h4>
+                                <p>Subir o arquivo <code>index.html</code> como recurso 'Ficheiro' e configurar na sección de aparencia o modo de visualización en <strong>"Incrustar" (Embed)</strong>.</p>
+                            </div>
+
+                            <div class="method-item">
+                                <h4>
+                                    <span>Método 2: Iframe nunha Páxina</span>
+                                    <span class="method-tag">Máis Integrado</span>
+                                </h4>
+                                <p>No editor de Moodle, activar a vista de código fonte (<code>&lt;&gt;</code>) nunha páxina ou etiqueta e pegar un iframe responsivo:</p>
+                                <div class="code-snippet-small">
+&lt;iframe src="URL_OU_ARQUIVO.html" width="100%" height="700" style="border:none; border-radius:12px;"&gt;&lt;/iframe&gt;
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Imaxe de apoio Moodle Embed -->
+                        <div style="margin-top: 15px; border-radius: 8px; overflow: hidden; border: 1px dashed var(--border-color); background: rgba(0,0,0,0.2); text-align: center;">
+                            <img src="img/moodle_embed.png" alt="Exemplo de integración en Moodle" style="max-width: 100%; height: auto; display: block; border-radius: 6px;" onerror="this.parentElement.style.display='none';">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 4: FLUXO BIDIRECCIONAL (PRIVACIDADE RGPD)
+                 ======================================================== -->
+            <section class="slide" id="slide-3">
+                <div class="slide-header">
+                    <div class="slide-eyebrow">SEGURIDADE E PRIVACIDADE</div>
+                    <h2 class="slide-title">Fluxo Bidireccional de Datos: <span>Privacidade Total</span></h2>
+                    <p class="slide-subtitle">Como combinar fontes públicas en liña con datos reais do alumnado garantindo o cumprimento absoluto do RGPD.</p>
+                </div>
+
+                <div class="flow-visual-container">
+                    <div class="flow-steps-grid">
+                        <div class="flow-step-card step-1">
+                            <span class="step-num">PASO 1</span>
+                            <h4>1. Entrada Local</h4>
+                            <p>O alumno arrastra un arquivo <code>.csv</code> local (ex. datos de temperatura ou notas). O navegador léeo con <strong>FileReader API</strong>.</p>
+                            <div class="flow-step-badge">100% Local &bull; Sen subida</div>
+                        </div>
+
+                        <div class="flow-step-card step-2">
+                            <span class="step-num">PASO 2</span>
+                            <h4>2. Consulta Externa</h4>
+                            <p>A aplicación realiza unha peticion asíncrona (<code>fetch</code>) a unha API pública oficial (Open-Meteo, USGS, Wikimedia) sen autenticación sensible.</p>
+                            <div class="flow-step-badge">HTTP GET &bull; CORS Aberto</div>
+                        </div>
+
+                        <div class="flow-step-card step-3">
+                            <span class="step-num">PASO 3</span>
+                            <h4>3. Procesamento</h4>
+                            <p>JavaScript cruza na memoria RAM do navegador os datos da API externa cos datos do CSV local, xerando gráficos e cálculos comparativos.</p>
+                            <div class="flow-step-badge">Cálculo en Cliente</div>
+                        </div>
+
+                        <div class="flow-step-card step-4">
+                            <span class="step-num">PASO 4</span>
+                            <h4>4. Saída Directa</h4>
+                            <p>O usuario fai clic e xera no acto un ficheiro <code>.xlsx</code> ou un informe <code>.pdf</code> maquetado listo para entregar ou gardar.</p>
+                            <div class="flow-step-badge">Descarga Instantánea</div>
+                        </div>
+                    </div>
+
+                    <!-- Imaxe de apoio Diagrama de Fluxo -->
+                    <div style="border-radius: 8px; overflow: hidden; border: 1px dashed var(--border-color); background: rgba(0,0,0,0.2); text-align: center;">
+                        <img src="img/flujo_bidireccional.png" alt="Diagrama de fluxo bidireccional de datos" style="max-width: 100%; height: auto; display: block; border-radius: 6px; margin: 0 auto;" onerror="this.parentElement.style.display='none';">
+                    </div>
+
+                    <div class="privacy-guarantee-banner">
+                        <div class="privacy-icon">🛡️</div>
+                        <div class="privacy-text">
+                            <h4>Garantía de Privacidade e Cumprimento Estrito do RGPD</h4>
+                            <p>
+                                Ao executarse enteiramente no navegador cliente (Client-Side), <strong>ningún dato persoal nin do centro educativo sae á rede</strong>. As chamadas á API externa só consultan datos públicos sen transmitir ningunha información privada dos estudantes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 5: CATÁLOGO DE PROXECTOS (CIENCIAS E CONTORNO)
+                 ======================================================== -->
+            <section class="slide" id="slide-4">
+                <div class="slide-header">
+                    <div class="slide-eyebrow">CATÁLOGO DIDÁCTICO &bull; BLOQUE A</div>
+                    <h2 class="slide-title">Micro-Apps para <span>Ciencias e Contorno</span></h2>
+                    <p class="slide-subtitle">Propostas de cadros de mando interactivos que conectan a aula con sensores e datos públicos mundiais en tempo real.</p>
+                </div>
+
+                <div class="projects-grid">
+                    <!-- Proxecto 1 -->
+                    <div class="project-card p-meteo">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Física e Bioloxía</span>
+                                <span class="proj-icon-large">☀️</span>
+                            </div>
+                            <h3>Estación Meteorolóxica e Radiación UV</h3>
+                            <div class="proj-api-badge">
+                                🌐 API: Open-Meteo (GPS libre)
+                            </div>
+                            <p>Panel con previsión meteorolóxica por horas, índice de radiación UV actual e cruzamento coas medicións manuais do horto escolar.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Arrastro de CSV con temperaturas do patio</li>
+                            <li>Dobre curva comparativa en Chart.js</li>
+                            <li>Alerta didáctica de protección solar segundo UV</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('meteo')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+
+                    <!-- Proxecto 2 -->
+                    <div class="project-card p-quake">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Xeoloxía e Sociais</span>
+                                <span class="proj-icon-large">🌋</span>
+                            </div>
+                            <h3>Monitor Sísmico e Tectónico Global</h3>
+                            <div class="proj-api-badge">
+                                🌐 API: USGS Earthquake (GeoJSON)
+                            </div>
+                            <p>Visualizador en tempo real de sismos globais con filtro de magnitude e profundidade, mostrando a relación coas placas tectónicas.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Mapa interactivo con capas en Leaflet</li>
+                            <li>Cálculo de enerxía liberada segundo a escala Richter</li>
+                            <li>Exportación directa a CSV para análise estatística</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('quake')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+
+                    <!-- Proxecto 3 -->
+                    <div class="project-card p-energy">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Tecnoloxía e Sustentabilidade</span>
+                                <span class="proj-icon-large">⚡</span>
+                            </div>
+                            <h3>Monitor do Prezo da Luz (PVPC)</h3>
+                            <div class="proj-api-badge">
+                                🌐 API: Tarifa Regulada PVPC / ESIOS
+                            </div>
+                            <p>Cadro de mando que representa as 24 horas da curva do prezo da electricidade en España para concienciar sobre o consumo responsable.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Detección automática das franxas val, chás e punta</li>
+                            <li>Simulador de gasto para a recarga de ordenadores</li>
+                            <li>Descarga de folla de traballo con preguntas en PDF</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('energy')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 6: CATÁLOGO DE PROXECTOS (HUMANIDADES E LETRAS)
+                 ======================================================== -->
+            <section class="slide" id="slide-5">
+                <div class="slide-header">
+                    <div class="slide-eyebrow">CATÁLOGO DIDÁCTICO &bull; BLOQUE B</div>
+                    <h2 class="slide-title">Micro-Apps para <span>Humanidades e Letras</span></h2>
+                    <p class="slide-subtitle">Ferramentas que transforman arquivos culturais e léxicos abertos en experiencias de aprendizaxe investigativa.</p>
+                </div>
+
+                <div class="projects-grid">
+                    <!-- Proxecto 4 -->
+                    <div class="project-card p-history">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Historia e Sociais</span>
+                                <span class="proj-icon-large">⏳</span>
+                            </div>
+                            <h3>"Tal Día Como Hoxe": Liña Temporal</h3>
+                            <div class="proj-api-badge">
+                                🌐 API: Wikimedia On This Day
+                            </div>
+                            <p>Explorador interactivo de efemérides históricas, nacementos e fitos científicos asociados a calquera día do ano lectivo.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Selector dinámico de mes e día</li>
+                            <li>Clasificación por eventos, nacementos e falecementos</li>
+                            <li>Xeración dunha ficha de investigación histórica en PDF</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('history')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+
+                    <!-- Proxecto 5 -->
+                    <div class="project-card p-art">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Educación Artística</span>
+                                <span class="proj-icon-large">🎨</span>
+                            </div>
+                            <h3>Galería Virtual de Patrimonio e Arte</h3>
+                            <div class="proj-api-badge">
+                                🌐 API: The Metropolitan Museum (Met)
+                            </div>
+                            <p>Buscador de fondos artísticos mundiais en dominio público con imaxes en alta resolución, época histórica e procedencia xeográfica.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Filtros por movemento artístico e cultura</li>
+                            <li>Modo presentación de cadros para proxector</li>
+                            <li>Descarga do dossier de obras seleccionadas polo alumno</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('art')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+
+                    <!-- Proxecto 6 -->
+                    <div class="project-card p-words">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Lingua e Literatura</span>
+                                <span class="proj-icon-large">✍️</span>
+                            </div>
+                            <h3>Obradoiro Léxico e Escritura Creativa</h3>
+                            <div class="proj-api-badge">
+                                🌐 API: Datamuse Semantic API
+                            </div>
+                            <p>Motor de axuda estilística e busca de relacións léxicas que axuda na composición poética e redacción de ensaios narrativos.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Busca de rimas consonantes e asonantes</li>
+                            <li>Sinónimos graduados por frecuencia de uso</li>
+                            <li>Exportador de glosarios creados polo alumnado a Excel</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('words')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 7: A CAPA DE ARQUIVOS (DRAG & DOWNLOAD)
+                 ======================================================== -->
+            <section class="slide" id="slide-6">
+                <div class="slide-header">
+                    <div class="slide-eyebrow">INTERACTIVIDADE AVANZADA</div>
+                    <h2 class="slide-title">A Capa de Arquivos: <span>Arrastrar e Descargar</span></h2>
+                    <p class="slide-subtitle">Como dotar á micro-aplicación de capacidade para procesar documentos do alumnado e xerar entregables profesionais.</p>
+                </div>
+
+                <div class="file-layer-grid">
+                    <!-- ENTRADA -->
+                    <div class="file-box">
+                        <h3>📥 Entrada Local por Drag & Drop</h3>
+                        <p style="font-size: 0.88rem; color: var(--text-dim); line-height: 1.5;">
+                            Permite aos estudantes introducir as súas propias medicións ou rexistros sen formularios complicados, simplemente arrastrando un arquivo <code>.csv</code> desde o seu escritorio.
+                        </p>
+
+                        <div class="drop-preview-zone">
+                            <div class="drop-preview-icon">📄</div>
+                            <strong>Arrastra aquí o arquivo .csv da clase</strong>
+                            <span>Exemplo: temperaturas_horto_escolar.csv</span>
+                        </div>
+
+                        <div style="font-size: 0.82rem; color: var(--text-main); background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+                            ⚙️ <strong>Como funciona na práctica:</strong> JavaScript emprega o evento <code>drop</code> e o obxecto nativo <code>FileReader.readAsText()</code> para separar as liñas e valores do arquivo e superpolos instantaneamente na gráfica de Chart.js.
+                        </div>
+                    </div>
+
+                    <!-- SAÍDA -->
+                    <div class="file-box">
+                        <h3>📤 Saída Multiformato cun Só Clic</h3>
+                        <p style="font-size: 0.88rem; color: var(--text-dim); line-height: 1.5;">
+                            A aplicación convértese nun xerador de materiais físicos e dixitais, facilitando a recollida de evidencias de aprendizaxe.
+                        </p>
+
+                        <div class="export-buttons-preview">
+                            <div class="export-btn-mock excel">
+                                <div class="btn-title">
+                                    <span class="icon">📊</span>
+                                    <span>Exportar Táboa de Datos (.xlsx / .csv)</span>
+                                </div>
+                                <span class="lib-pill">SheetJS</span>
+                            </div>
+
+                            <div class="export-btn-mock pdf">
+                                <div class="btn-title">
+                                    <span class="icon">📑</span>
+                                    <span>Descargar Ficha de Análise (.pdf)</span>
+                                </div>
+                                <span class="lib-pill">jsPDF</span>
+                            </div>
+                        </div>
+
+                        <div style="font-size: 0.82rem; color: var(--text-main); background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 20px;">
+                            💡 <strong>Vantaxe didáctica:</strong> O alumnado non precisa instalar procesadores de texto adicionais para xerar un informe con cabeceira, gráfica capturada e preguntas de reflexión listas para entregar en Moodle.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 8: O PROMPT MESTRE (MODELO REUTILIZABLE)
+                 ======================================================== -->
+            <section class="slide" id="slide-7">
+                <div class="slide-header">
+                    <div class="slide-eyebrow">PLANTILLA DE TRABALLO PRÁCTICO</div>
+                    <h2 class="slide-title">O Prompt Mestre: <span>Modelo Reutilizable</span></h2>
+                    <p class="slide-subtitle">Copia esta instrución estruturada en 4 capas para xerar en calquera IA avanzada a túa propia micro-aplicación para Moodle.</p>
+                </div>
+
+                <div class="prompt-layout">
+                    <!-- BLOQUE DE CÓDIGO CON BOTÓN COPIAR -->
+                    <div class="code-box-container">
+                        <div class="code-box-header">
+                            <span class="code-title">prompt_mestre_microapp_moodle.txt</span>
+                            <button class="btn-copy" id="btnCopyPrompt" onclick="copyPromptText()">
+                                <span id="copyIcon">📋</span>
+                                <span id="copyText">Copiar Prompt</span>
+                            </button>
+                        </div>
+                        <pre class="code-editor-area" id="promptContent">Actúa como programador frontend senior. Crea un único arquivo index.html completamente autocontido (HTML, CSS moderno e JS dentro do mesmo documento) deseñado para incrustarse nun iframe de Moodle.
+
+Requisitos funcionais:
+1. Conexión de Datos: Consume a API pública de [NOME_API] mediante fetch(), amosando os datos en tarxetas de resumo e unha gráfica interactiva con Chart.js (vía CDN).
+2. Entrada Local (Drag & Drop): Engade unha zona de arrastre para arquivos .csv locais que lea o documento con FileReader e debuxe unha segunda curva comparativa na gráfica (ex. medicións tomadas no centro).
+3. Exportación en Cliente:
+   - Botón "Exportar Datos (.xlsx/.csv)" usando a libraría SheetJS (CDN).
+   - Botón "Descargar Informe (.pdf)" maquetado con jsPDF (CDN).
+4. Deseño e Estabilidade: Interfaz limpa, tipografía accesible, estados de carga (loading spinners) e xestión amigable de erros de rede.</pre>
+                    </div>
+
+                    <!-- GUÍA DAS 4 CAPAS -->
+                    <div class="prompt-layers-guide">
+                        <div class="layer-item">
+                            <h4><span>1.</span> Rol e Formato Autocontido</h4>
+                            <p>Esixe explicitamente que todo estea nun só arquivo <code>index.html</code> para evitar dependencias e asegurar que funcione en Moodle.</p>
+                        </div>
+
+                        <div class="layer-item">
+                            <h4><span>2.</span> Fonte de Datos e Gráfica</h4>
+                            <p>Especifica a API pública elixida e delega a visualización gráfica nunha biblioteca estándar por CDN como Chart.js.</p>
+                        </div>
+
+                        <div class="layer-item">
+                            <h4><span>3.</span> Zona de Entrada e RGPD</h4>
+                            <p>Inclúe a lectura local con FileReader para que o alumnado poida incorporar datos reais sen problemas de privacidade.</p>
+                        </div>
+
+                        <div class="layer-item">
+                            <h4><span>4.</span> Saída e Resiliencia</h4>
+                            <p>Garante a exportación en formatos estándar (Excel/PDF) e prevén erros de rede con mensaxes comprensibles para os estudantes.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- BOTÓNS FLUTUANTES DE NAVEGACIÓN -->
+    <div class="floating-nav">
+        <button class="nav-btn" id="btnPrev" onclick="prevSlide()" title="Diapositiva anterior (Frecha Esquerda)">
+            &#8592;
+        </button>
+        <div class="keyboard-hint">
+            <span>[Espazo / Frechas]</span>
+        </div>
+        <button class="nav-btn" id="btnNext" onclick="nextSlide()" title="Diapositiva seguinte (Espazo ou Frecha Dereita)">
+            &#8594;
+        </button>
+    </div>
+
+    <!-- MODAL DE ÍNDICE DE DIAPOSITIVAS -->
+    <div class="modal-overlay" id="indexModal" onclick="closeIndexModalOnBackdrop(event)">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><span>📑</span> Índice do Obradoiro</h3>
+                <button class="modal-close" onclick="closeIndexModal()" title="Pechar índice">&times;</button>
+            </div>
+            <div class="modal-body" id="indexModalList">
+                <!-- Xérase dinamicamente por JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE PROMPT COMPLETO DE PROXECTO -->
+    <div class="modal-overlay" id="promptModal" onclick="closePromptModalOnBackdrop(event)">
+        <div class="modal-card modal-card-large">
+            <div class="modal-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span id="promptModalIcon" style="font-size: 1.6rem;">☀️</span>
+                    <div>
+                        <h3 id="promptModalTitle" style="margin: 0; font-size: 1.15rem; color: var(--accent-gold);">Estación Meteorolóxica e Radiación UV</h3>
+                        <div id="promptModalSubtitle" style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Prompt completo listo para copiar e pegar en ChatGPT, Gemini, Claude ou DeepSeek</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button class="btn-copy" id="btnCopyProjectPrompt" onclick="copyProjectPromptText()">
+                        <span id="copyProjIcon">📋</span>
+                        <span id="copyProjText">Copiar Prompt</span>
+                    </button>
+                    <button class="modal-close" onclick="closePromptModal()" title="Pechar">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body" style="padding: 18px 24px; background: #0c0c0c;">
+                <div style="margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                    <span id="promptModalTag" class="proj-tag" style="background: rgba(59, 130, 246, 0.2); color: #60A5FA;">Física e Bioloxía</span>
+                    <span style="font-size: 0.76rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">100% Autocontido &bull; Moodle Iframe Ready</span>
+                </div>
+                <pre class="code-editor-area" id="projectPromptContent" style="max-height: 55vh; user-select: text; font-size: 0.8rem;"></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================
+         LÓXICA JAVASCRIPT INTEGRADA
+         ========================================= -->
+    <script>
+        // Definición das diapositivas
+        const slides = [
+            { id: "slide-0", title: "Portada: Da Consulta á Factoría de Software", icon: "🏠" },
+            { id: "slide-1", title: "O Salto Cualitativo: Fitos de IA 2026", icon: "🚀" },
+            { id: "slide-2", title: "Arquitectura Técnica dun Artefacto Moodle", icon: "🏗️" },
+            { id: "slide-3", title: "Fluxo Bidireccional de Datos e Privacidade", icon: "🔒" },
+            { id: "slide-4", title: "Catálogo: Ciencias e Contorno", icon: "🔬" },
+            { id: "slide-5", title: "Catálogo: Humanidades e Letras", icon: "📜" },
+            { id: "slide-6", title: "A Capa de Arquivos (Arrastrar e Descargar)", icon: "📂" },
+            { id: "slide-7", title: "O Prompt Mestre Reutilizable", icon: "✨" }
+        ];
+
+        let currentSlideIndex = 0;
+        const totalSlides = slides.length;
+
+        // Elementos do DOM
+        const slideElements = document.querySelectorAll('.slide');
+        const currentSlideNumEl = document.getElementById('currentSlideNum');
+        const totalSlidesNumEl = document.getElementById('totalSlidesNum');
+        const progressBarEl = document.getElementById('progressBar');
+        const btnPrevEl = document.getElementById('btnPrev');
+        const btnNextEl = document.getElementById('btnNext');
+        const indexModalEl = document.getElementById('indexModal');
+        const indexModalListEl = document.getElementById('indexModalList');
+
+        // Inicialización
+        function initPresentation() {
+            totalSlidesNumEl.textContent = totalSlides;
+            buildIndexModal();
+            updateSlideView();
+
+            // Sincronización co hash da URL se existe (ex. #slide-3 ou #3)
+            const hash = window.location.hash.replace('#', '');
+            if (hash) {
+                const numericHash = parseInt(hash, 10);
+                if (!isNaN(numericHash) && numericHash >= 1 && numericHash <= totalSlides) {
+                    goToSlide(numericHash - 1);
+                } else {
+                    const foundIndex = slides.findIndex(s => s.id === hash);
+                    if (foundIndex !== -1) goToSlide(foundIndex);
+                }
+            }
+        }
+
+        // Cambio de diapositiva
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            currentSlideIndex = index;
+            updateSlideView();
+            window.location.hash = `slide-${index}`;
+            // Scroll ao inicio da zona visible
+            document.querySelector('.viewport').scrollTop = 0;
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides - 1) {
+                goToSlide(currentSlideIndex + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 0) {
+                goToSlide(currentSlideIndex - 1);
+            }
+        }
+
+        // Actualizar elementos visuais
+        function updateSlideView() {
+            // Actualizar diapositivas
+            slideElements.forEach((el, idx) => {
+                if (idx === currentSlideIndex) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+
+            // Actualizar barra de progreso
+            const progressPercent = ((currentSlideIndex + 1) / totalSlides) * 100;
+            progressBarEl.style.width = `${progressPercent}%`;
+
+            // Actualizar contador
+            currentSlideNumEl.textContent = currentSlideIndex + 1;
+
+            // Actualizar botóns de navegación
+            btnPrevEl.disabled = (currentSlideIndex === 0);
+            btnNextEl.disabled = (currentSlideIndex === totalSlides - 1);
+
+            // Actualizar items da barra lateral
+            for (let i = 0; i < totalSlides; i++) {
+                const navItem = document.getElementById(`nav-${i}`);
+                if (navItem) {
+                    if (i === currentSlideIndex) {
+                        navItem.classList.add('active');
+                    } else {
+                        navItem.classList.remove('active');
+                    }
+                }
+            }
+
+            // Actualizar filas do modal de índice
+            const indexRows = document.querySelectorAll('.index-row');
+            indexRows.forEach((row, i) => {
+                if (i === currentSlideIndex) {
+                    row.classList.add('current');
+                } else {
+                    row.classList.remove('current');
+                }
+            });
+        }
+
+        // Construír o modal de índice
+        function buildIndexModal() {
+            indexModalListEl.innerHTML = '';
+            slides.forEach((slide, idx) => {
+                const row = document.createElement('div');
+                row.className = `index-row ${idx === currentSlideIndex ? 'current' : ''}`;
+                row.onclick = () => {
+                    goToSlide(idx);
+                    closeIndexModal();
+                };
+
+                row.innerHTML = `
+                    <div class="index-row-left">
+                        <span class="index-num">0${idx + 1}</span>
+                        <span style="font-size: 1.2rem;">${slide.icon}</span>
+                        <span class="index-name">${slide.title}</span>
+                    </div>
+                    <span style="color: var(--text-dim); font-size: 0.8rem;">Ir &#8594;</span>
+                `;
+                indexModalListEl.appendChild(row);
+            });
+        }
+
+        function openIndexModal() {
+            indexModalEl.classList.add('open');
+        }
+
+        function closeIndexModal() {
+            indexModalEl.classList.remove('open');
+        }
+
+        function closeIndexModalOnBackdrop(e) {
+            if (e.target === indexModalEl) {
+                closeIndexModal();
+            }
+        }
+
+        // Copiar o prompt mestre
+        function copyPromptText() {
+            const promptCode = document.getElementById('promptContent').innerText;
+            navigator.clipboard.writeText(promptCode).then(() => {
+                const btn = document.getElementById('btnCopyPrompt');
+                const copyText = document.getElementById('copyText');
+                const copyIcon = document.getElementById('copyIcon');
+
+                btn.classList.add('copied');
+                copyText.textContent = 'Copiado! ✓';
+                copyIcon.textContent = '✓';
+
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    copyText.textContent = 'Copiar Prompt';
+                    copyIcon.textContent = '📋';
+                }, 2500);
+            }).catch(err => {
+                console.error('Erro ao copiar o texto:', err);
+            });
+        }
+
+        // =========================================
+        // BASE DE DATOS DE PROMPTS COMPLETOS DE PROXECTO
+        // =========================================
+        const projectPrompts = {
+            meteo: {
+                title: "Estación Meteorolóxica e Radiación UV",
+                icon: "☀️",
+                tag: "Física e Bioloxía",
+                tagColor: "rgba(59, 130, 246, 0.2)",
+                tagTextColor: "#60A5FA",
+                prompt: `Actúa como programador frontend senior especialista en ferramentas educativas interactivas. Crea un único arquivo index.html completamente autocontido (HTML5, estilos CSS modernos integrados e lóxica JavaScript ES6+, sen dependencias de compilación nin servidores) deseñado para funcionar como micro-aplicación educativa incrustada nun iframe de Moodle.
+
+Obxectivo do Proxecto:
+Construír un Cadro de Mando Meteorolóxico e de Radiación UV escolar interactivo que axude ao alumnado de Secundaria a analizar as condicións atmosféricas e a radiación solar para concienciar sobre a saúde dermatolóxica e o cambio climático.
+
+Requisitos Técnicos e Funcionais:
+
+1. Conexión de Datos en Tempo Real (API Pública sen Clave):
+   - Conéctate mediante fetch() á API aberta de Open-Meteo:
+     URL: https://api.open-meteo.com/v1/forecast?latitude=42.8805&longitude=-8.5457&hourly=temperature_2m,relative_humidity_2m,uv_index,weather_code&current=temperature_2m,relative_humidity_2m,uv_index,weather_code&timezone=auto (coordenadas de Santiago de Compostela / Galicia por defecto).
+   - Inclúe un selector sinxelo de cidades de Galicia (Santiago, A Coruña, Vigo, Lugo, Ourense, Pontevedra, Ferrol) para actualizar as coordenadas dinamicamente.
+   - Amosa tarxetas de resumo no panel superior: Temperatura actual (°C), Humidade relativa (%) e Índice UV actual.
+   - O indicador do índice UV debe destacar visualmente a escala de risco da OMS con cores dinámicas: Baixo (<3, Verde), Moderado (3-5, Amarelo), Alto (6-7, Laranxa), Moi Alto (8-10, Vermello), Extremo (11+, Violeta) xunto cunha recomendación educativa de protección para o recreo/patio escolar.
+
+2. Visualización Gráfica Interactiva (Chart.js via CDN):
+   - Carga Chart.js desde CDN (https://cdn.jsdelivr.net/npm/chart.js).
+   - Debuxa unha gráfica de liña de 24 horas con dobre eixo Y:
+     - Eixo esquerdo: Temperatura horaria (°C) cunha curva suave e zona sombreada.
+     - Eixo dereito: Índice UV horario (barras ou liña punteada).
+   - Tooltips interactivos ao pasar o rato con data, hora e valores exactos.
+
+3. Entrada de Datos Locais (Drag & Drop con FileReader - Privacidade RGPD):
+   - Habilita unha zona de arrastre claramente delimitada para arquivos .csv locais.
+   - O arquivo CSV conterá medicións manuais tomadas polo alumnado no colexio (ex. columnas: "hora,temperatura").
+   - Emprega a API estándar FileReader para ler o CSV en memoria no navegador (sen subir ningún dato a internet).
+   - Ao soltar o arquivo, engade inmediatamente unha terceira curva comparativa na gráfica de Chart.js ("Medicións Escolares Reais") superposta á previsión oficial da API.
+
+4. Exportación e Descargas no Cliente:
+   - Botón "Exportar Datos (.xlsx)" con SheetJS CDN (https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js) que descarga unha folla de cálculo combinando a previsión da API e as medicións do CSV local.
+   - Botón "Descargar Informe (.pdf)" con jsPDF CDN (https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js) que xera unha ficha educativa con cabeceira do centro, data, resumo dos datos e espazo con preguntas de reflexión para o alumnado.
+
+5. Deseño e Resiliencia:
+   - Deseño limpo, accesible e de alto contraste optimizado para proxector de aula.
+   - Indicador de carga (spinner) durante as peticións de rede.
+   - Xestión amigable de erros: se falla a conexión a internet, amosa unha mensaxe clara e carga un conxunto de datos de simulación para que a clase poida continuar sen deterse.`
+            },
+            quake: {
+                title: "Monitor Sísmico e Tectónico Global",
+                icon: "🌋",
+                tag: "Xeoloxía e Sociais",
+                tagColor: "rgba(192, 57, 43, 0.2)",
+                tagTextColor: "#F87171",
+                prompt: `Actúa como programador frontend senior especialista en recursos educativos interactivos. Crea un único arquivo index.html completamente autocontido (HTML5, CSS moderno e JS ES6+ sen dependencias nin servidores externos) deseñado para incrustarse como iframe nun curso de Moodle.
+
+Obxectivo do Proxecto:
+Desenvolver un Monitor Sísmico Global en Tempo Real para que o alumnado de Secundaria poida explorar a relación entre os terremotos, as fallas e os límites das placas tectónicas terrestres.
+
+Requisitos Técnicos e Funcionais:
+
+1. Conexión de Datos Sísmicos en Tempo Real:
+   - Consume a API pública GeoJSON do USGS (United States Geological Survey):
+     URL: https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson (con selector para cambiar a all_week.geojson).
+   - Extrae para cada sismo: magnitude, profundidade (km), lugar/rexión, data/hora e coordenadas xeográficas.
+   - Tarxetas de resumo superior: Número total de sismos rexistrados, sismo de maior magnitude e profundidade media.
+
+2. Mapa Xeográfico Interactivo (Leaflet.js via CDN):
+   - Carga Leaflet.js desde CDN (https://unpkg.com/leaflet@1.9.4/dist/leaflet.js e a súa folla de estilo https://unpkg.com/leaflet@1.9.4/dist/leaflet.css).
+   - Mapa con mapa base libre de OpenStreetMap.
+   - Representa cada terremoto cun círculo proporcional á magnitude e con cor segundo a profundidade:
+     - Superficial (< 70 km): Vermello escuro (#EF4444)
+     - Intermedio (70 - 300 km): Laranxa (#F59E0B)
+     - Profundo (> 300 km): Azul/Violeta (#8B5CF6)
+   - Popup interactivo en cada punto co nome da localidade, magnitude exacta, profundidade e cálculo da enerxía liberada aproximada en Joules (fórmula E = 10^(4.8 + 1.5*M)).
+
+3. Filtros Interactivos e Entrada Local (Drag & Drop):
+   - Controis deslizantes ou selectores para filtrar sismos no mapa en tempo real por:
+     - Magnitude mínima (ex. todos, > 2.5, > 4.5, > 6.0).
+     - Rango de tempo (últimas 24h ou últimos 7 días).
+   - Zona de arrastre para importar arquivos .csv ou .geojson locais con sismos históricos traballados na materia. Lectura en cliente con FileReader sen conexión a servidores externos.
+
+4. Exportación en Cliente:
+   - Botón "Exportar Sismos Filtrados (.csv)" con SheetJS CDN (https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js) para que os alumnos poidan importar a táboa en LibreOffice Calc ou Excel e facer histogramas.
+   - Botón "Xerar Ficha de Estudo (.pdf)" con jsPDF CDN (https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js) con ficha técnica do tremor máis potente do día e preguntas de investigación sobre fallas xeolóxicas.
+
+5. Deseño e Usabilidade:
+   - Interfaz con paleta escura tecnolóxica de bo contraste para aula.
+   - Estado de carga e xestión de erros con datos de fallback en caso de perda de conexión na aula.`
+            },
+            energy: {
+                title: "Monitor do Prezo da Luz (PVPC)",
+                icon: "⚡",
+                tag: "Tecnoloxía e Sustentabilidade",
+                tagColor: "rgba(212, 175, 55, 0.2)",
+                tagTextColor: "#D4AF37",
+                prompt: `Actúa como programador frontend senior especialista en interfaces educativas. Crea un único arquivo index.html autocontido (HTML5, CSS moderno e JS integrados no mesmo documento) deseñado para incrustarse nun iframe de Moodle.
+
+Obxectivo do Proxecto:
+Crear un Cadro de Mando do Prezo da Electricidade Horaria (PVPC) en España para concienciar ao alumnado sobre o consumo enerxético responsable, o aforro no centro educativo e a análise matemática de funcións horarias.
+
+Requisitos Técnicos e Funcionais:
+
+1. Conexión de Datos do Mercado Eléctrico (PVPC Tarifa Regulada 2.0TD):
+   - Consume a API pública do prezo da luz en España (ou API con CORS aberto como https://api.preciodelaluz.org/v1/prices/all?zone=PCB ou fontes de ESIOS/REE).
+   - Xestión intelixente de fallos: se hai bloqueo de CORS ou caída de rede, a aplicación debe empregar inmediatamente un conxunto realista de prezos de 24 horas en caché para que a práctica nunca quede bloqueada na aula.
+   - Mostra en tarxetas destacadas: Prezo medio do día (€/MWh e €/kWh), Hora máis barata (Franxa Val) e Hora máis cara (Franxa Punta).
+
+2. Gráfica Interactiva das 24 Horas (Chart.js via CDN):
+   - Carga Chart.js desde CDN (https://cdn.jsdelivr.net/npm/chart.js).
+   - Gráfica de barras ou liña con código de cores estándar da tarifa 2.0TD:
+     - Franxa Val (horas máis económicas, normalmente madrugada): Verde (#10B981)
+     - Franxa Chás (horas intermedias): Amarelo/Dourado (#F59E0B)
+     - Franxa Punta (horas máis caras, mediodía e serán): Vermello (#EF4444)
+   - Liña horizontal indicando o prezo medio do día.
+
+3. Simulador Interactivo de Gasto do Centro Escolar:
+   - Panel de cálculo onde o alumno selecciona un equipo do colexio:
+     - Exemplo: Carriño de recarga de 30 portátiles (potencia: 2000W), Climatización da aula (1500W), Proxector de aula (300W).
+   - O alumno elixe a franxa horaria de uso (ex. de 10:00 a 12:00 vs de 02:00 a 04:00 da mañá).
+   - A aplicación calcula e compara o custo en euros exacto de ambas decisións, amosando a porcentaxe de aforro conseguido.
+
+4. Entrada de Datos por Drag & Drop e Exportación:
+   - Zona para arrastrar un arquivo .csv con lecturas do contador eléctrico do colexio (columna hora e consumo en kWh).
+   - Botón "Exportar Datos (.xlsx)" con SheetJS CDN.
+   - Botón "Informe de Eficiencia Enerxética (.pdf)" con jsPDF CDN cunha auditoría enerxética escolar simulada lista para imprimir ou entregar en Moodle.
+
+5. Deseño:
+   - Interfaz limpa, adaptada a pantallas táctiles e encerados dixitais, con tipografía clara e textos en galego.`
+            },
+            history: {
+                title: "Tal Día Como Hoxe: Liña Temporal e Efemérides",
+                icon: "⏳",
+                tag: "Historia e Sociais",
+                tagColor: "rgba(139, 92, 246, 0.2)",
+                tagTextColor: "#A78BFA",
+                prompt: `Actúa como programador frontend senior especialista en ferramentas didácticas. Crea un único arquivo index.html completamente autocontido (HTML5, estilos CSS3 e JavaScript ES6+ sen dependencias nin servidores adicionais) listo para incrustarse nun iframe de Moodle.
+
+Obxectivo do Proxecto:
+Construír unha aplicación interactiva de exploración histórica baseada na data ("Tal día como hoxe"), para que o alumnado de ESO e Bacharelato poida investigar efemérides, fitos científicos e figuras históricas clave de calquera día do curso lectivo.
+
+Requisitos Técnicos e Funcionais:
+
+1. Conexión á API de Efemérides de Wikimedia:
+   - Conéctate mediante fetch() ao servizo público aberto de Wikimedia:
+     URL: https://es.wikipedia.org/api/rest_v1/feed/onthisday/all/{MM}/{DD}
+   - Permite seleccionar calquera mes e día mediante controis intuitivos (ou botón de acceso rápido a "Hoxe").
+   - Organiza o contido en 3 seccións ou pestanas reactivas:
+     - Acontecementos Históricos Relevantes
+     - Nacementos de Personaxes Ilustres
+     - Falecementos e Fitos Científicos/Culturais
+
+2. Filtrado e Explorador Temporal Interactivo:
+   - Buscador textual en tempo real para filtrar efemérides polo nome dun país, personaxe ou concepto (ex. "Galicia", "Revolución", "Premio Nobel", "Descubrimento").
+   - Filtro por épocas históricas: Idade Antiga (<476), Idade Media (476-1492), Idade Moderna (1492-1789) e Idade Contemporánea (>1789).
+   - Liña de tempo vertical estilizada con badges de ano en cor dourada.
+
+3. Entrada Local de Efemérides do Centro ou da Comunidade (Drag & Drop):
+   - Zona de arrastre para cargar un arquivo .csv local (ex. "efemerides_locais.csv" con columnas: ano,titulo,descripcion).
+   - Lectura con FileReader (100% en cliente, privacidade garantida) que integra os eventos locais na mesma liña temporal cunha icona diferenciada de "Historia Local".
+
+4. Exportación e Xeración de Fichas de Traballo:
+   - Botón "Descargar Ficha de Investigación (.pdf)" con jsPDF CDN (https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js):
+     - Xera un documento imprimible cunha táboa das 5 efemérides seleccionadas polo alumno, cadros de texto con preguntas guía de investigación ("Por que foi relevante este feito?", "Que consecuencias tivo?") e espazo para sinatura e cualificación docente.
+   - Botón "Exportar a Excel (.xlsx)" con SheetJS CDN.
+
+5. Deseño:
+   - Tipografía lexible, deseño elegante tipo catálogo con alto contraste para proxector de aula, estados de carga e xestión amigable de incidencias de rede.`
+            },
+            art: {
+                title: "Galería Virtual de Patrimonio e Arte",
+                icon: "🎨",
+                tag: "Educación Artística",
+                tagColor: "rgba(236, 72, 153, 0.2)",
+                tagTextColor: "#F472B6",
+                prompt: `Actúa como programador frontend senior experto en humanidades dixitais e educación. Crea un único arquivo index.html autocontido (HTML5, estilos CSS modernos e JS ES6+ integrados sen necesidade de servidor nin compilación) para incrustarse nun iframe de Moodle.
+
+Obxectivo do Proxecto:
+Crear unha Galería e Explorador Virtual de Patrimonio Artístico para que o alumnado poida descubrir, analizar e crear coleccións virtuais con obras de arte en dominio público de museos internacionais.
+
+Requisitos Técnicos e Funcionais:
+
+1. Conexión á Colección Aberta do Metropolitan Museum of Art (The Met API):
+   - Conéctate aos endpoints abertos sen clave de The Met:
+     - Busca: https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q={termo_ou_movemento}
+     - Detalle de obra: https://collectionapi.metmuseum.org/public/collection/v1/objects/{objectID}
+   - Proporciona botóns de busca temática rápida adaptados ao currículo: Renacemento, Impresionismo, Arte Exipcia, Escultura Grega, Século de Ouro e Vangardas.
+   - Buscador aberto por texto libre para atopar artistas ou estilos específicos.
+
+2. Visualización e Ficha Técnica das Obras:
+   - Reixa de tarxetas visuais coa imaxe en alta definición da obra, título, autor, data de creación, cultura, técnica e departamento do museo.
+   - Modal de vista detallada a pantalla completa para poder proxectar no encerado dixital da aula con posibilidade de zoom ou lupa sobre os detalles da obra.
+   - Distintivo visual claro de "Dominio Público / Open Access".
+
+3. Función "O Meu Dossier Artístico" (Interacción Curatorial do Alumnado):
+   - O alumno pode premer nun botón con icona de estrela/corazón para engadir as obras á súa propia "Colección Curatorial".
+   - Contador en tempo real de obras gardadas no encabezado.
+   - Panel lateral despregable onde o estudante pode redactar breves comentarios críticos sobre cada obra seleccionada.
+
+4. Exportación e Descargas no Navegador:
+   - Botón "Descargar Dossier Artístico (.pdf)" con jsPDF CDN (https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js) que xera un catálogo maquetado en PDF coas imaxes en miniatura das obras seleccionadas, os seus datos técnicos e os comentarios analíticos do alumno.
+   - Botón "Exportar Inventario (.xlsx)" con SheetJS CDN.
+
+5. Deseño e Rendemento:
+   - Carga diferida de imaxes (lazy loading) e indicadores de carga para que a navegación sexa fluída.
+   - Datos de exemplo en caché por se a conexión WiFi da aula experimenta atrasos ou cortes.
+   - Deseño escuro elegante que realce a visibilidade das cores das obras de arte.`
+            },
+            words: {
+                title: "Obradoiro Léxico e Escritura Creativa",
+                icon: "✍️",
+                tag: "Lingua e Literatura",
+                tagColor: "rgba(6, 182, 212, 0.2)",
+                tagTextColor: "#22D3EE",
+                prompt: `Actúa como programador frontend senior con experiencia en software pedagóxico e lingüístico. Crea un único arquivo index.html autocontido (HTML5, CSS moderno e JS ES6+ dentro do mesmo ficheiro) deseñado para incrustarse como actividade nun iframe de Moodle.
+
+Obxectivo do Proxecto:
+Desenvolver un Asistente Léxico e Obradoiro de Escritura Creativa interactivo para axudar ao alumnado de Secundaria na creación de poemas, ensaios e relatos, explorando relacións semánticas, rimas e riqueza léxica.
+
+Requisitos Técnicos e Funcionais:
+
+1. Conexión á API Semántica Aberta de Datamuse:
+   - Consume a API pública de Datamuse (https://api.datamuse.com/words) sen necesidade de API Key:
+     - Rimas: https://api.datamuse.com/words?rel_rhy={palabra} (tamén ?rel_nry para rimas aproximadas/asonantes).
+     - Sinónimos: https://api.datamuse.com/words?rel_syn={palabra}
+     - Ideas asociadas / Contexto: https://api.datamuse.com/words?ml={palabra}
+     - Palabras que comezan/rematan por un patrón: ?sp={patron}
+   - Clasificación dos resultados con etiquetas de puntuación e frecuencia de uso.
+
+2. Interface Dividida (Editor + Explorador Léxico):
+   - Panel Esquerdo (Editor Creativo): Área de texto rica para que o alumno redacte a súa composición poética ou conto. Contador de palabras, liñas e caracteres en tempo real.
+   - Panel Dereito (Explorador Léxico): Buscador rápido onde o alumno introduce unha palabra ou preme directamente nunha palabra do seu texto para recibir instantaneamente:
+     - Bloque 1: Rimas consonantes e asonantes.
+     - Bloque 2: Sinónimos para evitar repeticións e mellorar o estilo.
+     - Bloque 3: Asociacións metafóricas ou conceptuais relacionadas.
+   - Ao premer en calquera suxestión léxica, esta insírese automaticamente no texto do alumno.
+
+3. Entrada de Vocabulario Local por Drag & Drop (FileReader):
+   - Zona de arrastre para subir arquivos .csv ou .txt locais con listas de vocabulario ou palabras temáticas traballadas na unidade didáctica do colexio.
+   - O sistema carga este vocabulario de forma local sen envialo a ningún servidor externo.
+
+4. Exportación e Entrega de Tarefas:
+   - Botón "Descargar Composición (.pdf)" con jsPDF CDN: Xera unha folla de traballo maquetada co título da obra, nome do alumno, texto final, número de estrofas/palabras e a táboa do glosario de sinónimos empregado na tarefa.
+   - Botón "Exportar Glosario (.xlsx)" con SheetJS CDN para crear tarxetas de vocabulario.
+
+5. Deseño:
+   - Tipografía axeitada para lectura e redacción (estilo caderno de notas moderno), modo de alto contraste para o encerado do aula e compatibilidade total con ordenadores e tabletas.`
+            }
+        };
+
+        // Modal de Prompts de Proxecto
+        const promptModalEl = document.getElementById('promptModal');
+        const promptModalTitleEl = document.getElementById('promptModalTitle');
+        const promptModalIconEl = document.getElementById('promptModalIcon');
+        const promptModalTagEl = document.getElementById('promptModalTag');
+        const projectPromptContentEl = document.getElementById('projectPromptContent');
+
+        function openPromptModal(key) {
+            const data = projectPrompts[key];
+            if (!data) return;
+
+            promptModalTitleEl.textContent = data.title;
+            promptModalIconEl.textContent = data.icon;
+            promptModalTagEl.textContent = data.tag;
+            promptModalTagEl.style.background = data.tagColor;
+            promptModalTagEl.style.color = data.tagTextColor;
+            projectPromptContentEl.textContent = data.prompt;
+
+            // Restablecer botón de copiar
+            const btn = document.getElementById('btnCopyProjectPrompt');
+            const copyText = document.getElementById('copyProjText');
+            const copyIcon = document.getElementById('copyProjIcon');
+            btn.classList.remove('copied');
+            copyText.textContent = 'Copiar Prompt';
+            copyIcon.textContent = '📋';
+
+            promptModalEl.classList.add('open');
+        }
+
+        function closePromptModal() {
+            promptModalEl.classList.remove('open');
+        }
+
+        function closePromptModalOnBackdrop(e) {
+            if (e.target === promptModalEl) {
+                closePromptModal();
+            }
+        }
+
+        function copyProjectPromptText() {
+            const text = projectPromptContentEl.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('btnCopyProjectPrompt');
+                const copyText = document.getElementById('copyProjText');
+                const copyIcon = document.getElementById('copyProjIcon');
+
+                btn.classList.add('copied');
+                copyText.textContent = 'Copiado! ✓';
+                copyIcon.textContent = '✓';
+
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    copyText.textContent = 'Copiar Prompt';
+                    copyIcon.textContent = '📋';
+                }, 2500);
+            }).catch(err => {
+                console.error('Erro ao copiar:', err);
+            });
+        }
+
+        // Navegación por teclado
+        document.addEventListener('keydown', (e) => {
+            // Se algún modal está aberto, pechalo con Escape
+            if (e.key === 'Escape') {
+                closeIndexModal();
+                closePromptModal();
+                return;
+            }
+
+            // Se o foco está nun campo de texto, non interferir
+            if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+                return;
+            }
+
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ': // Barra espazadora
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+
+        // Soporte para xestos táctiles (Swipe)
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleGesture();
+        }, { passive: true });
+
+        function handleGesture() {
+            const threshold = 50; // Mínimo desprazamento en píxeles
+            if (touchEndX < touchStartX - threshold) {
+                nextSlide(); // Desprazamento á esquerda -> Avanzar
+            }
+            if (touchEndX > touchStartX + threshold) {
+                prevSlide(); // Desprazamento á dereita -> Retroceder
+            }
+        }
+
+        // Inicializar ao cargar a páxina
+        window.addEventListener('DOMContentLoaded', initPresentation);
+    </script>
+</body>
+</html>

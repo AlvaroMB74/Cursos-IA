@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="gl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obradoiro Práctico: LLM e Razoamento (Nov-26)</title>
+    <link rel="stylesheet" href="../css/estilos_ia.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: 'var(--bg-dark)', card: 'var(--card-bg)', cream: 'var(--text-main)', dim: 'var(--text-dim)',
+                        gold: 'var(--accent-gold)', orange: 'var(--accent-orange)', retro: 'var(--accent-retro)',
+                        cyan: '#06B6D4', purple: '#8B5CF6', green: '#10B981'
+                    },
+                    fontFamily: { sans: ['Open Sans', 'sans-serif'] },
+                    animation: { 'fade-in': 'fadeIn 0.6s ease-out forwards' },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,800;1,400&display=swap"
+        rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.js"></script>
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+        }
+
+        .bg-glow {
+            background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.08) 0%, rgba(18, 18, 18, 0) 70%);
+        }
+
+        .reveal {
+            height: 100vh;
+        }
+
+        .reveal .slides>section {
+            padding: 0;
+        }
+
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+
+        .backface-hidden {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: var(--accent-gold);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body class="bg-dark text-cream font-sans overflow-hidden bg-glow">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const Icon = ({ children, className, size = 20 }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>);
+        const Icons = {
+            Brain: (p) => <Icon {...p}><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" /></Icon>,
+            Copy: (p) => <Icon {...p}><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></Icon>,
+            Check: (p) => <Icon {...p}><polyline points="20 6 9 17 4 12" /></Icon>,
+            Rotate: (p) => <Icon {...p}><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></Icon>,
+            ChevronLeft: (p) => <Icon {...p}><path d="m15 18-6-6 6-6" /></Icon>,
+            ChevronRight: (p) => <Icon {...p}><path d="m9 18 6-6-6-6" /></Icon>,
+            Unlock: (p) => <Icon {...p}><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 9.9-1" /></Icon>,
+            Lock: (p) => <Icon {...p}><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></Icon>,
+            FileText: (p) => <Icon {...p}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></Icon>,
+            Book: (p) => <Icon {...p}><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" /></Icon>,
+            Plane: (p) => <Icon {...p}><path d="M2 12h20" /><path d="M13 2 4 14" /><path d="M22 2 13 14" /><path d="M8 21h8" /><path d="M15 21v2h-6v-2" /></Icon>,
+            ExternalLink: (p) => <Icon {...p}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></Icon>
+        };
+
+        const ModelFlipCard = ({ model }) => {
+            const [isFlipped, setIsFlipped] = useState(false);
+            return (
+                <div className="relative w-full h-[180px] perspective-1000 group cursor-pointer animate-fade-in" onMouseEnter={() => setIsFlipped(true)} onMouseLeave={() => setIsFlipped(false)} onClick={() => setIsFlipped(!isFlipped)}>
+                    <div className={`relative w-full h-full duration-500 transform-style-3d transition-transform ${isFlipped ? 'rotate-y-180' : ''}`}>
+                        <div className={`absolute w-full h-full backface-hidden rounded-xl p-4 flex flex-col justify-between border-2 bg-card/90 backdrop-blur-sm shadow-lg transition-all duration-300 ${model.color} hover:scale-105 hover:shadow-2xl`}>
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <div className="flex items-center gap-1.5 mb-1">
+                                        <span className="text-xs">{model.regionFlag}</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-dim">{model.region}</span>
+                                        <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold ${model.open ? 'bg-green-500/20 text-green-300 border border-green-500/30' : 'bg-white/10 text-dim'}`}>{model.open ? 'OPEN' : 'CLOSED'}</span>
+                                    </div>
+                                    <h4 className="font-extrabold text-base tracking-tight text-white">{model.name}</h4>
+                                    <span className="text-[10px] text-dim block font-mono">{model.modelBadge}</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <a href={model.url} target="_blank" rel="noopener noreferrer" className="text-dim hover:text-white transition-colors z-20 p-1" onClick={(e) => e.stopPropagation()} title="Abrir Web"><Icons.ExternalLink size={16} /></a>
+                                </div>
+                            </div>
+                            <div className="text-xs pt-1 border-t border-white/5 flex justify-between items-end">
+                                <div>
+                                    <span className="block font-bold uppercase tracking-wider text-[10px] opacity-90">{model.cost}</span>
+                                    <span className="opacity-60 italic text-[11px]">{model.company}</span>
+                                </div>
+                                <span className="text-[9px] uppercase tracking-widest border border-current px-2 py-0.5 rounded-full opacity-60">Info +</span>
+                            </div>
+                        </div>
+                        <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-black/95 border border-white/10 rounded-xl p-4 flex flex-col justify-center text-xs shadow-2xl">
+                            <div className="mb-2">
+                                <span className="text-green-400 font-bold block mb-0.5 uppercase tracking-wider text-[10px]">👍 Fortalezas:</span>
+                                <p className="text-gray-300 leading-snug text-[11px]">{model.pros}</p>
+                            </div>
+                            <div>
+                                <span className="text-retro font-bold block mb-0.5 uppercase tracking-wider text-[10px]">👎 Debilidades:</span>
+                                <p className="text-gray-400 leading-snug text-[11px]">{model.cons}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const MissionCard = ({ title, difficulty, icon: IconComp, tasks, colorClass }) => {
+            const [currentTask, setCurrentTask] = useState(0);
+            const [copied, setCopied] = useState(false);
+            const task = tasks[currentTask];
+            const nextTask = () => setCurrentTask((prev) => (prev + 1) % tasks.length);
+            const prevTask = () => setCurrentTask((prev) => (prev - 1 + tasks.length) % tasks.length);
+            const handleCopy = () => { navigator.clipboard.writeText(task.prompt); setCopied(true); setTimeout(() => setCopied(false), 2000); };
+
+            return (
+                <div className={`bg-card border-t-4 ${colorClass} rounded-lg p-6 flex flex-col h-full shadow-2xl group relative transition-all hover:-translate-y-1 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]`}>
+                    <div className="flex justify-between items-start mb-5 border-b border-white/5 pb-3">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-white/5 rounded-md text-white/80"><IconComp size={24} /></div>
+                            <div><h3 className="font-bold text-cream text-lg">{title}</h3><span className="text-[10px] uppercase text-dim tracking-widest">{difficulty}</span></div>
+                        </div>
+                        <div className="text-xs font-mono text-dim bg-white/5 px-3 py-1 rounded whitespace-nowrap min-w-[60px] text-center">{currentTask + 1} / {tasks.length}</div>
+                    </div>
+                    <div className="mb-4 min-h-[50px]"><h4 className="text-white font-bold text-sm mb-1">{task.name}</h4><p className="text-xs text-dim italic">{task.context}</p></div>
+                    {/* CORRECCIÓN APLICADA: flex flex-col para el contenedor y h-full para el texto */}
+                    <div className="bg-black/40 rounded border border-white/10 p-4 relative flex-grow group-hover:border-white/20 transition-colors mb-4 flex flex-col">
+                        <div className="absolute top-2 right-2 z-10"><button onClick={handleCopy} className="text-dim hover:text-gold transition-colors p-1" title="Copiar Prompt">{copied ? <Icons.Check size={16} className="text-green-500" /> : <Icons.Copy size={16} />}</button></div>
+                        <p className="text-[11px] text-green-100/80 font-mono leading-relaxed whitespace-pre-line custom-scroll overflow-y-auto h-full pr-2">{task.prompt}</p>
+                    </div>
+                    <div className="flex justify-between items-center mt-auto pt-3 border-t border-white/5">
+                        <button onClick={prevTask} className="text-dim hover:text-white p-2 hover:bg-white/5 rounded"><Icons.ChevronLeft /></button><span className="text-[9px] uppercase text-dim tracking-widest opacity-50">Navegar Tarefas</span><button onClick={nextTask} className="text-dim hover:text-white p-2 hover:bg-white/5 rounded"><Icons.ChevronRight /></button>
+                    </div>
+                </div>
+            );
+        };
+
+        const WorkshopApp = () => {
+            const [selectedRegion, setSelectedRegion] = useState('ALL');
+
+            const models = [
+                // --- ESTADOS UNIDOS ---
+                {
+                    name: "ChatGPT",
+                    modelBadge: "Familia GPT-6 / GPT-6 Pro",
+                    region: "EEUU",
+                    regionFlag: "🇺🇸",
+                    url: "https://chatgpt.com",
+                    company: "OpenAI",
+                    open: false,
+                    cost: "Freemium",
+                    color: "border-green-500/50 text-green-400 shadow-[0_0_15px_rgba(34,197,94,0.15)]",
+                    pros: "O todoterreo absoluto con voz en tempo real, xeración de imaxe nativa (GPT Image), razoamento profundo e axentes integrados nunha soa conta.",
+                    cons: "Ecosistema propietario pechado, cotas e prezos dinámicos en horas de alto tráfico."
+                },
+                {
+                    name: "Claude",
+                    modelBadge: "Opus 5.5 / Sonnet 5.5 / Fable 5.2",
+                    region: "EEUU",
+                    regionFlag: "🇺🇸",
+                    url: "https://claude.ai",
+                    company: "Anthropic",
+                    open: false,
+                    cost: "Freemium",
+                    color: "border-orange/50 text-orange shadow-[0_0_15px_rgba(234,179,8,0.15)]",
+                    pros: "O estándar de ouro para tarefas de longo percorrido (long-horizon), traballo con proxectos e documentos complexos, programación e a prosa máis matizada e humana.",
+                    cons: "Filtros de seguridade e capas de moderación estritas."
+                },
+                {
+                    name: "Gemini",
+                    modelBadge: "Gemini 4 (Argon) / Pro",
+                    region: "EEUU",
+                    regionFlag: "🇺🇸",
+                    url: "https://gemini.google.com",
+                    company: "Google",
+                    open: false,
+                    cost: "Freemium",
+                    color: "border-blue-500/50 text-blue-300 shadow-[0_0_15px_rgba(59,130,246,0.15)]",
+                    pros: "Líder en velocidade e multimodalidade nativa (texto, imaxe, audio e vídeo), ventá de contexto millonaria e integración directa con Google Workspace.",
+                    cons: "Respostas ás veces hiperprecavidas ante debates sensibles ou controversias."
+                },
+                {
+                    name: "Gemini Notebook",
+                    modelBadge: "Ex-NotebookLM / Audio Studio",
+                    region: "EEUU",
+                    regionFlag: "🇺🇸",
+                    url: "https://notebooklm.google.com",
+                    company: "Google",
+                    open: false,
+                    cost: "Gratis",
+                    color: "border-amber-400/50 text-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.15)]",
+                    pros: "A ferramenta de cabeceira docente para traballar con total fidelidade ancorada nas fontes propias (PDFs, vídeos, webs), creando podcasts didácticos e resumos con citas parágrafo a parágrafo.",
+                    cons: "Non busca na web aberta xeral; circunscríbese estritamente aos materiais achegados polo profesor."
+                },
+                {
+                    name: "Perplexity",
+                    modelBadge: "Deep Research / Sonar",
+                    region: "EEUU",
+                    regionFlag: "🇺🇸",
+                    url: "https://www.perplexity.ai",
+                    company: "Perplexity AI",
+                    open: false,
+                    cost: "Freemium",
+                    color: "border-cyan/50 text-cyan shadow-[0_0_15px_rgba(6,182,212,0.15)]",
+                    pros: "Motor de investigación profunda que consulta centos de fontes académicas e páxinas web en tempo real con verificacións contrastadas.",
+                    cons: "Menor enfoque en creatividade artística ou tarefas puramente literarias."
+                },
+
+                // --- PESOS ABERTOS E ASIA ---
+                {
+                    name: "DeepSeek",
+                    modelBadge: "DeepSeek V4-Pro / V4.1 Flash",
+                    region: "CHINA",
+                    regionFlag: "🇨🇳",
+                    url: "https://chat.deepseek.com",
+                    company: "DeepSeek",
+                    open: true,
+                    cost: "Gratis / MIT",
+                    color: "border-blue-700/60 text-blue-400 shadow-[0_0_15px_rgba(29,78,216,0.25)]",
+                    pros: "O referente mundial en eficiencia e custo: rendemento de razoamento de primeiro nivel e capacidade agéntica con licenza aberta MIT.",
+                    cons: "Servidores públicos con alta conxestión nas horas de máximo tráfico mundial."
+                },
+                {
+                    name: "Qwen",
+                    modelBadge: "Qwen 3.8-Max / 27B Aberto",
+                    region: "CHINA",
+                    regionFlag: "🇨🇳",
+                    url: "https://chat.qwen.ai",
+                    company: "Alibaba Cloud",
+                    open: true,
+                    cost: "Gratis / Apache 2.0",
+                    color: "border-purple/50 text-purple shadow-[0_0_15px_rgba(168,85,247,0.15)]",
+                    pros: "A familia aberta máis versátil: amplitude multimodal completa, liderado en código e matemáticas, con tamaños (27B) aptos para executar en local con privacidade.",
+                    cons: "Menor integración directa out-of-the-box con plataformas educativas occidentais."
+                },
+                {
+                    name: "Kimi e GLM",
+                    modelBadge: "Kimi K3.1 Pro / GLM-5.3",
+                    region: "CHINA",
+                    regionFlag: "🇨🇳",
+                    url: "https://kimi.ai",
+                    company: "Moonshot AI & Zhipu",
+                    open: true,
+                    cost: "Freemium / Open",
+                    color: "border-emerald-500/50 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.15)]",
+                    pros: "Especialistas de referencia en ventás de contexto xigantescas (1M+ tokens), uso avanzado de ferramentas (tool use) e enxeñaría de código con pesos abertos.",
+                    cons: "Ecosistema centrado primariamente en contornas e servidores asiáticos."
+                }
+            ];
+
+            const filteredModels = selectedRegion === 'ALL' 
+                ? models 
+                : models.filter(m => m.region === selectedRegion);
+
+            const missionData = {
+                burocracia: [
+                    {
+                        name: "Plan PLEA (Xunta)", context: "Creación do esquema para o Plan de Lectura, Escritura e Apoio.", prompt: `Actúa como experto en lexislación educativa da Xunta de Galicia.
+Contexto: Redactar o borrador para o "Plan de Lectura, Escritura e Apoio" (PLEA).
+Tarefa: Xera un esquema estruturado para o documento.
+Inclúe:
+1. Apartados obrigatorios segundo normativa vixente.
+2. Un parágrafo de exemplo de redacción formal para a "Xustificación".
+3. Suxestión de 3 indicadores de avaliación do plan.
+Formato: Táboa.` },
+                    {
+                        name: "Comunicación Difícil", context: "Email formal a familias sobre un incidente ou baixada de rendemento.", prompt: `Actúa como un docente empático e profesional.
+Contexto: Debo escribir un email aos pais dun alumno que baixou o seu rendemento notablemente.
+Tarefa: Redacta un correo que sexa:
+1. Próximo pero formal.
+2. Non culpabilizador (enfoque en solucións).
+3. Propoña unha reunión presencial.
+Formato: Texto de email con Asunto.` },
+                    {
+                        name: "Acta de Claustro", context: "Resumir notas desordenadas dunha reunión nunha acta oficial.", prompt: `Actúa como secretario de centro educativo.
+Contexto: Teño estas notas desordenadas da reunión: [PEGAR AQUÍ AS TÚAS NOTAS RÁPIDAS].
+Tarefa: Convírteas nunha Acta Oficial de Reunión.
+Inclúe: Orde do día, Acordos tomados e Rogos/Preguntas.
+Ton: Administrativo e neutro.` }
+                ],
+                pedagogia: [
+                    {
+                        name: "SDA Factura da Luz (Galicia)", 
+                        context: "Situación de aprendizaxe contextualizada con datos reais e currículo galego.", 
+                        prompt: `Actúa como asesor pedagóxico. Son profesor/a de 2º de ESO en Galicia e quero unha situación de aprendizaxe de Matemáticas sobre proporcionalidade a partir da factura da luz dunha familia da miña vila. 
+Dame:
+1. Obxectivo e competencias específicas do currículo galego.
+2. Secuencia didáctica estruturada en 4 sesións de aula.
+3. Unha actividade de investigación con datos reais.
+4. Unha rúbrica analítica de 4 niveis.
+Requisito: Se non estás seguro dun dato legal ou curricular, advírteo e non o inventes. Responde en lingua galega e con listas sintéticas.`
+                    },
+                    {
+                        name: "SDA Gamificada", context: "Deseño dunha Situación de Aprendizaxe creativa (LOMLOE).", prompt: `Actúa como deseñador instrucional experto en LOMLOE.
+Contexto: SDA para [CURSO] sobre [TEMA].
+Tarefa: Deseña unha actividade gamificada (Escape Room ou Misión).
+Inclúe:
+1. Narrativa/Gancho inicial.
+2. Retos vinculados a saberes básicos.
+3. Produto final avaliable.
+Formato: Lista estruturada.` },
+                    {
+                        name: "Rúbrica Automática", context: "Creación de matriz de avaliación para un proxecto oral.", prompt: `Actúa como experto en avaliación por competencias.
+Contexto: Avaliar unha exposición oral en grupo para 4º ESO.
+Tarefa: Crea unha rúbrica analítica de 4 niveis (1-4).
+Criterios: Comunicación non verbal, contido, soporte visual e traballo en equipo.
+Formato: Táboa Markdown lista para copiar.` },
+                    {
+                        name: "Adaptación NEAE", context: "Adaptar un texto complexo para alumno con dificultades lectoras.", prompt: `Actúa como especialista en Pedagoxía Terapéutica (PT).
+Contexto: Teño este texto sobre a Célula Eucariota [PEGAR TEXTO].
+Tarefa:
+1. Simplifica a linguaxe (Lectura Fácil).
+2. Resalta en negra os conceptos clave.
+3. Engade unha analoxía da vida real para explicar a función das mitocondrias.` }
+                ],
+                personal: [
+                    {
+                        name: "Viaxe Soñada", context: "Planificación de vacacións detallada.", prompt: `Actúa como axente de viaxes local experto.
+Contexto: Viaxe de 10 días a Xapón en Outubro. Orzamento medio. Gústame a comida de rúa e a natureza, non o luxo.
+Tarefa: Crea un itinerario día a día.
+Inclúe: Rutas lóxicas de tren, pratos que debo probar en cada cidade e unha 'xoia oculta' pouco turística.
+Formato: Táboa cronolóxica.` },
+                    {
+                        name: "Menú Saudable", context: "Organización de comidas semanal con lista da compra.", prompt: `Actúa como nutricionista.
+Contexto: Obxectivo: Comer máis verdura e proteína. Pouco tempo para cociñar entre semana (máx 20 min).
+Tarefa:
+1. Menú semanal (L-V) de ceas rápidas.
+2. Lista da compra agrupada por sección do supermercado (Froitería, Carnicería, etc).` },
+                    {
+                        name: "Rutina Ximnasio", context: "Plan de adestramento para principiante.", prompt: `Actúa como adestrador persoal.
+Contexto: Principiante. 3 días á semana. Dispoño de pesas na casa. Obxectivo: Gañar forza xeral.
+Tarefa: Crea unha rutina de corpo completo (Full Body).
+Explica brevemente a técnica correcta de cada exercicio para evitar lesións.` }
+                ]
+            };
+
+            useEffect(() => { if (window.Reveal) { window.Reveal.initialize({ controls: true, progress: true, center: true, hash: false, transition: 'slide' }); } }, []);
+
+            return (
+                <div className="reveal"><div className="slides">
+                    <section data-background-color="var(--bg-dark)">
+                        <div className="h-full flex flex-col justify-center px-6 max-w-7xl mx-auto py-3">
+                            <header className="text-center mb-4">
+                                <h2 className="text-3xl md:text-4xl font-bold text-cream mb-1">
+                                    O Universo <span className="text-green-400">LLM</span>: O Duelo Global
+                                </h2>
+                                <p className="text-dim text-xs md:text-sm max-w-2xl mx-auto mb-3">
+                                    Modelos propietarios e pechados de Occidente fronte á revolución de pesos abertos e eficiencia oriental.
+                                </p>
+                                <div className="flex justify-center flex-wrap gap-2">
+                                    <button 
+                                        onClick={() => setSelectedRegion('ALL')} 
+                                        className={`px-4 py-1 rounded-full text-xs font-bold transition-all border ${selectedRegion === 'ALL' ? 'bg-cream text-dark border-cream shadow-[0_0_12px_rgba(255,255,255,0.3)]' : 'bg-white/5 text-dim border-transparent hover:border-white/20 hover:text-white'}`}>
+                                        🌐 Todos ({models.length})
+                                    </button>
+                                    <button 
+                                        onClick={() => setSelectedRegion('EEUU')} 
+                                        className={`px-4 py-1 rounded-full text-xs font-bold transition-all border ${selectedRegion === 'EEUU' ? 'bg-blue-600 text-white border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.4)]' : 'bg-white/5 text-dim border-transparent hover:border-white/20 hover:text-white'}`}>
+                                        🇺🇸 EEUU: Fronteira & Ecosistemas ({models.filter(m => m.region === 'EEUU').length})
+                                    </button>
+                                    <button 
+                                        onClick={() => setSelectedRegion('CHINA')} 
+                                        className={`px-4 py-1 rounded-full text-xs font-bold transition-all border ${selectedRegion === 'CHINA' ? 'bg-red-700 text-white border-red-500 shadow-[0_0_15px_rgba(220,38,38,0.4)]' : 'bg-white/5 text-dim border-transparent hover:border-white/20 hover:text-white'}`}>
+                                        🇨🇳 CHINA: Pesos Abertos & Eficiencia ({models.filter(m => m.region === 'CHINA').length})
+                                    </button>
+                                </div>
+                            </header>
+
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-[62vh] overflow-y-auto custom-scroll p-1">
+                                {filteredModels.map((m, i) => (<ModelFlipCard key={i} model={m} />))}
+                            </div>
+
+                            <div className="mt-3 text-center animate-bounce text-dim opacity-50 text-xs">Desliza para Misións Prácticas ➜</div>
+                        </div>
+                    </section>
+                    <section data-background-color="var(--bg-dark)">
+                        <div className="h-full flex flex-col justify-center px-8 max-w-7xl mx-auto">
+                            <header className="flex justify-between items-end mb-6 border-b border-white/10 pb-4">
+                                <div><h2 className="text-3xl font-bold text-cream">Laboratorio de Prompts</h2><p className="text-green-400 text-xs font-bold uppercase tracking-widest">Usa as frechas para cambiar de tarefa en cada tarxeta</p></div>
+                            </header>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[65vh]">
+                                <MissionCard title="Burocracia" difficulty="Nivel: Administrativo" icon={Icons.FileText} colorClass="border-retro" tasks={missionData.burocracia} />
+                                <MissionCard title="Pedagoxía" difficulty="Nivel: Aula" icon={Icons.Book} colorClass="border-gold" tasks={missionData.pedagogia} />
+                                <MissionCard title="Persoal" difficulty="Nivel: Vida Real" icon={Icons.Plane} colorClass="border-cyan" tasks={missionData.personal} />
+                            </div>
+                        </div>
+                    </section>
+                </div></div>
+            );
+        };
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<WorkshopApp />);
+    </script>
+</body>
+
+</html>

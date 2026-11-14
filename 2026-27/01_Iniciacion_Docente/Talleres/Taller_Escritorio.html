@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="gl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obradoiro de IA de Escritorio e Axentes (Nov-26)</title>
+    <link rel="stylesheet" href="../css/estilos_ia.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: 'var(--bg-dark)', card: 'var(--card-bg)', cream: 'var(--text-main)', dim: 'var(--text-dim)',
+                        gold: 'var(--accent-gold)', orange: 'var(--accent-orange)', retro: 'var(--accent-retro)',
+                        cyan: '#06B6D4', purple: '#8B5CF6', green: '#10B981', rose: '#F43F5E', amber: '#F59E0B'
+                    },
+                    fontFamily: { sans: ['Open Sans', 'sans-serif'] },
+                    animation: { 'fade-in': 'fadeIn 0.6s ease-out forwards' },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.js"></script>
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+        }
+
+        .bg-glow {
+            background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.1) 0%, rgba(18, 18, 18, 0) 70%);
+        }
+
+        .reveal {
+            height: 100vh;
+        }
+
+        .reveal .slides>section {
+            padding: 0;
+        }
+
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+
+        .backface-hidden {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: var(--accent-gold);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body class="bg-dark text-cream font-sans overflow-hidden bg-glow">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const Icon = ({ children, className = "", size = 20 }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>
+        );
+        const Icons = {
+            Terminal: (p) => <Icon {...p}><polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" /></Icon>,
+            Copy: (p) => <Icon {...p}><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></Icon>,
+            Check: (p) => <Icon {...p}><polyline points="20 6 9 17 4 12" /></Icon>,
+            Rotate: (p) => <Icon {...p}><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></Icon>,
+            ChevronLeft: (p) => <Icon {...p}><path d="m15 18-6-6 6-6" /></Icon>,
+            ChevronRight: (p) => <Icon {...p}><path d="m9 18 6-6-6-6" /></Icon>,
+            ShieldAlert: (p) => <Icon {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></Icon>,
+            ExternalLink: (p) => <Icon {...p}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></Icon>,
+            Cpu: (p) => <Icon {...p}><rect x="4" y="4" width="16" height="16" rx="2" /><rect x="9" y="9" width="6" height="6" /><line x1="9" y1="1" x2="9" y2="4" /><line x1="15" y1="1" x2="15" y2="4" /><line x1="9" y1="20" x2="9" y2="23" /><line x1="15" y1="20" x2="15" y2="23" /><line x1="20" y1="9" x2="23" y2="9" /><line x1="20" y1="15" x2="23" y2="15" /><line x1="1" y1="9" x2="4" y2="9" /><line x1="1" y1="15" x2="4" y2="15" /></Icon>,
+            Folder: (p) => <Icon {...p}><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" /></Icon>
+        };
+
+        const ModelFlipCard = ({ model }) => {
+            const [isFlipped, setIsFlipped] = useState(false);
+            return (
+                <div className="relative w-full h-[255px] perspective-1000 group cursor-pointer" onClick={() => setIsFlipped(!isFlipped)}>
+                    <div className={`relative w-full h-full duration-700 transform-style-3d transition-transform ${isFlipped ? 'rotate-y-180' : ''}`}>
+                        {/* Cara Frontal */}
+                        <div className={`absolute w-full h-full backface-hidden bg-card border ${model.color} rounded-xl p-5 flex flex-col justify-between shadow-lg hover:border-opacity-100 transition-all ${isFlipped ? 'pointer-events-none' : ''}`}>
+                            <div>
+                                <div className="flex justify-between items-start mb-2">
+                                    <span className="text-[10px] uppercase tracking-widest font-bold opacity-75">{model.company}</span>
+                                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${model.isLocal ? 'border-green/40 bg-green/10 text-green' : 'border-purple/40 bg-purple/10 text-purple'}`}>
+                                        {model.badge}
+                                    </span>
+                                </div>
+                                <h3 className="text-xl font-bold text-cream mb-1">{model.name}</h3>
+                                <p className="text-xs text-dim italic line-clamp-2">"{model.tagline}"</p>
+                            </div>
+                            <div className="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
+                                <span className="text-dim text-[11px] font-mono">{model.cost}</span>
+                                <span className="flex items-center gap-1 text-gold text-[11px] font-bold group-hover:translate-x-1 transition-transform">Xirar <Icons.Rotate size={12} /></span>
+                            </div>
+                        </div>
+
+                        {/* Cara Posterior */}
+                        <div className={`absolute w-full h-full backface-hidden rotate-y-180 bg-card border border-white/20 rounded-xl p-5 flex flex-col justify-between shadow-2xl ${isFlipped ? '' : 'pointer-events-none'}`}>
+                            <div className="overflow-y-auto custom-scroll pr-1">
+                                <h4 className="text-sm font-bold text-cream mb-2 flex items-center justify-between">
+                                    <span>{model.name}</span>
+                                    <span className="text-[10px] text-dim">{model.type}</span>
+                                </h4>
+                                <div className="mb-2">
+                                    <span className="text-[10px] font-bold text-green uppercase tracking-wider block mb-0.5">Vantaxe Docente:</span>
+                                    <p className="text-xs text-dim leading-snug">{model.pros}</p>
+                                </div>
+                                <div>
+                                    <span className="text-[10px] font-bold text-orange uppercase tracking-wider block mb-0.5">A Ter en Conta:</span>
+                                    <p className="text-xs text-dim leading-snug">{model.cons}</p>
+                                </div>
+                            </div>
+                            <div className="border-t border-white/10 pt-2 flex justify-between items-center mt-2">
+                                <a href={model.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-[11px] text-gold hover:underline flex items-center gap-1">
+                                    Web Oficial <Icons.ExternalLink size={12} />
+                                </a>
+                                <span className="text-[10px] text-dim font-mono">{model.privacyTag}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const MissionCard = ({ title, difficulty, icon: IconComponent, colorClass, tasks }) => {
+            const [currentTask, setCurrentTask] = useState(0);
+            const [copied, setCopied] = useState(false);
+            const task = tasks[currentTask];
+
+            const copyPrompt = () => {
+                navigator.clipboard.writeText(task.prompt);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            };
+
+            const nextTask = (e) => { e.stopPropagation(); setCurrentTask((prev) => (prev + 1) % tasks.length); setCopied(false); };
+            const prevTask = (e) => { e.stopPropagation(); setCurrentTask((prev) => (prev - 1 + tasks.length) % tasks.length); setCopied(false); };
+
+            return (
+                <div className={`bg-card border-2 ${colorClass} rounded-xl p-5 flex flex-col justify-between h-full shadow-lg relative overflow-hidden`}>
+                    <div>
+                        <div className="flex justify-between items-start mb-3 border-b border-white/10 pb-3">
+                            <div className="flex items-center gap-2">
+                                <div className="p-2 rounded-lg bg-white/5 text-gold"><IconComponent size={20} /></div>
+                                <div>
+                                    <h3 className="font-bold text-base text-cream">{title}</h3>
+                                    <span className="text-[10px] text-dim block">{difficulty}</span>
+                                </div>
+                            </div>
+                            <span className="text-xs font-mono px-2 py-0.5 bg-white/5 rounded text-gold">{currentTask + 1}/{tasks.length}</span>
+                        </div>
+                        <div className="mb-2">
+                            <h4 className="text-sm font-semibold text-cream mb-1">{task.name}</h4>
+                            <p className="text-xs text-dim italic mb-3">{task.context}</p>
+                        </div>
+                    </div>
+                    <div className="bg-black/40 border border-white/5 rounded-lg p-3 relative group flex-grow flex flex-col mb-3">
+                        <button onClick={copyPrompt} className="absolute top-2 right-2 bg-white/10 hover:bg-gold hover:text-dark text-white p-1.5 rounded transition-all z-10" title="Copiar Prompt">
+                            {copied ? <Icons.Check size={14} className="text-green" /> : <Icons.Copy size={14} />}
+                        </button>
+                        <p className="text-[11px] text-purple-100/90 font-mono leading-relaxed whitespace-pre-line custom-scroll overflow-y-auto h-full pr-2">{task.prompt}</p>
+                    </div>
+                    <div className="flex justify-between items-center mt-auto pt-2 border-t border-white/5">
+                        <button onClick={prevTask} className="text-dim hover:text-white p-2 hover:bg-white/5 rounded"><Icons.ChevronLeft /></button>
+                        <span className="text-[9px] uppercase text-dim tracking-widest opacity-50">Navegar Misións</span>
+                        <button onClick={nextTask} className="text-dim hover:text-white p-2 hover:bg-white/5 rounded"><Icons.ChevronRight /></button>
+                    </div>
+                </div>
+            );
+        };
+
+        const WorkshopApp = () => {
+            const models = [
+                {
+                    name: "Claude Desktop",
+                    company: "Anthropic",
+                    badge: "MCP / Cowork",
+                    type: "Cliente de Escritorio",
+                    isLocal: false,
+                    cost: "Freemium / Pro",
+                    privacyTag: "Nube (Cifrado)",
+                    color: "border-orange/50 text-orange shadow-[0_0_15px_rgba(234,179,8,0.15)]",
+                    tagline: "Modos Chat, Cowork e Code con soporte nativo do protocolo MCP.",
+                    pros: "Excelente para ordenar carpetas de aula, transformar apuntes en fichas e conectar correo ou calendario mediante ferramentas MCP locais.",
+                    cons: "Non é un modelo local: o contido elixido envíase á nube de Anthropic. Precisa supervisión de permisos de ficheiros."
+                },
+                {
+                    name: "ChatGPT Desktop",
+                    company: "OpenAI",
+                    badge: "Codex / Work",
+                    type: "Cliente de Escritorio",
+                    isLocal: false,
+                    cost: "Freemium / Pro",
+                    privacyTag: "Nube (OpenAI)",
+                    color: "border-green-500/50 text-green-400 shadow-[0_0_15px_rgba(34,197,94,0.15)]",
+                    pros: "Atallos directos de teclado no sistema operativo, análise de capturas de pantalla, modo Codex e automatizacións con ChatGPT Agent.",
+                    cons: "Sen modo local offline; as accións agénticas no navegador requiren precaución de seguridade fronte a inxeccións de prompts."
+                },
+                {
+                    name: "Google Antigravity",
+                    company: "Google",
+                    badge: "Axentes 2.0",
+                    type: "IDE Agéntico",
+                    isLocal: false,
+                    cost: "Gratis / Pro",
+                    privacyTag: "Nube / Workspace",
+                    color: "border-blue-500/50 text-blue-300 shadow-[0_0_15px_rgba(59,130,246,0.15)]",
+                    pros: "Entorno completo con subaxentes especializados, navegador incorporado que proba o que constrúe, skills e conexión con ferramentas.",
+                    cons: "Pensado para docentes e desenvolvedores con interese en construír aplicacións web completas e automatizacións avanzadas."
+                },
+                {
+                    name: "Cursor / IDEs Axénticos",
+                    company: "Anysphere & Open Source",
+                    badge: "Cline / Roo Code",
+                    type: "IDE con Axentes",
+                    isLocal: true,
+                    cost: "Gratis / Pago",
+                    privacyTag: "Nube ou Local",
+                    color: "border-purple/50 text-purple shadow-[0_0_15px_rgba(168,85,247,0.15)]",
+                    pros: "Creación de aplicacións web didácticas, xogos educativos e calculadoras curriculares (.HTML) mediante instrucións naturais sen programar.",
+                    cons: "Requiere familiarizarse co manexo de carpetas de proxecto e arquivos locais. En modo aberto (Cline) permite conectar modelos locais a custo 0€."
+                },
+                {
+                    name: "LM Studio / Ollama",
+                    company: "Element Labs / Ollama",
+                    badge: "100% Local RGPD",
+                    type: "Runtime Local Privado",
+                    isLocal: true,
+                    cost: "Gratis (Open Source)",
+                    privacyTag: "100% Offline Privado",
+                    color: "border-emerald-500/50 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.15)]",
+                    pros: "Privacidade absoluta: o modelo corre no teu propio equipo sen conexión a internet nin saída de datos. Plena conformidade co RGPD e a Lei de Educación Dixital.",
+                    cons: "Requiere memoria RAM axeitada (mínimo 16GB) e os modelos de 7B-27B son algo máis reducidos que os xigantes de fronteira da nube."
+                },
+                {
+                    name: "AnythingLLM",
+                    company: "Mintplex Labs",
+                    badge: "RAG Documental",
+                    type: "Asistente Local de Centro",
+                    isLocal: true,
+                    cost: "Gratis (Open Source)",
+                    privacyTag: "100% Local / Centro",
+                    color: "border-cyan/50 text-cyan shadow-[0_0_15px_rgba(6,182,212,0.15)]",
+                    pros: "A solución máis doada para ter un 'chat privado cos teus documentos': interroga programacións didácticas, o PEC ou actas en PDF sen que saian do ordenador.",
+                    cons: "A fidelidade depende da calidade do modelo elixido e require revisar as citas nos documentos orixinais."
+                }
+            ];
+
+            const missionData = {
+                escritorio: [
+                    {
+                        name: "Clasificación de Arquivos de Aula",
+                        context: "Axente de escritorio que organiza carpetas docentes con confirmación previa.",
+                        prompt: `(Para executar en Claude Desktop / ChatGPT Desktop nunha carpeta de proba «Aula_Proba», sen datos persoais):
+
+Le os 12 documentos da carpeta, clasifícaos por tema e curso, e propón unha estrutura limpa de subcarpetas cun índice resumo en formato Markdown (.md).
+
+REQUISITO DE SEGURIDADE:
+Non movas nin borres ningún arquivo ata que eu revise e confirme explicitamente a túa proposta. Cando eu che dea o visto bo, executa os cambios e xera un rexistro das accións realizadas.`
+                    },
+                    {
+                        name: "RAG sobre a Programación Didáctica",
+                        context: "Interrogar a normativa ou programación do departamento sen subir datos á nube.",
+                        prompt: `(Para usar en AnythingLLM / Notebook con PDF cargado):
+
+Actúa como xefe de departamento didáctico.
+Baseándote EXCLUSIVAMENTE no documento da Programación Didáctica adxunto:
+1. Cal é a ponderación porcentual exacta dos instrumentos de avaliación na 2ª avaliación?
+2. Que criterios específicos de recuperación se indican para o alumnado con materias pendentes?
+3. Cita textualmente a páxina e o apartado de cada resposta.`
+                    }
+                ],
+                local: [
+                    {
+                        name: "Corrección Local Conforme ao RGPD",
+                        context: "Revisar composicións de alumnado nun modelo 100% local e sen internet.",
+                        prompt: `(Para usar en LM Studio ou Ollama cun modelo local como Qwen-27B ou Mistral):
+
+Actúa como profesor/a de Lingua Galega e Literatura.
+Texto do alumno (previamente anonimizado sen nomes nin datos persoais):
+"[PEGAR TEXTO DO ALUMNO]"
+
+Tarefa pedagóxica:
+1. Sinala erros ortográficos ou léxicos explicando a regra normativa.
+2. Destaca dous puntos fortes da redacción (cohesión, vocabulario rico).
+3. Propón tres suxestións amables de mellora para axudar ao alumno a reformular o segundo parágrafo.`
+                    },
+                    {
+                        name: "Resumo Seguro de Acta de Claustro",
+                        context: "Sintetizar notas internas confidenciais sen filtracións externas.",
+                        prompt: `(Para executar nun modelo local sen conexión a internet):
+
+Actúa como secretario de centro educativo.
+A partir das seguintes notas en bruto da reunión de coordinación:
+[PEGAR NOTAS DA REUNIÓN]
+
+Xera unha Acta Sintética que conteña:
+- Puntos principais acordados.
+- Compromisos e tarefas pendentes con prazos.
+- Asuntos derivados ao seguinte claustro.
+Ton: Neutro, conciso e institucional.`
+                    }
+                ],
+                axentes: [
+                    {
+                        name: "Xerar Mini-Aplicación Web Didáctica",
+                        context: "Crear un xogo ou calculadora interactiva para clase usando Cursor ou Antigravity.",
+                        prompt: `(Para usar en Cursor / Antigravity / Devin Desktop):
+
+Crea unha páxina web nun único ficheiro HTML interactivo para alumnos de 3º ESO chamada "Calculadora da Pegada de Carbono Escolar".
+Debe incluír:
+1. Catro preguntas sinxelas con botóns (transporte ao colexio, almorzo, reciclaxe, uso de papel).
+2. Unha barra visual que calcule a estimación en tempo real.
+3. Un deseño moderno, accesible e limpo con Tailwind CSS.
+4. Un botón final que mostre 3 consellos personalizados en lingua galega para o centro.`
+                    },
+                    {
+                        name: "Automatización de Rúbricas a Folla de Cálculo",
+                        context: "Xerar un arquivo estruturado CSV/Excel dende criterios descritivos.",
+                        prompt: `(Para axentes con ferramentas de ficheiro):
+
+A partir desta táboa de criterios de avaliación LOMLOE para Educación Física:
+[PEGAR CRITERIOS]
+
+Constrúe unha folla estruturada en formato CSV lista para importar na nosa folla de cálculo docente con:
+- Columna A: Código do criterio.
+- Columna B: Descrición do saber básico.
+- Columnas C a F: Niveis de logro 1 (Insuficiente), 2 (Suficiente), 3 (Notable), 4 (Sobresaliente).`
+                    }
+                ]
+            };
+
+            useEffect(() => {
+                if (window.Reveal) {
+                    window.Reveal.initialize({ controls: true, progress: true, center: true, hash: false, transition: 'slide' });
+                }
+            }, []);
+
+            return (
+                <div className="reveal">
+                    <div className="slides">
+                        {/* Diapositiva 1: As Ferramentas */}
+                        <section data-background-color="var(--bg-dark)">
+                            <div className="h-full flex flex-col justify-center px-6 md:px-10 max-w-7xl mx-auto py-5">
+                                <header className="text-center mb-4">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple/10 border border-purple/30 text-purple text-xs font-bold uppercase tracking-widest mb-1.5">
+                                        <span>Obradoiro 5</span>
+                                        <span className="w-1 h-1 rounded-full bg-purple"></span>
+                                        <span className="font-mono text-gold">Nov-26</span>
+                                    </div>
+                                    <h2 className="text-3xl md:text-5xl font-extrabold text-cream mb-1.5">
+                                        IA de Escritorio <span className="text-purple">& Harness Axéntico</span>
+                                    </h2>
+                                    <p className="text-dim text-xs md:text-sm max-w-3xl mx-auto">
+                                        A IA sae do chat: un <strong>Harness</strong> conecta o modelo co sistema (arquivos, terminal, navegador e protocolo <strong>MCP</strong>) para delegar tarefas completas con supervisión humana.
+                                    </p>
+                                </header>
+
+                                {/* Banner Pedagóxico: O Concepto de Harness e Seguridade RGPD */}
+                                <div className="mb-4 grid md:grid-cols-2 gap-3 max-w-5xl mx-auto text-left">
+                                    <div className="bg-purple/10 border border-purple/30 rounded-xl p-2.5 md:p-3 flex items-start gap-2.5">
+                                        <div className="p-1.5 rounded-lg bg-purple/20 text-purple shrink-0 mt-0.5">
+                                            <Icons.Terminal size={16} />
+                                        </div>
+                                        <p className="text-[11px] text-purple-200/90 leading-snug">
+                                            <strong className="text-purple font-bold">Que é un Harness e MCP?</strong> O modelo non actúa só: o <em>harness</em> é a contorna operativa que lle achega ferramentas, memoria e permisos. O estándar aberto <strong>MCP (Model Context Protocol)</strong> permítelle ler cartafoles ou servizos sen copiar e pegar datos a man.
+                                        </p>
+                                    </div>
+                                    <div className="bg-red-950/30 border border-rose/30 rounded-xl p-2.5 md:p-3 flex items-start gap-2.5">
+                                        <div className="p-1.5 rounded-lg bg-rose/20 text-rose shrink-0 mt-0.5">
+                                            <Icons.ShieldAlert size={16} />
+                                        </div>
+                                        <p className="text-[11px] text-rose-200/90 leading-snug">
+                                            <strong className="text-rose font-bold">Privacidade e RGPD:</strong> Para datos confidenciais de alumnado ou actas, prioriza ferramentas <strong>100% locais (LM Studio, Ollama, AnythingLLM)</strong> onde os datos non saen do teu equipo. Nunca delegues accións en servizos oficiais (Abalar / correo) sen confirmación previa.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    {models.map((m, i) => (<ModelFlipCard key={i} model={m} />))}
+                                </div>
+
+                                <div className="mt-4 text-center animate-bounce text-dim opacity-50 text-xs">
+                                    Desliza para Misións Agénticas e Locais ➜
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Diapositiva 2: Misións Prácticas */}
+                        <section data-background-color="var(--bg-dark)">
+                            <div className="h-full flex flex-col justify-center px-6 md:px-10 max-w-7xl mx-auto py-6">
+                                <header className="flex justify-between items-end mb-4 border-b border-white/10 pb-3">
+                                    <div>
+                                        <h2 className="text-2xl md:text-3xl font-bold text-cream">Laboratorio Agéntico</h2>
+                                        <p className="text-purple text-xs font-bold uppercase tracking-widest">
+                                            Prompts de automatización, RAG documental e privacidade local.
+                                        </p>
+                                    </div>
+                                </header>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 h-[68vh]">
+                                    <MissionCard title="Xestión de Escritorio" difficulty="Nivel: Organización" icon={Icons.Folder} colorClass="border-orange" tasks={missionData.escritorio} />
+                                    <MissionCard title="Privacidade Local RGPD" difficulty="Nivel: Confidencialidade" icon={Icons.ShieldAlert} colorClass="border-green" tasks={missionData.local} />
+                                    <MissionCard title="Creación con Axentes" difficulty="Nivel: Recursos Web" icon={Icons.Cpu} colorClass="border-purple" tasks={missionData.axentes} />
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<WorkshopApp />);
+    </script>
+</body>
+
+</html>

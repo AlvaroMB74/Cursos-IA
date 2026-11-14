@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="gl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 3: Catálogo de Proxectos Propostos (Edición 2026–2027)</title>
+    <link rel="stylesheet" href="../../CSS/estilos_ia.css">
+    <link rel="stylesheet" href="../../CSS/axentica.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0f172a',
+                        card: '#1e293b',
+                        'card-elevated': '#334155',
+                        cream: '#f8fafc',
+                        dim: '#94a3b8',
+                        orange: '#f97316',
+                        gold: '#f59e0b',
+                        cyan: '#06b6d4',
+                        emerald: '#10b981',
+                        purple: '#8b5cf6',
+                        rose: '#f43f5e'
+                    },
+                    fontFamily: {
+                        sans: ['Open Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body class="custom-scroll selection:bg-emerald-500 selection:text-white">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const Modulo3App = () => {
+            const [selectedCategory, setSelectedCategory] = useState('todos');
+            const [selectedProject, setSelectedProject] = useState(null);
+
+            const proxectos = [
+                {
+                    id: "p1",
+                    categoria: "persoal",
+                    categoriaNome: "Uso Cidadán e Persoal",
+                    titulo: "Visualizador do Orzamento Público",
+                    subtitulo: "Transparencia municipal en datos abertos con gráficas interactivas",
+                    icon: "📊",
+                    cor: "emerald",
+                    tags: ["CSV Datos Abertos", "Gráficas HTML/JS", "Transparencia"],
+                    idea: "Un panel interactivo cunhas partidas dun orzamento público real (Concello, Xunta ou Estado), con comparativa entre anos e explicacións en linguaxe clara para calquera persoa.",
+                    fontes: "Ficheiro CSV descargado dun portal oficial de datos abertos coa súa documentación oficial. Gárdase en local con URL, data e licenza.",
+                    oAxenteFai: "Inspecciona o CSV (columnas, unidades, cifras e posibles erros de formato). Propón un plan de tres gráficas. Limpa os datos nun arquivo novo, xera o visualizador HTML autónomo con Chart.js e redacta resumos en galego claro.",
+                    verificasTi: "Que a suma das partidas parciais cadre matematicamente co total publicado polo organismo. Que as unidades (euros ou miles de euros) sexan correctas. Que ningunha explicación afirme cousas que os datos non sosteñen.",
+                    alcanceMinimo: "Unha administración, dous anos comparados, tres gráficas e un parágrafo explicativo por visualización.",
+                    semente: "Le este CSV e dime que contén antes de facer código: columnas, unidades e problemas que ves. Despois propón un plan de tres gráficas e agarda a miña aprobación expresa."
+                },
+                {
+                    id: "p2",
+                    categoria: "persoal",
+                    categoriaNome: "Uso Cidadán e Persoal",
+                    titulo: "Decisor con Criterios e Evidencias",
+                    subtitulo: "Matriz multicriterio con análise de sensibilidade e controis deslizantes",
+                    icon: "⚖️",
+                    cor: "gold",
+                    tags: ["Toma de Decisións", "Análise de Sensibilidade", "Sliders Interactivas"],
+                    idea: "Unha ferramenta para tomar unha decisión complexa persoal (compra dun coche, elección de electrodoméstico eficiente, destino de viaxe ou cambio de servizo) convertida nun comparador con pesos ponderados.",
+                    fontes: "Tres a cinco opcións con datos reais recollidos nunha táboa CSV (fichas técnicas oficiais, informes da OCU ou prezos de mercado), cunha ligazón por cada dato.",
+                    oAxenteFai: "Propón criterios a partir da túa necesidade e recolle os datos coas súas fontes comprobadas. Constrúe unha aplicación HTML con controis deslizantes de pesos para cada criterio, calcula o ranking en directo e sinala en que momento muda a mellor opción.",
+                    verificasTi: "Que cada dato teña fonte real e comprobable (abres tres ao chou). Que os criterios estean ben ponderados e non conten o mesmo dúas veces. Que o gañador non dependa dun peso desproporcionado.",
+                    alcanceMinimo: "Catro opcións cotexadas, cinco criterios avaliados, controis interactivos e unha táboa clara de sensibilidade.",
+                    semente: "Quero tomar unha decisión informada entre A, B e C. Antes de buscar nin calcular nada, pregúntame que factores me importan e propón unha lista de criterios con fontes para que eu os valide."
+                },
+                {
+                    id: "p3",
+                    categoria: "persoal",
+                    categoriaNome: "Uso Cidadán e Persoal",
+                    titulo: "Detective da Factura da Luz",
+                    subtitulo: "Auditoría horaria de consumo eléctrico e simulación de tarifas",
+                    icon: "⚡",
+                    cor: "cyan",
+                    tags: ["Enerxía", "CSV Horario", "Aforro Doméstico"],
+                    idea: "Descubre onde van os teus cartos de enerxía analizando os teus datos reais de consumo horario descargados da túa distribuidora oficial (i-DE, UFD, E-Redes).",
+                    fontes: "Arquivo CSV co histórico horario de consumo (sen nomes nin datos bancarios) e as condicións da túa tarifa vixente (prezo do kWh en punta, chaira e val).",
+                    oAxenteFai: "Le o arquivo CSV, detecta hábitos de consumo horario, picos de potencia innecesarios e calcula o custo exacto con diferentes modalidades de tarifas do mercado regulado vs. libre.",
+                    verificasTi: "Que o total de kWh sumado polo código cadre co total que aparece na túa factura física dese mes.",
+                    alcanceMinimo: "Un mes completo de datos horarios analizado, desglose por tramos e simulación de dúas tarifas alternativas.",
+                    semente: "Le este CSV de consumo horario da miña distribuidora. Calcula a suma total de kWh por franxas horarias e propón un plan de cálculo de aforro antes de xerar calquera informe."
+                },
+                {
+                    id: "p4",
+                    categoria: "docente",
+                    categoriaNome: "Uso na Práctica Docente",
+                    titulo: "Ruta Xeolóxica e Literaria Local",
+                    subtitulo: "Guía de campo interactiva con mapa Leaflet autónomo sen conexión",
+                    icon: "🗺️",
+                    cor: "purple",
+                    tags: ["Patrimonio e Paisaxe", "Mapas Leaflet", "Aprendizaxe Situada"],
+                    idea: "Un itinerario didáctico que enlaza paraxes naturais de Galicia con fragmentos literarios, fitos xeolóxicos ou patrimonio etnográfico nun mapa interactivo que funciona en calquera dispositivo sen internet.",
+                    fontes: "Táboa CSV con coordenadas GPS (latitude, lonxitude), textos breves con cita de autor ou referencia xeolóxica, e fotografías locais en formato comprimido.",
+                    oAxenteFai: "Valida que as coordenadas caian en terra firme no concello elixido. Xera unha páxina web local con Leaflet e OpenStreetMap que carga a ruta, os puntos de interese e as fichas de traballo para o alumnado.",
+                    verificasTi: "Que os puntos do mapa correspondan aos lugares reais e que ningunha cita literaria ou dato científico sexa inventado.",
+                    alcanceMinimo: "Cinco paradas xeorreferenciadas, unha ficha de observación por punto e navegación fluída no mapa.",
+                    semente: "Aquí tes unha lista de 5 puntos de interese con coordenadas e textos. Constrúe unha aplicación web cun mapa interactivo autónomo con Leaflet para guiar a ruta sobre o terreo."
+                },
+                {
+                    id: "p5",
+                    categoria: "docente",
+                    categoriaNome: "Uso na Práctica Docente",
+                    titulo: "Auditor de Coherencia Documental",
+                    subtitulo: "Revisor cruzado de programacións didácticas e criterios de avaliación",
+                    icon: "📑",
+                    cor: "orange",
+                    tags: ["Xestión Docente", "Normativa e Criterios", "Supervisión"],
+                    idea: "Un colaborador que analiza as túas unidades didácticas ou programacións para verificar que cada criterio de avaliación teña actividades asignadas e instrumentos asociados sen baleiros.",
+                    fontes: "O documento de programación docente en PDF ou Markdown e a táboa oficial de competencias específicas da materia.",
+                    oAxenteFai: "Extrae os criterios citados, cotéxaos contra a táboa oficial, xera unha matriz de cobertura (criterios cubertos vs. esquecidos) e sinala posibles inconsistencias na redacción.",
+                    verificasTi: "Comprobas as alertas sinaladas e decides se os axustes pedagóxicos teñen sentido ou responden a unha mala interpretación do texto.",
+                    alcanceMinimo: "Unha programación dun trimestre analizada con matriz de trazabilidade xerada en formato táboa limpa.",
+                    semente: "Le este borrador da miña programación e a táboa de criterios oficiais. Non reescribas nada: fai unicamente unha táboa de concordancia indicando que criterios teñen actividades e cales faltan."
+                },
+                {
+                    id: "p6",
+                    categoria: "docente",
+                    categoriaNome: "Uso na Práctica Docente",
+                    titulo: "Adaptador Accesible a Lectura Doada",
+                    subtitulo: "Transformación estruturada mantendo o rigor dos contidos curriculares",
+                    icon: "♿",
+                    cor: "emerald",
+                    tags: ["Inclusión NEAE", "Lectura Doada", "Accesibilidade"],
+                    idea: "Adaptación de textos complexos (historia, ciencias, literatura) para alumnado con necesidades de apoio ou dificultades de comprensión lectora, aplicando as normas de accesibilidade cognitiva sen perder o rigor.",
+                    fontes: "O texto orixinal do tema e as directrices básicas de linguaxe clara e lectura doada.",
+                    oAxenteFai: "Segmenta o texto en oracións sinxelas, clarifica a orde sintáctica (Suxeito-Verbo-Obxecto), engade un glosario de termos técnicos e xera un formato visual limpo con espazado amplo e apoios visuais.",
+                    verificasTi: "Que a simplificación lingüística non eliminou conceptos esenciais nin distorsionou a verdade científica ou histórica.",
+                    alcanceMinimo: "Un texto de dúas páxinas adaptado, glosario xerado e formato listo para imprimir ou consultar en pantalla.",
+                    semente: "Adapta este texto ás normas de lectura doada para un alumno con dificultades de comprensión. Mantén intactos os conceptos clave e presenta unha táboa comparativa orixinal vs. adaptado."
+                }
+            ];
+
+            const proxectosFiltrados = selectedCategory === 'todos'
+                ? proxectos
+                : proxectos.filter(p => p.categoria === selectedCategory);
+
+            return (
+                <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 pl-20 md:pl-24">
+                    {/* Cabeceira */}
+                    <div className="max-w-6xl mx-auto mb-8 border-b border-slate-800 pb-6">
+                        <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
+                            <div className="flex items-center gap-3">
+                                <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                    Módulo 3
+                                </span>
+                                <span className="text-slate-400 text-sm">Ampliando Horizontes (2026–2027)</span>
+                            </div>
+                            <div className="text-xs text-slate-500 font-mono">
+                                Visión: Non-Técnico con Superpoderes
+                            </div>
+                        </div>
+                        <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+                            Catálogo de Proxectos Propostos
+                        </h1>
+                        <p className="text-slate-400 text-base md:text-lg mt-2 max-w-4xl">
+                            O obxectivo é <strong className="text-emerald-400">abrir a túa visión sobre o que hoxe un usuario non-técnico pode deseñar e construír</strong>. Que sexas docente é un contexto de aplicación estupendo, pero esta tecnoloxía transforma por igual a túa xestión persoal e a túa práctica profesional.
+                        </p>
+
+                        {/* Filtros de Categoría */}
+                        <div className="flex flex-wrap gap-2 mt-6">
+                            {[
+                                { id: 'todos', label: 'Todos os Proxectos', count: proxectos.length },
+                                { id: 'persoal', label: '👤 Uso Cidadán e Persoal', count: proxectos.filter(p => p.categoria === 'persoal').length },
+                                { id: 'docente', label: '🎓 Uso na Práctica Docente', count: proxectos.filter(p => p.categoria === 'docente').length }
+                            ].map(filtro => (
+                                <button
+                                    key={filtro.id}
+                                    onClick={() => setSelectedCategory(filtro.id)}
+                                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+                                        selectedCategory === filtro.id
+                                            ? 'bg-emerald-500 text-slate-950 font-bold shadow-lg shadow-emerald-500/20'
+                                            : 'bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-slate-800'
+                                    }`}
+                                >
+                                    <span>{filtro.label}</span>
+                                    <span className="px-1.5 py-0.2 rounded-full bg-slate-950 text-[10px] font-mono text-slate-300">
+                                        {filtro.count}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="max-w-6xl mx-auto space-y-6">
+                        {/* Grid de Proxectos */}
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                            {proxectosFiltrados.map(p => (
+                                <div
+                                    key={p.id}
+                                    onClick={() => setSelectedProject(p)}
+                                    className={`bg-slate-900 border rounded-2xl p-5 cursor-pointer transition-all hover:-translate-y-1 flex flex-col justify-between ${
+                                        selectedProject?.id === p.id
+                                            ? 'border-emerald-500 shadow-xl shadow-emerald-500/10 bg-slate-850'
+                                            : 'border-slate-800 hover:border-slate-700'
+                                    }`}
+                                >
+                                    <div>
+                                        <div className="flex items-center justify-between mb-3">
+                                            <span className="text-2xl">{p.icon}</span>
+                                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                                                p.categoria === 'persoal' ? 'bg-cyan-500/20 text-cyan-400' : 'bg-purple-500/20 text-purple-400'
+                                            }`}>
+                                                {p.categoria === 'persoal' ? 'Persoal / Cidadán' : 'Práctica Docente'}
+                                            </span>
+                                        </div>
+                                        <h3 className="text-lg font-bold text-white mb-1">{p.titulo}</h3>
+                                        <p className="text-xs text-slate-400 mb-3">{p.subtitulo}</p>
+                                    </div>
+
+                                    <div>
+                                        <div className="flex flex-wrap gap-1.5 mb-4">
+                                            {p.tags.map((t, i) => (
+                                                <span key={i} className="px-2 py-0.5 rounded bg-slate-950 text-[10px] text-slate-400 border border-slate-800">
+                                                    {t}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <div className="text-[11px] font-bold text-emerald-400 flex items-center gap-1">
+                                            <span>Abrir ficha completa</span> &rarr;
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Modal / Ficha Técnica do Proxecto Seleccionado */}
+                        {selectedProject && (
+                            <div className="bg-slate-900 border-2 border-emerald-500/50 rounded-2xl p-6 md:p-8 animate-fadeIn relative shadow-2xl">
+                                <button
+                                    onClick={() => setSelectedProject(null)}
+                                    className="absolute top-4 right-4 text-slate-400 hover:text-white text-lg font-bold w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center"
+                                >
+                                    ✕
+                                </button>
+
+                                <div className="flex flex-wrap items-center gap-3 mb-2">
+                                    <span className="text-3xl">{selectedProject.icon}</span>
+                                    <div>
+                                        <span className="text-xs font-mono uppercase text-emerald-400 font-bold">
+                                            {selectedProject.categoriaNome}
+                                        </span>
+                                        <h2 className="text-2xl font-bold text-white">{selectedProject.titulo}</h2>
+                                    </div>
+                                </div>
+                                <p className="text-slate-300 text-sm mb-6 leading-relaxed">
+                                    {selectedProject.idea}
+                                </p>
+
+                                <div className="grid md:grid-cols-2 gap-6 pt-4 border-t border-slate-800">
+                                    {/* Columna Esquerda */}
+                                    <div className="space-y-4">
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                            <h5 className="text-xs uppercase font-bold tracking-wider text-cyan-400 mb-1 flex items-center gap-1">
+                                                <span>📁</span> Fontes de Entrada Requiridas:
+                                            </h5>
+                                            <p className="text-xs text-slate-300 leading-relaxed">
+                                                {selectedProject.fontes}
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                            <h5 className="text-xs uppercase font-bold tracking-wider text-amber-400 mb-1 flex items-center gap-1">
+                                                <span>⚡</span> O que fai o Colaborador Dixital:
+                                            </h5>
+                                            <p className="text-xs text-slate-300 leading-relaxed">
+                                                {selectedProject.oAxenteFai}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Columna Dereita */}
+                                    <div className="space-y-4">
+                                        <div className="bg-emerald-950/40 p-4 rounded-xl border border-emerald-500/30">
+                                            <h5 className="text-xs uppercase font-bold tracking-wider text-emerald-300 mb-1 flex items-center gap-1">
+                                                <span>🛡️</span> O que Verificas Ti (Punto de Control):
+                                            </h5>
+                                            <p className="text-xs text-emerald-100 leading-relaxed">
+                                                {selectedProject.verificasTi}
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                            <h5 className="text-xs uppercase font-bold tracking-wider text-slate-400 mb-1">
+                                                Alcance Mínimo Realista (4 horas):
+                                            </h5>
+                                            <p className="text-xs text-slate-300 leading-relaxed">
+                                                {selectedProject.alcanceMinimo}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Semente / Prompt de arranque */}
+                                <div className="mt-6 pt-4 border-t border-slate-800">
+                                    <div className="text-xs uppercase font-bold tracking-wider text-orange-400 mb-2 flex items-center gap-1">
+                                        <span>🌱</span> Semente de Arranque (Primeiro Prompt Recomendado):
+                                    </div>
+                                    <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-amber-300 leading-relaxed">
+                                        "{selectedProject.semente}"
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Modulo3App />);
+    </script>
+</body>
+
+</html>

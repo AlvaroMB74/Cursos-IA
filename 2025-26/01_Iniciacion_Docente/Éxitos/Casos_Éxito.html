@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="gl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casos de Éxito IA</title>
+    <link rel="stylesheet" href="../css/estilos_ia.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { dark: 'var(--bg-dark)', card: 'var(--card-bg)', cream: 'var(--text-main)', dim: 'var(--text-dim)', gold: 'var(--accent-gold)', orange: 'var(--accent-orange)', retro: 'var(--accent-retro)', cyan: '#06B6D4', purple: '#8B5CF6', green: '#10B981' }, fontFamily: { sans: ['Open Sans', 'sans-serif'] }, animation: { 'fade-in': 'fadeIn 0.5s ease-out forwards' }, keyframes: { fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } } } } }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,800;1,400&display=swap"
+        rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+        }
+
+        .bg-glow {
+            background: radial-gradient(circle at 50% 0%, rgba(211, 84, 0, 0.05) 0%, rgba(18, 18, 18, 0) 60%);
+        }
+
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+
+        .backface-hidden {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+
+<body class="bg-dark text-cream font-sans overflow-x-hidden bg-glow">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useMemo, useEffect } = React;
+        const IconBase = ({ children, className, size = 24, ...props }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>);
+        const Icons = { Play: (p) => <IconBase {...p}><circle cx="12" cy="12" r="10" /><polygon points="10 8 16 12 10 16 10 8" /></IconBase>, X: (p) => <IconBase {...p}><path d="M18 6 6 18" /><path d="m6 6 12 12" /></IconBase>, ArrowRight: (p) => <IconBase {...p}><path d="M5 12h14M12 5l7 7-7 7" /></IconBase> };
+
+        const VideoModal = ({ videoUrl, title, onClose }) => {
+            if (!videoUrl) return null;
+            const getYoutubeEmbed = (url) => { const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/; const match = url.match(regExp); return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}?autoplay=1&rel=0` : null; };
+            const embedLink = getYoutubeEmbed(videoUrl);
+            useEffect(() => { const handleEsc = (e) => { if (e.key === 'Escape') onClose(); }; window.addEventListener('keydown', handleEsc); return () => window.removeEventListener('keydown', handleEsc); }, [onClose]);
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in" onClick={onClose}>
+                    <button onClick={onClose} className="absolute top-5 right-5 text-white/70 hover:text-white transition-colors z-50"><Icons.X size={40} /></button>
+                    <div className="w-full max-w-5xl aspect-video bg-black rounded shadow-[0_0_50px_rgba(211,84,0,0.3)] overflow-hidden" onClick={e => e.stopPropagation()}>{embedLink ? (<iframe src={embedLink} className="w-full h-full" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>) : (<div className="flex items-center justify-center h-full text-dim">Video non dispoñible</div>)}</div>
+                    <div className="absolute bottom-10 text-center w-full pointer-events-none"><h2 className="text-xl font-bold text-white">{title}</h2></div>
+                </div>
+            );
+        };
+
+        const FlipCard = ({ item, onOpenVideo }) => {
+            const [isFlipped, setIsFlipped] = useState(false);
+            return (
+                <div className="relative w-full h-[350px] perspective-1000 group cursor-pointer animate-fade-in" onClick={() => setIsFlipped(!isFlipped)} onMouseEnter={() => setIsFlipped(true)} onMouseLeave={() => setIsFlipped(false)}>
+                    <div className={`relative w-full h-full duration-700 transform-style-3d transition-transform ${isFlipped ? 'rotate-y-180' : ''}`}>
+                        <div className={`absolute w-full h-full backface-hidden bg-card border border-white/10 rounded-lg overflow-hidden shadow-xl ${isFlipped ? 'pointer-events-none' : ''}`}>
+                            <div className="absolute inset-0 z-0"><img src={item.imagePath} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.style.backgroundColor = '#1a1a1a' }} /><div className="absolute inset-0 bg-black/60 group-hover:bg-black/50 transition-colors"></div></div>
+                            <div className="relative z-10 h-full flex flex-col p-6"><span className={`self-start px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest border bg-black/50 backdrop-blur-sm ${item.catColor}`}>{item.category}</span><div className="mt-auto"><h3 className="text-2xl md:text-3xl font-bold text-white mb-2 leading-tight text-shadow">{item.title}</h3><div className="w-12 h-1 bg-orange mb-3"></div><p className="text-cream text-sm font-light italic">"{item.subtitle}"</p></div></div>
+                        </div>
+                        <div className={`absolute w-full h-full backface-hidden rotate-y-180 bg-card border-t-4 border-orange rounded-lg p-6 flex flex-col shadow-[0_0_30px_rgba(0,0,0,0.5)] ${isFlipped ? '' : 'pointer-events-none'}`}>
+                            <h4 className="text-lg font-bold text-orange mb-3">{item.title}</h4>
+                            <p className="text-sm text-dim leading-relaxed flex-grow overflow-y-auto custom-scroll pr-2">{item.description}</p>
+                            <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center"><span className="text-[10px] uppercase text-dim tracking-wider">Impacto Real</span>{item.videoUrl && (<button onClick={(e) => { e.stopPropagation(); onOpenVideo(item); }} className="flex items-center gap-2 bg-white/10 hover:bg-orange hover:text-white px-3 py-1.5 rounded-full text-xs font-bold transition-all text-orange"><Icons.Play size={14} /> Ver Vídeo</button>)}</div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const SuccessGalleryApp = () => {
+            const cases = [
+                { id: 1, category: "Bioloxía", catColor: "border-blue-500 text-blue-300", title: "AlphaFold", subtitle: "O origami da vida resolto", description: "Durante 50 anos, predicir a forma 3D dunha proteína era un reto case imposible. AlphaFold resolveu a estrutura de 200 millóns de proteínas (case todas as coñecidas) en meses, acelerando o desenvolvemento de fármacos.", imagePath: "./img/alphafold.jpg", videoUrl: "https://www.youtube.com/watch?v=XhExzm_rWxk" },
+                { id: 2, category: "Medicina", catColor: "border-green-500 text-green-300", title: "Fármacos IA", subtitle: "Deseño molecular inverso", description: "En lugar de probar moléculas ao chou, a IA xenerativa deseña novas moléculas 'á carta' para que encaixen en receptores específicos. En 2023, o primeiro fármaco deseñado integramente por IA para a fibrose pulmonar entrou en fase clínica.", imagePath: "./img/farmacos.jpg", videoUrl: "https://www.youtube.com/watch?v=stGzhnXtzK0" },
+                { id: 3, category: "Astronomía", catColor: "border-purple-500 text-purple-300", title: "NASA & Kepler", subtitle: "Buscando mundos no ruído", description: "O telescopio Kepler envía demasiados datos para seren analizados por humanos. Unha rede neuronal analizou sinais descartados e atopou Kepler-90i, un oitavo planeta nun sistema solar afastado.", imagePath: "./img/nasa.jpg", videoUrl: "https://www.youtube.com/watch?v=xjXUUNpCT8k&t=37s" },
+                { id: 4, category: "Enxeñería", catColor: "border-orange text-orange-300", title: "Aerospike", subtitle: "Evolución de motores foguete", description: "Deseñar motores aerospike é complexo pola dinámica de fluídos. Startups como Pangea Aerospace usan ML para simular millóns de configuracións, logrando deseños impresos en 3D un 15% máis eficientes.", imagePath: "./img/aerospike.jpg", videoUrl: "https://www.youtube.com/watch?v=6Xx1GXjRbMk" },
+                { id: 5, category: "Química", catColor: "border-orange text-orange-300", title: "GNoME", subtitle: "800 anos de química nun segundo", description: "DeepMind utilizou IA para predicir a estabilidade de novos materiais inorgánicos. Descubriu 2.2 millóns de estruturas novas, candidatos para baterías e paneis solares máis eficientes.", imagePath: "./img/gnome.jpg", videoUrl: "https://www.youtube.com/watch?v=y-znQUbhuKo" },
+                { id: 6, category: "Robótica", catColor: "border-orange text-orange-300", title: "Embodied AI", subtitle: "A intelixencia cobra corpo", description: "Robots como Atlas ou Optimus xa non se programan con regras fixas. Usan aprendizaxe por reforzo para 'aprender' a moverse e manipular obxectos, permitindo unha adaptación ao mundo real nunca vista.", imagePath: "./img/robotica.jpg", videoUrl: "https://www.youtube.com/watch?v=q2rR_aXjqnI" },
+                { id: 7, category: "Historia", catColor: "border-retro text-retro", title: "Vesuvius Challenge", subtitle: "Lendo o invisible", description: "Papiros de Herculano foron carbonizados polo Vesubio no 79 d.C. A IA analizou escaneos 3D de raios X para detectar cambios microscópicos na tinta e 'desenrolar' dixitalmente os textos perdidos.", imagePath: "./img/vesubio.jpg", videoUrl: "https://www.youtube.com/watch?v=Z_L1oN8y7Bs" },
+                { id: 8, category: "Empresa", catColor: "border-retro text-retro", title: "Loxística", subtitle: "Redefinindo a xestión loxística para optimizar procesos", description: "Spotify e Netflix (recomendacións personalizadas), Amazon (inventario e recomendacións), Uber/Airbnb (prezos dinámicos), Apple/Google (asistentes de voz/busca) e empresas como Zara (xestión da cadea de subministración) están a usar a IA para optimizar procesos, reducir custos, mellorar a experiencia do cliente e personalizar servizos mediante análise de datos, automatización e modelos preditivos en sectores como as finanzas, o comercio minorista e os recursos humanos.", imagePath: "./img/logistica.jpg", videoUrl: "https://www.youtube.com/watch?v=Zpaw-sQdrnY" },
+                { id: 9, category: "Arqueoloxía", catColor: "border-retro text-retro", title: "Quipus Incas", subtitle: "Decodificando nós perdidos", description: "Investigadores de Harvard usan algoritmos de recoñecemento de patróns para cruzar datos de Quipus con censos coloniais españois, intentando descifrar por fin esta linguaxe numérico-narrativa.", imagePath: "./img/quipus.jpg", videoUrl: "https://www.youtube.com/watch?v=4chEHpxxWfc" },
+                { id: 10, category: "Bioloxía", catColor: "border-green-500 text-green-300", title: "Project CETI", subtitle: "Podemos falar coas baleas?", description: "Utilizando procesamento de linguaxe natural para analizar millóns de clics de cachalotes. O obxectivo é descifrar a súa sintaxe e intentar unha comunicación interespecie.", imagePath: "./img/ballenas.jpg", videoUrl: "https://www.youtube.com/watch?v=pFUUV1otKZ4" },
+                { id: 11, category: "Robótica", catColor: "border-gold text-gold", title: "Conducción autónoma", subtitle: "Unha nova sensación", description: "A conducción autónoma é un feito dende hay anos, e agora comeza a incorporarse ás nosas vidas.", imagePath: "./img/coche.jpg", videoUrl: "https://www.youtube.com/watch?v=8Szm56z58EM" },
+                { id: 12, category: "Medicina", catColor: "border-gold text-gold", title: "Apoio ó diagnóstico", subtitle: "O supermédico", description: "O recoñecemento de patróns e profundidade na investigación de historiales médicos permite prever ataques cardíacos e outras complicacións con precisión.", imagePath: "./img/diagnostico.jpg", videoUrl: "https://www.youtube.com/watch?v=QrHo1NdaW54" },
+            ];
+
+            const [selectedVideo, setSelectedVideo] = useState(null);
+            const [filter, setFilter] = useState('Todos');
+            const categories = ['Todos', ...new Set(cases.map(c => c.category))];
+            const filteredCases = useMemo(() => { return filter === 'Todos' ? cases : cases.filter(c => c.category === filter); }, [filter]);
+
+            return (
+                <div className="min-h-screen pb-24 px-6 md:px-12">
+                    <header className="py-12 text-center animate-fade-in"><div className="max-w-4xl mx-auto"><h4 className="text-orange tracking-[0.3em] uppercase font-bold text-xs mb-4">Módulo 2: Aplicación Real</h4><h1 className="text-4xl md:text-6xl font-bold mb-6 text-cream">Impacto <span className="text-gold">Transformador</span></h1><p className="text-lg text-dim font-light leading-relaxed max-w-2xl mx-auto">Da teoría á práctica. 12 exemplos de como a IA está a redefinir os límites do posible en todas as disciplinas.</p></div></header>
+                    <div className="flex justify-center flex-wrap gap-2 mb-10 animate-fade-in" style={{ animationDelay: '0.1s' }}>{categories.map(cat => (<button key={cat} onClick={() => setFilter(cat)} className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all border ${filter === cat ? 'bg-cream text-dark border-cream shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'bg-white/5 text-dim border-transparent hover:border-white/20 hover:text-white'}`}>{cat}</button>))}</div>
+                    <main className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>{filteredCases.map(item => (<FlipCard key={item.id} item={item} onOpenVideo={setSelectedVideo} />))}</main>
+                    {selectedVideo && (<VideoModal videoUrl={selectedVideo.videoUrl} title={selectedVideo.title} onClose={() => setSelectedVideo(null)} />)}
+                </div>
+            );
+        };
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<SuccessGalleryApp />);
+    </script>
+</body>
+
+</html>

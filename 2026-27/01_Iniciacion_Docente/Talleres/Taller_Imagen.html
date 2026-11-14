@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="gl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obradoiro de Creación Visual e Multimodal (Nov-26)</title>
+    <link rel="stylesheet" href="../css/estilos_ia.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { dark: 'var(--bg-dark)', card: 'var(--card-bg)', cream: 'var(--text-main)', dim: 'var(--text-dim)', gold: 'var(--accent-gold)', orange: 'var(--accent-orange)', retro: 'var(--accent-retro)', cyan: '#06B6D4', purple: '#8B5CF6', green: '#10B981', pink: '#EC4899' }, fontFamily: { sans: ['Open Sans', 'sans-serif'] }, animation: { 'fade-in': 'fadeIn 0.6s ease-out forwards' }, keyframes: { fadeIn: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } } } } }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.js"></script>
+    <style> body { background-color: var(--bg-dark); color: var(--text-main); } .bg-glow { background: radial-gradient(circle at 50% 0%, rgba(236, 72, 153, 0.08) 0%, rgba(18, 18, 18, 0) 70%); } .reveal { height: 100vh; } .reveal .slides > section { padding: 0; } .perspective-1000 { perspective: 1000px; } .transform-style-3d { transform-style: preserve-3d; } .backface-hidden { -webkit-backface-visibility: hidden; backface-visibility: hidden; } .rotate-y-180 { transform: rotateY(180deg); } .custom-scroll::-webkit-scrollbar { width: 4px; } .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); } .custom-scroll::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 3px; } </style>
+</head>
+<body class="bg-dark text-cream font-sans overflow-hidden bg-glow">
+    <div id="root"></div>
+    <script type="text/babel">
+        // (COMPONENTE ICONOS IGUAL QUE ANTES)
+        const { useState, useEffect } = React;
+        const Icon = ({ children, className, size = 20 }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>);
+        const Icons = { Palette: (p) => <Icon {...p}><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></Icon>, Image: (p) => <Icon {...p}><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></Icon>, Camera: (p) => <Icon {...p}><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></Icon>, Copy: (p) => <Icon {...p}><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></Icon>, Check: (p) => <Icon {...p}><polyline points="20 6 9 17 4 12"/></Icon>, ChevronLeft: (p) => <Icon {...p}><path d="m15 18-6-6 6-6"/></Icon>, ChevronRight: (p) => <Icon {...p}><path d="m9 18 6-6-6-6"/></Icon>, Unlock: (p) => <Icon {...p}><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></Icon>, Lock: (p) => <Icon {...p}><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></Icon>, ExternalLink: (p) => <Icon {...p}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></Icon> };
+
+        // (COMPONENTE FLIP CARD - TRADUCIDO)
+        const ModelFlipCard = ({ model }) => {
+            const [isFlipped, setIsFlipped] = useState(false);
+            return (
+                <div className="relative w-full h-[170px] perspective-1000 group cursor-pointer animate-fade-in" onMouseEnter={() => setIsFlipped(true)} onMouseLeave={() => setIsFlipped(false)} onClick={() => setIsFlipped(!isFlipped)}>
+                    <div className={`relative w-full h-full duration-500 transform-style-3d transition-transform ${isFlipped ? 'rotate-y-180' : ''}`}>
+                        <div className={`absolute w-full h-full backface-hidden rounded-xl p-5 flex flex-col justify-between border-2 bg-card/90 backdrop-blur-sm shadow-lg transition-all duration-300 ${model.color} hover:scale-105 hover:shadow-2xl`}>
+                            <div className="flex justify-between items-start"><h4 className="font-extrabold text-lg tracking-tight">{model.name}</h4><div className="flex gap-2"><a href={model.url} target="_blank" rel="noopener noreferrer" className="text-dim hover:text-white transition-colors z-20" onClick={(e) => e.stopPropagation()} title="Abrir Web"><Icons.ExternalLink size={16} /></a>{model.open ? <Icons.Unlock size={14} className="opacity-80" /> : <Icons.Lock size={14} className="opacity-50" />}</div></div>
+                            <div className="text-xs"><span className="block font-bold uppercase tracking-wider mb-1 opacity-90">{model.cost}</span><span className="opacity-60 italic">{model.company}</span></div>
+                            <div className="mt-2 text-right"><span className="text-[9px] uppercase tracking-widest border border-current px-2 py-1 rounded-full opacity-60">Info +</span></div>
+                        </div>
+                        <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-black/95 border border-white/10 rounded-xl p-5 flex flex-col justify-center text-xs shadow-2xl">
+                            <div className="mb-3"><span className="text-green-400 font-bold block mb-1 uppercase tracking-wider text-[10px]">👍 Fortalezas:</span><p className="text-gray-300 leading-snug">{model.pros}</p></div>
+                            <div><span className="text-retro font-bold block mb-1 uppercase tracking-wider text-[10px]">👎 Debilidades:</span><p className="text-gray-400 leading-snug">{model.cons}</p></div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const MissionCard = ({ title, difficulty, icon: IconComp, tasks, colorClass }) => {
+            const [currentTask, setCurrentTask] = useState(0);
+            const [copied, setCopied] = useState(false);
+            const task = tasks[currentTask];
+            const nextTask = () => setCurrentTask((prev) => (prev + 1) % tasks.length);
+            const prevTask = () => setCurrentTask((prev) => (prev - 1 + tasks.length) % tasks.length);
+            const handleCopy = () => { navigator.clipboard.writeText(task.prompt); setCopied(true); setTimeout(() => setCopied(false), 2000); };
+
+            return (
+                <div className={`bg-card border-t-4 ${colorClass} rounded-lg p-6 flex flex-col h-full shadow-2xl group relative transition-all hover:-translate-y-1 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]`}>
+                    <div className="flex justify-between items-start mb-4 border-b border-white/5 pb-3">
+                        <div className="flex items-center gap-3"><div className="p-2 bg-white/5 rounded-md text-white/80"><IconComp size={24} /></div><div><h3 className="font-bold text-cream text-lg">{title}</h3><span className="text-[10px] uppercase text-dim tracking-widest">{difficulty}</span></div></div>
+                        <div className="text-xs font-mono text-dim bg-white/5 px-3 py-1 rounded whitespace-nowrap min-w-[60px] text-center">{currentTask + 1} / {tasks.length}</div>
+                    </div>
+                    <div className="mb-4 min-h-[40px]"><h4 className="text-white font-bold text-sm mb-1">{task.name}</h4><p className="text-xs text-dim italic">{task.context}</p></div>
+                    <div className="bg-black/40 rounded border border-white/10 p-4 relative flex-grow group-hover:border-white/20 transition-colors mb-4 flex flex-col">
+                        <div className="absolute top-2 right-2 z-10"><button onClick={handleCopy} className="text-dim hover:text-gold transition-colors p-1" title="Copiar Prompt">{copied ? <Icons.Check size={16} className="text-green-500" /> : <Icons.Copy size={16} />}</button></div>
+                        <p className="text-[11px] text-pink-100/80 font-mono leading-relaxed whitespace-pre-line custom-scroll overflow-y-auto h-full pr-2">{task.prompt}</p>
+                    </div>
+                    <div className="flex justify-between items-center mt-auto pt-2 border-t border-white/5">
+                        <button onClick={prevTask} className="text-dim hover:text-white p-2 hover:bg-white/5 rounded"><Icons.ChevronLeft /></button><span className="text-[9px] uppercase text-dim tracking-widest opacity-50">Navegar Tarefas</span><button onClick={nextTask} className="text-dim hover:text-white p-2 hover:bg-white/5 rounded"><Icons.ChevronRight /></button>
+                    </div>
+                </div>
+            );
+        };
+
+        const WorkshopApp = () => {
+            const models = [
+                { name: "GPT Image", url: "https://chatgpt.com", company: "OpenAI", open: false, cost: "Freemium", color: "border-green-500/50 text-green-400 shadow-[0_0_15px_rgba(34,197,94,0.15)]", pros: "Edición conversacional iterativa ('muda a cor', 'engade un elemento'), texto lexible e xeración de vectores SVG e animacións.", cons: "Algúns estilos manteñen certa estética dixitalizada." },
+                { name: "Nano Banana", url: "https://gemini.google.com", company: "Google (Gemini)", open: false, cost: "Gratis / Freemium", color: "border-blue-500/50 text-blue-300 shadow-[0_0_15px_rgba(59,130,246,0.15)]", pros: "Gratuíto, ultrarrápido, excelente comprensión de linguaxe natural e alta consistencia usando imaxes de referencia.", cons: "Filtros de seguridade e moderación moi cautelosos con figuras humanas." },
+                { name: "Midjourney v8", url: "https://midjourney.com", company: "Midjourney", open: false, cost: "Pago", color: "border-purple/50 text-purple shadow-[0_0_15px_rgba(168,85,247,0.15)]", pros: "O referente absoluto en calidade artística, texturas hiperrealistas, iluminación cinemática e dirección de arte.", cons: "Non dispón de plan gratuíto de proba." },
+                { name: "Ideogram 4", url: "https://ideogram.ai", company: "Ideogram", open: false, cost: "Freemium", color: "border-pink-500/50 text-pink-300 shadow-[0_0_15px_rgba(236,72,153,0.15)]", pros: "O rei indiscutible integrando tipografía exacta, letras nítidas e deseño de carteis, pósteres e logotipos escolares.", cons: "Plan gratuíto con cotas diarias limitadas." },
+                { name: "Recraft v4", url: "https://www.recraft.ai", company: "Recraft", open: false, cost: "Freemium", color: "border-emerald-500/50 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.15)]", pros: "Deseñado para ilustración e iconografía: xera vectores reais (.SVG) editables, iconas limpas e paletas corporativas de centro.", cons: "Menor vocación de fotografía crua fronte a Midjourney ou FLUX." },
+                { name: "FLUX.2", url: "https://bfl.ai", company: "Black Forest Labs", open: true, cost: "Freemium / Pesos Abertos", color: "border-amber-500/50 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.15)]", pros: "Pesos abertos de vangarda, fotorrealismo extremo e control absoluto; executable en local sen depender de plataformas externas.", cons: "Esixente para correr en local se non se dispón de GPU potente." },
+            ];
+
+            const missionData = {
+                burocracia: [
+                    { name: "Cartaz Letras Galegas", context: "Deseño de cartelería oficial con texto exacto e estilo gráfico.", prompt: `Crea un cartaz A3 en vertical para o Día das Letras Galegas do noso instituto, con tipografía grande lexible, paleta azul e branca inspirada na bandeira e unha ilustración da ría. O texto debe dicir exactamente: «Día das Letras Galegas · Venres 17 de maio · Biblioteca do IES». Dame tres variantes e versión vectorial (SVG) da mellor.` },
+                    { name: "Logo de Proxecto", context: "Crear un isotipo moderno para un proxecto de centro sobre sostibilidade.", prompt: `Isotipo moderno e minimalista para un proxecto escolar chamado "EcoFuturo". Icona dunha folla que é tamén unha bombilla. Estilo vectorial plano, cores verde azulado e laranxa. Fondo branco. Sen texto. --ar 1:1` },
+                    { name: "Cabeceira Newsletter", context: "Imaxe de portada para unha circular informativa sobre unha excursión.", prompt: `Ilustración estilo contos infantís dun grupo de nenos escolares diversos con mochilas, mirando un antigo castelo romano nun outeiro soleado. Cores cálidas, acuarela e tinta. Formato panorámico. --ar 16:9` }
+                ],
+                pedagogia: [
+                    { name: "Concepto Abstracto", context: "Visualizar o concepto de 'Democracia' para alumnos de Primaria.", prompt: `Ilustración amigable estilo Pixar que representa o concepto de "Democracia". Un grupo diverso de animais do bosque votando felizmente levantando a man arredor dunha árbore anciá. Cores vibrantes, luz suave. --ar 4:3` },
+                    { name: "Recreación Histórica", context: "Imaxe realista da Antiga Roma para clase de Historia.", prompt: `Fotografía realista e detallada dunha rúa concorrida na Antiga Roma durante o século I d.C. Xente con togas, postos de mercado, un templo de mármore ao fondo. Luz natural de solpor. Calidade cinematográfica, 8k. --ar 3:2` },
+                    { name: "Personaxe Literario", context: "Xerar o retrato de Don Quixote para analizar descricións.", prompt: `Retrato fotográfico de Don Quixote da Mancha. Un ancián fidalgo, delgado, con barba canosa desaliñada e armadura vella e oxidada. Mirada soñadora e melancólica mirando ao horizonte. Estilo Rembrandt, iluminación claroscuro dramática. Gran de película. --ar 2:3` }
+                ],
+                personal: [
+                    { name: "Avatar Estilizado", context: "Crear unha foto de perfil artística para redes sociais.", prompt: `Retrato en primeiro plano dunha persoa moza con lentes e pelo rizado sorrindo. Estilo ilustración dixital "cyberpunk low-fi", paleta de cores neón rosa e cian. Fondo urbano futurista borroso. --ar 1:1` },
+                    { name: "Deseño de Interiores", context: "Visualizar como quedaría un salón reformado.", prompt: `Fotografía de interiorismo dun salón de estilo nórdico acolledor. Sofá gris claro, moita madeira natural, plantas grandes, luz natural entrando por un ventanal enorme. Unha cheminea moderna acesa. Minimalista, revista de decoración. --ar 4:3` },
+                    { name: "Fotografía de Comida", context: "Imaxe hiperrealista dun prato para un blog de cociña.", prompt: `Fotografía macro de comida dunha hamburguesa gourmet zumenta con queixo derretido e touciño. Primeirísimo plano, vapor saíndo. Iluminación de estudo profesional, fondo rústico de madeira escura desenfocado. Deliciosa, texturas detalladas. 8k. --ar 1:1` }
+                ]
+            };
+
+            useEffect(() => { if (window.Reveal) { window.Reveal.initialize({ controls: true, progress: true, center: true, hash: false, transition: 'slide' }); } }, []);
+
+            return (
+                <div className="reveal"><div className="slides">
+                    <section data-background-color="var(--bg-dark)">
+                        <div className="h-full flex flex-col justify-center px-8 max-w-7xl mx-auto">
+                            <header className="text-center mb-8"><h2 className="text-4xl font-bold text-cream mb-2">O Universo <span className="text-pink-500">Visual</span></h2><p className="text-dim text-sm">Non todos os pinceis pintan igual. Coñece as túas ferramentas.</p></header>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">{models.map((m, i) => (<ModelFlipCard key={i} model={m} />))}</div>
+                            <div className="mt-8 text-center animate-bounce text-dim opacity-50 text-xs">Desliza para Misións Creativas ➜</div>
+                        </div>
+                    </section>
+                    <section data-background-color="var(--bg-dark)">
+                        <div className="h-full flex flex-col justify-center px-8 max-w-7xl mx-auto">
+                            <header className="flex justify-between items-end mb-6 border-b border-white/10 pb-4">
+                                <div><h2 className="text-3xl font-bold text-cream">Estudo de Creación</h2><p className="text-pink-500 text-xs font-bold uppercase tracking-widest">A clave está nos detalles. Copia e proba.</p></div>
+                            </header>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[65vh]">
+                                <MissionCard title="Burocracia Visual" difficulty="Nivel: Soporte" icon={Icons.Image} colorClass="border-retro" tasks={missionData.burocracia} />
+                                <MissionCard title="Pedagoxía Visual" difficulty="Nivel: Aula" icon={Icons.Palette} colorClass="border-gold" tasks={missionData.pedagogia} />
+                                <MissionCard title="Arte Persoal" difficulty="Nivel: Creativo" icon={Icons.Camera} colorClass="border-cyan" tasks={missionData.personal} />
+                            </div>
+                        </div>
+                    </section>
+                </div></div>
+            );
+        };
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<WorkshopApp />);
+    </script>
+</body>
+</html>
