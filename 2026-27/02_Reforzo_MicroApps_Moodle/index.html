@@ -919,6 +919,17 @@
         .project-card.p-art { border-top: 4px solid #EC4899; }
         .project-card.p-words { border-top: 4px solid var(--accent-cyan); }
 
+        /* Proxectos de Iniciación (SVG Local) */
+        .project-card.p-gears { border-top: 4px solid var(--accent-orange); }
+        .project-card.p-water { border-top: 4px solid var(--accent-cyan); }
+        .project-card.p-algebra { border-top: 4px solid var(--accent-green); }
+        .project-card.p-cubes { border-top: 4px solid var(--accent-gold); }
+        .project-card.p-house { border-top: 4px solid var(--accent-blue); }
+        .project-card.p-syntax { border-top: 4px solid var(--accent-purple); }
+        .project-card.p-emotions { border-top: 4px solid #EC4899; }
+        .project-card.p-train { border-top: 4px solid var(--accent-orange); }
+        .project-card.p-noise { border-top: 4px solid var(--accent-green); }
+
         .proj-meta-top {
             display: flex;
             justify-content: space-between;
@@ -941,6 +952,16 @@
         .p-history .proj-tag { background: rgba(139, 92, 246, 0.2); color: #A78BFA; }
         .p-art .proj-tag { background: rgba(236, 72, 153, 0.2); color: #F472B6; }
         .p-words .proj-tag { background: rgba(6, 182, 212, 0.2); color: #22D3EE; }
+
+        .p-gears .proj-tag { background: rgba(211, 84, 0, 0.2); color: #FB923C; }
+        .p-water .proj-tag { background: rgba(6, 182, 212, 0.2); color: #22D3EE; }
+        .p-algebra .proj-tag { background: rgba(16, 185, 129, 0.2); color: #34D399; }
+        .p-cubes .proj-tag { background: rgba(212, 175, 55, 0.2); color: var(--accent-gold); }
+        .p-house .proj-tag { background: rgba(59, 130, 246, 0.2); color: #60A5FA; }
+        .p-syntax .proj-tag { background: rgba(139, 92, 246, 0.2); color: #A78BFA; }
+        .p-emotions .proj-tag { background: rgba(236, 72, 153, 0.2); color: #F472B6; }
+        .p-train .proj-tag { background: rgba(211, 84, 0, 0.2); color: #FB923C; }
+        .p-noise .proj-tag { background: rgba(16, 185, 129, 0.2); color: #34D399; }
 
         .proj-icon-large {
             font-size: 1.8rem;
@@ -1483,7 +1504,7 @@
                 <span>Índice</span>
             </button>
             <div class="slide-counter" id="slideCounter">
-                Diapositiva <strong id="currentSlideNum">1</strong> de <span id="totalSlidesNum">8</span>
+                Diapositiva <strong id="currentSlideNum">1</strong> de <span id="totalSlidesNum">11</span>
             </div>
         </div>
     </header>
@@ -1517,25 +1538,41 @@
         </div>
 
         <div class="sidebar-divider"></div>
-        <div class="sidebar-section-title">Proxectos</div>
+        <div class="sidebar-section-title">Iniciación (SVG)</div>
 
-        <div class="nav-item" onclick="goToSlide(4)" id="nav-4" title="5. Ciencias e Contorno">
-            <span class="nav-icon">🔬</span>
-            <span class="nav-label">Ciencias</span>
+        <div class="nav-item" onclick="goToSlide(4)" id="nav-4" title="5. Iniciación: Ciencias e STEM">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-label">Ciencias (SVG)</span>
         </div>
-        <div class="nav-item" onclick="goToSlide(5)" id="nav-5" title="6. Humanidades e Letras">
+        <div class="nav-item" onclick="goToSlide(5)" id="nav-5" title="6. Iniciación: Letras e Humanidades">
+            <span class="nav-icon">🎲</span>
+            <span class="nav-label">Letras (SVG)</span>
+        </div>
+        <div class="nav-item" onclick="goToSlide(6)" id="nav-6" title="7. Iniciación: Educación Infantil">
+            <span class="nav-icon">🧸</span>
+            <span class="nav-label">Infantil (SVG)</span>
+        </div>
+
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-title">Avanzadas (APIs)</div>
+
+        <div class="nav-item" onclick="goToSlide(7)" id="nav-7" title="8. Avanzadas: Ciencias e Contorno">
+            <span class="nav-icon">🔬</span>
+            <span class="nav-label">Ciencias (API)</span>
+        </div>
+        <div class="nav-item" onclick="goToSlide(8)" id="nav-8" title="9. Avanzadas: Humanidades e Letras">
             <span class="nav-icon">📜</span>
-            <span class="nav-label">Humanidades</span>
+            <span class="nav-label">Letras (API)</span>
         </div>
 
         <div class="sidebar-divider"></div>
         <div class="sidebar-section-title">Práctica</div>
 
-        <div class="nav-item" onclick="goToSlide(6)" id="nav-6" title="7. Entrada e Descargas">
+        <div class="nav-item" onclick="goToSlide(9)" id="nav-9" title="10. Entrada e Descargas">
             <span class="nav-icon">📂</span>
             <span class="nav-label">Arquivos</span>
         </div>
-        <div class="nav-item" onclick="goToSlide(7)" id="nav-7" title="8. Prompt Mestre">
+        <div class="nav-item" onclick="goToSlide(10)" id="nav-10" title="11. Prompt Mestre">
             <span class="nav-icon">✨</span>
             <span class="nav-label">Prompt Mestre</span>
         </div>
@@ -1552,7 +1589,7 @@
                 <div class="hero-layout">
                     <div class="hero-content">
                         <div class="slide-eyebrow">
-                            <span>🎓</span> FORMAÇÃO DOCENTE DE REFORZO &bull; 3 HORAS
+                            <span>🎓</span> FORMACIÓN DOCENTE DE REFORZO &bull; 3 HORAS
                         </div>
                         <h1>
                             Da Consulta de Texto<br>
@@ -1589,12 +1626,12 @@
                         <div class="dashboard-card card-c3" onclick="goToSlide(4)">
                             <div>
                                 <h3>Catálogo de Proxectos</h3>
-                                <p>6 modelos listos para Ciencias, Sociais, Letras e Eficiencia.</p>
+                                <p>9 apps de Iniciación (SVG local) e 6 Avanzadas (APIs públicas).</p>
                             </div>
                             <div class="card-icon">💡</div>
                         </div>
 
-                        <div class="dashboard-card card-c4" onclick="goToSlide(7)">
+                        <div class="dashboard-card card-c4" onclick="goToSlide(10)">
                             <div>
                                 <h3>O Prompt Mestre</h3>
                                 <p>A fórmula en 4 capas para xerar calquera app educativa con IA.</p>
@@ -1818,13 +1855,259 @@
             </section>
 
             <!-- ========================================================
-                 DIAPOSITIVA 5: CATÁLOGO DE PROXECTOS (CIENCIAS E CONTORNO)
+                 DIAPOSITIVA 5: INICIACIÓN - CIENCIAS E STEM (SVG LOCAL)
                  ======================================================== -->
             <section class="slide" id="slide-4">
                 <div class="slide-header">
-                    <div class="slide-eyebrow">CATÁLOGO DIDÁCTICO &bull; BLOQUE A</div>
-                    <h2 class="slide-title">Micro-Apps para <span>Ciencias e Contorno</span></h2>
-                    <p class="slide-subtitle">Propostas de cadros de mando interactivos que conectan a aula con sensores e datos públicos mundiais en tempo real.</p>
+                    <div class="slide-eyebrow">CATÁLOGO DE INICIACIÓN (100% LOCAL / SVG) &bull; BLOQUE A</div>
+                    <h2 class="slide-title">Iniciación: <span>Ciencias e STEM</span></h2>
+                    <p class="slide-subtitle">Simuladores visuais e manipulativos sen conexión nin APIs externas, baseados en gráficos vectoriais SVG animados e matemáticas directas.</p>
+                </div>
+
+                <div class="projects-grid">
+                    <!-- Proxecto Iniciación 1: Engrenaxes -->
+                    <div class="project-card p-gears">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Tecnoloxía e Física</span>
+                                <span class="proj-icon-large">⚙️</span>
+                            </div>
+                            <h3>Taller de Engrenaxes Vivos</h3>
+                            <div class="proj-api-badge">
+                                🎨 SVG Paramétrico + JS (Sen API)
+                            </div>
+                            <p>Coloca de 2 a 4 rodas dentadas, axusta o número de dentes e a velocidade do motor para observar en directo o sentido de xiro e a relación de transmisión.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Engrenaxes vectoriais xerados con trigonometría</li>
+                            <li>Cálculo en tempo real de RPM e relacións</li>
+                            <li>Ideal para proxector, tablet e pizarra dixital</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('gears')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+
+                    <!-- Proxecto Iniciación 2: Ciclo da Auga -->
+                    <div class="project-card p-water">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Bioloxía e Xeografía</span>
+                                <span class="proj-icon-large">💧</span>
+                            </div>
+                            <h3>Ciclo da Auga Vivo e Climático</h3>
+                            <div class="proj-api-badge">
+                                🎨 SVG Multicapa + CSS Keyframes
+                            </div>
+                            <p>Manipula a temperatura ambiental e a cobertura forestal para ver como cambian a evaporación, as nubes, a chuvia/neve e o acuífero subterráneo.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Paisaxe vectorial reactiva á temperatura (-10°C a 45°C)</li>
+                            <li>Simulación do impacto da deforestación na infiltración</li>
+                            <li>Panel con explicacións didácticas por capa</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('water')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+
+                    <!-- Proxecto Iniciación 3: Balanza Alxébrica -->
+                    <div class="project-card p-algebra">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Matemáticas (Álxebra)</span>
+                                <span class="proj-icon-large">⚖️</span>
+                            </div>
+                            <h3>Balanza Alxébrica de Ecuacións</h3>
+                            <div class="proj-api-badge">
+                                🎨 SVG Dinámico + Principio de Igualdade
+                            </div>
+                            <p>Resolve ecuacións de 1º grao aplicando sempre a mesma operación en ambos pratos da balanza ata illar a X en equilibrio perfecto.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Prohibición estrita de "pasar termos": rigor matemático</li>
+                            <li>Brazo SVG que pivota con física realista ao desequilibrarse</li>
+                            <li>Xenerador de retos por niveis de dificultade</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('algebra')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 6: INICIACIÓN - HUMANIDADES E LETRAS (SVG LOCAL)
+                 ======================================================== -->
+            <section class="slide" id="slide-5">
+                <div class="slide-header">
+                    <div class="slide-eyebrow">CATÁLOGO DE INICIACIÓN (100% LOCAL / SVG) &bull; BLOQUE B</div>
+                    <h2 class="slide-title">Iniciación: <span>Humanidades e Letras</span></h2>
+                    <p class="slide-subtitle">Ferramentas visuais para lingua, idiomas e expresión escrita que combinan SVG interactivo con personalización mediante arquivos locais.</p>
+                </div>
+
+                <div class="projects-grid">
+                    <!-- Proxecto Iniciación 4: Story Cubes -->
+                    <div class="project-card p-cubes">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Lingua e Creatividade</span>
+                                <span class="proj-icon-large">🎲</span>
+                            </div>
+                            <h3>Story Cubes Narrativos (.csv)</h3>
+                            <div class="proj-api-badge">
+                                🎨 Dados SVG + FileReader (.csv)
+                            </div>
+                            <p>5 dados visuais que xiran ao azar para disparar relatos (personaxe, lugar, conflito, obxecto, emoción) e conectores obrigatorios, personalizables por CSV.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Carga de listas propias mediante Drag & Drop de .csv</li>
+                            <li>Bloqueo de dados individuais e reloxo visual de escritura</li>
+                            <li>Son de dados con Web Audio API sen ficheiros externos</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('cubes')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+
+                    <!-- Proxecto Iniciación 5: A Casa das Preposicións -->
+                    <div class="project-card p-house">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Idiomas (Inglés / Lingua)</span>
+                                <span class="proj-icon-large">🐈</span>
+                            </div>
+                            <h3>A Casa das Preposicións</h3>
+                            <div class="proj-api-badge">
+                                🎨 Escena SVG + Eventos Pointer
+                            </div>
+                            <p>Xogo táctil para aprender preposicións espaciais (in, on, under, next to, between): arrastra o gato animado ao lugar exacto da habitación.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Corte arquitectónico da casa en SVG con mobles</li>
+                            <li>Animacións de reacción do personaxe ao acertar/errar</li>
+                            <li>Compatible con ratón, dedo e pizarra dixital</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('house')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+
+                    <!-- Proxecto Iniciación 6: Caixa de Cristal Sintáctica -->
+                    <div class="project-card p-syntax">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Lingua e Sintaxe</span>
+                                <span class="proj-icon-large">🔎</span>
+                            </div>
+                            <h3>Caixa de Cristal Morfosintáctica</h3>
+                            <div class="proj-api-badge">
+                                🎨 Chaves SVG (Curvas Bézier)
+                            </div>
+                            <p>Analizador sintáctico visual: agrupa palabras consecutivas en sintagmas e funcións (SN, SV, CD, CI...) xerando chaves aniñadas animadas baixo o texto.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Trazado automático de chaves SVG mediante coordenadas</li>
+                            <li>Banco editable de oracións con autocorrección</li>
+                            <li>Cero NLP complexo: lóxica visual pura</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('syntax')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 7: INICIACIÓN - EDUCACIÓN INFANTIL (SVG LOCAL)
+                 ======================================================== -->
+            <section class="slide" id="slide-6">
+                <div class="slide-header">
+                    <div class="slide-eyebrow">CATÁLOGO DE INICIACIÓN (100% LOCAL / SVG) &bull; BLOQUE C</div>
+                    <h2 class="slide-title">Iniciación: <span>Educación Infantil e Primaria</span></h2>
+                    <p class="slide-subtitle">Aplicacións táctiles de alto impacto visual e emocional, deseñadas sen dependencia de lectura e con estímulos sonoros nativos.</p>
+                </div>
+
+                <div class="projects-grid">
+                    <!-- Proxecto Iniciación 7: Monstro das Emocións -->
+                    <div class="project-card p-emotions">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Educación Emocional</span>
+                                <span class="proj-icon-large">👾</span>
+                            </div>
+                            <h3>O Monstro das Emocións</h3>
+                            <div class="proj-api-badge">
+                                🎨 SVG Morphing + Guía Respiración
+                            </div>
+                            <p>Personaxe expresivo cuxos ollos, cellas, boca e cor cambian suavemente ao tocar cada emoción, incluíndo modo guiado de respiración para a calma.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>6 emocións básicas + modo xogo "¿Como está hoxe?"</li>
+                            <li>Animación de respiración pausada (4s inhalar / 4s exhalar)</li>
+                            <li>Acordes musicais suaves con Web Audio API</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('emotions')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+
+                    <!-- Proxecto Iniciación 8: Tren das Formas -->
+                    <div class="project-card p-train">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Xeometría e Atención</span>
+                                <span class="proj-icon-large">🚂</span>
+                            </div>
+                            <h3>O Tren das Formas</h3>
+                            <div class="proj-api-badge">
+                                🎨 SVG Xeométrico + Drag & Drop
+                            </div>
+                            <p>Os pequenos arrastran figuras xeométricas de cores cara ás siluetas baleiras dos vagóns; ao completalo, a locomotora pita e arranca pola vía.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Detección táctil tolerante para mans pequenas</li>
+                            <li>Silbato e traqueteo xerados por código (Web Audio)</li>
+                            <li>Rodas xiratorias e fume animado en SVG</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('train')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+
+                    <!-- Proxecto Iniciación 9: Semáforo do Ruído e Time Timer -->
+                    <div class="project-card p-noise">
+                        <div>
+                            <div class="proj-meta-top">
+                                <span class="proj-tag">Xestión de Aula e Rutinas</span>
+                                <span class="proj-icon-large">🚦</span>
+                            </div>
+                            <h3>Semáforo do Ruído e Reloxo Visual</h3>
+                            <div class="proj-api-badge">
+                                🎨 Time Timer SVG + Ambiente Aula
+                            </div>
+                            <p>Combina un semáforo amigable do clima de traballo (silencio, parellas, grupo) cun disco visual que se oculta progresivamente sen precisar saber ler horas.</p>
+                        </div>
+                        <ul class="proj-features">
+                            <li>Efecto "Time Timer" con stroke-dashoffset en círculo SVG</li>
+                            <li>Caras amigables no semáforo + debuxo sorpresa ao rematar</li>
+                            <li>Son suave de cuenco tibetano ao chegar a cero</li>
+                        </ul>
+                        <button class="btn-project-prompt" onclick="openPromptModal('noise')">
+                            <span>📋</span> Ver Prompt Completo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 8: AVANZADAS - CIENCIAS E CONTORNO (APIs PÚBLICAS)
+                 ======================================================== -->
+            <section class="slide" id="slide-7">
+                <div class="slide-header">
+                    <div class="slide-eyebrow">CATÁLOGO AVANZADO (APIS PÚBLICAS + EXPORTACIÓN) &bull; BLOQUE A</div>
+                    <h2 class="slide-title">Avanzadas: <span>Ciencias e Contorno</span></h2>
+                    <p class="slide-subtitle">Cadros de mando interactivos que conectan a aula con datos públicos mundiais en tempo real e permiten exportar táboas e informes.</p>
                 </div>
 
                 <div class="projects-grid">
@@ -1900,13 +2183,13 @@
             </section>
 
             <!-- ========================================================
-                 DIAPOSITIVA 6: CATÁLOGO DE PROXECTOS (HUMANIDADES E LETRAS)
+                 DIAPOSITIVA 9: AVANZADAS - HUMANIDADES E LETRAS (APIs PÚBLICAS)
                  ======================================================== -->
-            <section class="slide" id="slide-5">
+            <section class="slide" id="slide-8">
                 <div class="slide-header">
-                    <div class="slide-eyebrow">CATÁLOGO DIDÁCTICO &bull; BLOQUE B</div>
-                    <h2 class="slide-title">Micro-Apps para <span>Humanidades e Letras</span></h2>
-                    <p class="slide-subtitle">Ferramentas que transforman arquivos culturais e léxicos abertos en experiencias de aprendizaxe investigativa.</p>
+                    <div class="slide-eyebrow">CATÁLOGO AVANZADO (APIS PÚBLICAS + EXPORTACIÓN) &bull; BLOQUE B</div>
+                    <h2 class="slide-title">Avanzadas: <span>Humanidades e Letras</span></h2>
+                    <p class="slide-subtitle">Ferramentas que transforman arquivos culturais e léxicos abertos en experiencias de aprendizaxe investigativa con exportación a PDF/Excel.</p>
                 </div>
 
                 <div class="projects-grid">
@@ -1982,9 +2265,9 @@
             </section>
 
             <!-- ========================================================
-                 DIAPOSITIVA 7: A CAPA DE ARQUIVOS (DRAG & DOWNLOAD)
+                 DIAPOSITIVA 10: A CAPA DE ARQUIVOS (DRAG & DOWNLOAD)
                  ======================================================== -->
-            <section class="slide" id="slide-6">
+            <section class="slide" id="slide-9">
                 <div class="slide-header">
                     <div class="slide-eyebrow">INTERACTIVIDADE AVANZADA</div>
                     <h2 class="slide-title">A Capa de Arquivos: <span>Arrastrar e Descargar</span></h2>
@@ -2043,9 +2326,9 @@
             </section>
 
             <!-- ========================================================
-                 DIAPOSITIVA 8: O PROMPT MESTRE (MODELO REUTILIZABLE)
+                 DIAPOSITIVA 11: O PROMPT MESTRE (MODELO REUTILIZABLE)
                  ======================================================== -->
-            <section class="slide" id="slide-7">
+            <section class="slide" id="slide-10">
                 <div class="slide-header">
                     <div class="slide-eyebrow">PLANTILLA DE TRABALLO PRÁCTICO</div>
                     <h2 class="slide-title">O Prompt Mestre: <span>Modelo Reutilizable</span></h2>
@@ -2166,10 +2449,13 @@ Requisitos funcionais:
             { id: "slide-1", title: "O Salto Cualitativo: Fitos de IA 2026", icon: "🚀" },
             { id: "slide-2", title: "Arquitectura Técnica dun Artefacto Moodle", icon: "🏗️" },
             { id: "slide-3", title: "Fluxo Bidireccional de Datos e Privacidade", icon: "🔒" },
-            { id: "slide-4", title: "Catálogo: Ciencias e Contorno", icon: "🔬" },
-            { id: "slide-5", title: "Catálogo: Humanidades e Letras", icon: "📜" },
-            { id: "slide-6", title: "A Capa de Arquivos (Arrastrar e Descargar)", icon: "📂" },
-            { id: "slide-7", title: "O Prompt Mestre Reutilizable", icon: "✨" }
+            { id: "slide-4", title: "Iniciación (SVG): Ciencias e STEM", icon: "⚙️" },
+            { id: "slide-5", title: "Iniciación (SVG): Humanidades e Letras", icon: "🎲" },
+            { id: "slide-6", title: "Iniciación (SVG): Educación Infantil", icon: "🧸" },
+            { id: "slide-7", title: "Avanzadas (API): Ciencias e Contorno", icon: "🔬" },
+            { id: "slide-8", title: "Avanzadas (API): Humanidades e Letras", icon: "📜" },
+            { id: "slide-9", title: "A Capa de Arquivos (Arrastrar e Descargar)", icon: "📂" },
+            { id: "slide-10", title: "O Prompt Mestre Reutilizable", icon: "✨" }
         ];
 
         let currentSlideIndex = 0;
@@ -2334,6 +2620,264 @@ Requisitos funcionais:
         // BASE DE DATOS DE PROMPTS COMPLETOS DE PROXECTO
         // =========================================
         const projectPrompts = {
+            gears: {
+                title: "Taller de Engrenaxes Vivos",
+                icon: "⚙️",
+                tag: "Tecnoloxía e Física",
+                tagColor: "rgba(211, 84, 0, 0.2)",
+                tagTextColor: "#FB923C",
+                prompt: `Actúa como programador frontend senior especialista en simulacións educativas. Crea un único arquivo index.html completamente autocontido (HTML5, CSS3 e JS ES6+ sen librarías externas nin peticións de rede) preparado para executarse offline ou incrustado nun iframe de Moodle.
+
+Obxectivo do Proxecto:
+Construír un simulador interactivo de engrenaxes e transmisións mecánicas para que o alumnado de Tecnoloxía e Física comprenda a relación de transmisión, o cambio de velocidade angular e a inversión do sentido de xiro.
+
+Requisitos Técnicos e Funcionais:
+
+1. Xeración Dinámica de Engrenaxes en SVG:
+   - Un lenzo <svg> con viewBox adaptable onde o usuario poida configurar de 2 a 4 rodas dentadas en cadea.
+   - Controis deslizantes para elixir o número de dentes (Z) de cada roda (ex. entre 8 e 32 dentes) e a velocidade de entrada (RPM) do motor principal, ademais dun botón para inverter o sentido de xiro.
+   - Unha función JavaScript xera o trazado <path> exacto de cada engrenaxe mediante trigonometría de xeito que o radio sexa proporcional ao número de dentes e os dentes encaixen visualmente entre rodas veciñas.
+
+2. Animación Mecánica Realista (requestAnimationFrame):
+   - Anima o xiro de cada roda aplicando transform="rotate(...)" en tempo real.
+   - A velocidade angular de cada roda calcúlase coa fórmula exacta N1 * w1 = N2 * w2, invertendo o signo en cada paso para que as rodas veciñas xiren en sentidos opostos.
+   - Amosa frechas vectoriais curvas sobre cada engrenaxe indicando o seu sentido de xiro e etiquetas co valor de Z e as RPM actuais.
+
+3. Panel de Cálculos Didácticos:
+   - Tarxeta de resumo coa relación de transmisión total (i = Z_motriz / Z_conducida ou produto de etapas), indicando claramente se o sistema é "Redutor" ou "Multiplicador" de velocidade.
+   - Modo reto opcional con 3 desafíos guiados (ex. "Consegue que a última roda xire á metade de velocidade cá primeira").
+
+4. Deseño e Compatibilidade:
+   - Paleta escura de alto contraste para proxector de aula, eventos pointer compatibles con pizarra dixital/táctil e textos íntegros en galego.`
+            },
+            water: {
+                title: "Ciclo da Auga Vivo e Climático",
+                icon: "💧",
+                tag: "Bioloxía e Xeografía",
+                tagColor: "rgba(6, 182, 212, 0.2)",
+                tagTextColor: "#22D3EE",
+                prompt: `Actúa como programador frontend senior especialista en infografías educativas interactivas. Crea un único arquivo index.html completamente autocontido (HTML5, CSS3 e JS ES6+ sen librarías externas nin conexión a internet) preparado para incrustarse nun iframe de Moodle.
+
+Obxectivo do Proxecto:
+Desenvolver un esquema vivo do Ciclo da Auga onde o alumnado poida manipular variables climáticas e ambientais e observar en tempo real como reacciona o ecosistema hidrolóxico.
+
+Requisitos Técnicos e Funcionais:
+
+1. Escena Panorámica Vectorial en SVG Multicapa:
+   - Ilustración limpa en <svg> con viewBox responsivo dividida en capas <g> identificadas: sol, montaña con cumio, bosque/árbores, río superficial, mar, nubes e acuífero subterráneo.
+   - A cada capa asociaráselle unha animación CSS controlada por variables CSS dinámicas (--velocidade-evaporacion, --densidade-nubes, --nivel-acuifero).
+
+2. Controis Ambientais Interactivos:
+   - Deslizador 1 - Temperatura Ambiental (de -10°C a 45°C):
+     - A maior temperatura, aumenta a velocidade e opacidade das frechas onduladas de evaporación que soben do mar.
+     - Por debaixo de 0°C, a precipitación transfórmase visualmente de gotas de chuvia azuis a copos de neve brancos que acumulan neve no cumio da montaña.
+   - Deslizador 2 - Cobertura Forestal (de 0% deforestado a 100% bosque denso):
+     - Controla o número de árbores visibles na ladeira.
+     - Con alta cobertura forestal, a infiltración cara ao acuífero subterráneo é forte (frechas cara abaixo e acuífero azul cheo); con deforestación severa, aumenta a escorrentía superficial rápida e o acuífero redúcese.
+
+3. Modo Exploración Didáctica:
+   - Ao premer en calquera etapa (Evaporación, Condensación, Precipitación, Infiltración, Escorrentía), ábrese unha ficha explicativa clara adaptada a Secundaria/Primaria.
+   - Emprega eventos pointer e textos claros en galego con alto contraste para proxector.`
+            },
+            algebra: {
+                title: "Balanza Alxébrica de Ecuacións",
+                icon: "⚖️",
+                tag: "Matemáticas (Álxebra)",
+                tagColor: "rgba(16, 185, 129, 0.2)",
+                tagTextColor: "#34D399",
+                prompt: `Actúa como programador frontend senior especialista en didáctica das matemáticas. Crea un único arquivo index.html completamente autocontido (HTML5, CSS3 e JS ES6+ sen dependencias nin servidores) deseñado para incrustarse nun iframe de Moodle.
+
+Obxectivo do Proxecto:
+Crear un manipulativo virtual cunha balanza alxébrica para ensinar a resolver ecuacións de primeiro grado (ex. 2x + 3 = 9, 3x - 2 = x + 6) mediante o rigor matemático do Principio de Equivalencia.
+
+REGRA PEDAGÓXICA ESTRITA E INQUEBRANTABLE:
+- XAMAIS permitas nin menciones "pasar un termo dun lado ao outro", "pasar sumando/restando" nin "pasar multiplicando/dividindo".
+- TODAS as accións do alumno deben aplicarse simultaneamente aos DOUS pratos da balanza (Membro Esquerdo e Membro Dereito) para manter o equilibrio da igualdade (ex. "Restar 3 en ambos lados", "Dividir entre 2 ambos lados").
+
+Requisitos Técnicos e Funcionais:
+
+1. Balanza Vectorial en SVG con Física Visual:
+   - Dibuixa unha balanza clásica en <svg> cun brazo superior que pivota (transform: rotate() con transición suave cubic-bezier) segundo a diferenza real de peso entre o prato esquerdo e o dereito.
+   - Representa as incógnitas "X" como caixas douradas etiquetadas e as unidades positivas/negativas (+1 / -1) como pesas diferenciadas por cor en ambos pratos.
+   - Cando ambos pratos están en equilibrio (igualdade verdadeira), o fiel central alíñase cunha marca verde.
+
+2. Fluxo de Resolución Paso a Paso:
+   - Botóns de operación simultánea sobre toda a ecuación:
+     - Botóns "+1", "-1", "+X", "-X" que engaden ou retiran o termo seleccionado EN AMBOS PRATOS Á VEZ.
+     - Botóns de simplificación / división ("Dividir entre 2 ambos lados", "Dividir entre 3 ambos lados", etc.) activos cando é pertinente para illar unha única X.
+   - Historial lateral en tempo real que rexistra cada transformación alxébrica formalmente (ex. "2x + 3 - 3 = 9 - 3  ->  2x = 6").
+   - Se a ecuación queda resolta (unha X nun prato e só números no outro), lanza unha celebración visual con confeti vectorial SVG e botón "Seguinte Reto".
+
+3. Banco de Retos e Modo Libre:
+   - 3 niveis de dificultade (Nivel 1: x + a = b; Nivel 2: ax + b = c; Nivel 3: ax + b = cx + d) + opción para que o docente escriba a súa propia ecuación sinxela.
+   - Textos en galego, alto contraste para encerado dixital e compatibilidade táctil con eventos pointer.`
+            },
+            cubes: {
+                title: "Story Cubes Narrativos (.csv)",
+                icon: "🎲",
+                tag: "Lingua e Creatividade",
+                tagColor: "rgba(212, 175, 55, 0.2)",
+                tagTextColor: "#D4AF37",
+                prompt: `Actúa como programador frontend senior especialista en ferramentas de creatividade lingüística. Crea un único arquivo index.html completamente autocontido (HTML5, CSS3 e JS ES6+ sen dependencias externas nin servidor) listo para incrustarse nun iframe de Moodle.
+
+Obxectivo do Proxecto:
+Desenvolver uns "Story Cubes Dixitais" interactivos e personalizables para obradoiros de escritura creativa, expresión oral e aprendizaxe de idiomas en Secundaria ou Primaria.
+
+Requisitos Técnicos e Funcionais:
+
+1. Cinco Dados Vectoriais SVG Animados:
+   - Representa 5 dados grandes e claros debuxados en <svg> (categorías por defecto: Personaxe, Lugar, Obxecto, Conflito/Acción, Emoción) acompañados de 3 tarxetas de "Conectores Gramaticais Obrigatorios" (ex. "Porén", "Mentres tanto", "Finalmente").
+   - Botón principal "Lanzar Dados": executa unha animación de rotación e rebote en 2D sobre os 5 dados e emite un breve son sintetizado de dados rodando con Web Audio API (sen arquivos .mp3).
+   - Cada dado ten un pequeno botón de cadeado 🔒 para bloquealo e volver lanzar só os demais.
+
+2. Personalización Total mediante Arquivo .csv Local (Drag & Drop + FileReader):
+   - Inclúe unha zona de arrastre (e botón selector de arquivo) para que o docente cargue un arquivo .csv propio desde o seu ordenador usando a API FileReader (100% local, sen subir nada a internet).
+   - Formato sinxelo do CSV: "categoria,elemento,emoji" (ex. "Personaxe,Científica curiosa,👩‍🔬" ou vocabulario en inglés/francés/galego da unidade didáctica).
+   - Inclúe un botón "Descargar CSV de exemplo" xerado en cliente con Blob para que o profesorado vexa o formato ao instante e poida editalo en Calc/Excel.
+
+3. Temporizador Visual de Escritura e Bloc de Notas:
+   - Anel circular SVG (stroke-dashoffset) configurable (3, 5 ou 10 min) para marcar o tempo de redacción da historia na aula, con aviso sonoro suave ao rematar.
+   - Área de texto opcional debaixo onde o alumno ou grupo pode redactar o microrrelato e descargalo como arquivo .txt local.
+
+4. Deseño e Resiliencia:
+   - Envvolve calquera uso de localStorage en bloques try/catch por se Moodle restrinxe o almacenamento no iframe.
+   - Textos en galego, deseño atractivo e alto contraste para proxector.`
+            },
+            house: {
+                title: "A Casa das Preposicións",
+                icon: "🐈",
+                tag: "Idiomas (Inglés / Lingua)",
+                tagColor: "rgba(59, 130, 246, 0.2)",
+                tagTextColor: "#60A5FA",
+                prompt: `Actúa como programador frontend senior especialista en xogos educativos de idiomas. Crea un único arquivo index.html completamente autocontido (HTML5, CSS3 e JS ES6+ sen dependencias nin servidor) listo para incrustarse nun iframe de Moodle.
+
+Obxectivo do Proxecto:
+Crear un xogo visual manipulativo chamado "A Casa das Preposicións" para practicar preposicións de lugar (in, on, under, next to, behind, between) en Inglés (con opción de cambiar tamén a Galego/Castelán para niveis iniciais).
+
+Requisitos Técnicos e Funcionais:
+
+1. Escena Vectorial SVG dunha Habitación:
+   - Ilustración limpa en <svg> cunha habitación vista en corte frontal que inclúe mobles recoñecibles: unha mesa, unha cama, un armario aberto, unha estantería, unha caixa e unha xanela.
+   - Un personaxe simpático (un gato vectorial animado) que o usuario pode arrastrar libremente usando eventos pointer (pointerdown, pointermove, pointerup) para que funcione igual con rato, dedo ou pizarra dixital.
+
+2. Mecánica de Retos e Zonas de Colisión:
+   - Na parte superior amósase a consigna en texto grande e claro (ex. "Put the cat UNDER the table") cun botón opcional de audio que le a frase usando speechSynthesis do navegador se está dispoñible.
+   - Zonas de destino definidas con precisión arredor dos mobles. Ao soltar o gato:
+     - Se acerta: o gato acomódase no punto exacto cunha animación de salto alegre, emítese un ton positivo con Web Audio API e súmase 1 punto.
+     - Se erra: o gato regresa suavemente ao inicio e ilumínase brevemente cun halo verde a zona correcta para reforzar a aprendizaxe visual.
+
+3. Modo Práctica Libre e Modo Reto (10 preguntas):
+   - Selector de idioma (Inglés / Galego) e indicador de progreso con estrelas de recompensa.
+   - Cero dependencias externas, responsive e co uso de localStorage protexido con try/catch.`
+            },
+            syntax: {
+                title: "Caixa de Cristal Morfosintáctica",
+                icon: "🔎",
+                tag: "Lingua e Sintaxe",
+                tagColor: "rgba(139, 92, 246, 0.2)",
+                tagTextColor: "#A78BFA",
+                prompt: `Actúa como programador frontend senior especialista en ferramentas lingüísticas educativas. Crea un único arquivo index.html completamente autocontido (HTML5, CSS3 e JS ES6+ sen dependencias externas nin NLP en servidor) deseñado para incrustarse nun iframe de Moodle.
+
+Obxectivo do Proxecto:
+Desenvolver a "Caixa de Cristal Morfosintáctica": un analizador visual por bloques encaixables onde o alumnado agrupa palabras dunha oración para identificar sintagmas e funcións sintácticas mediante chaves vectoriais SVG animadas.
+
+Requisitos Técnicos e Funcionais:
+
+1. Oración Interactiva e Capa SVG Superposta:
+   - Amosa unha oración grande e centrada onde cada palabra é un botón/token seleccionable individualmente.
+   - O alumno fai clic en palabras consecutivas para seleccionalas como grupo e preme na etiqueta da función ou sintagma correspondente (Suxeito - SN, Predicado - SV, Complemento Directo, Complemento Indirecto, Complemento Circunstancial, Atributo).
+   - Debaixo da oración, unha capa <svg> calcula dinamicamente as coordenadas (getBoundingClientRect()) do grupo de palabras e debuxa chaves vectoriais curvas (Curvas de Bézier en <path>) ou caixas aniñadas con animación de trazo (stroke-dashoffset) coa cor e etiqueta da función elixida.
+
+2. Banco Editable de Oracións e Autocorrección:
+   - Inclúe un banco inicial de 8 oracións graduadas por dificultade (en Galego e opción de exemplo en Castelán) almacenadas nun obxecto JSON ao principio do script para que calquera docente poida editalas facilmente.
+   - Modo "Comprobar Análise": compara as agrupacións e etiquetas do alumno coa solución pre-etiquetada no JSON, amosando acertos en verde e pistas nos erros.
+   - Tamén inclúe un "Modo Encerado Libre" onde o docente pode escribir calquera oración nun campo de texto e ir debuxando as chaves sintácticas en directo diante da clase sen validación automática.
+
+3. Deseño e Usabilidade:
+   - Botóns grandes de cores diferenciadas e accesibles (evitando confundir vermello/verde mediante etiquetas textuais claras), deseño de alto contraste para proxector e botón "Desfacer último nivel".`
+            },
+            emotions: {
+                title: "O Monstro das Emocións",
+                icon: "👾",
+                tag: "Educación Emocional",
+                tagColor: "rgba(236, 72, 153, 0.2)",
+                tagTextColor: "#F472B6",
+                prompt: `Actúa como programador frontend senior especialista en aplicacións para Educación Infantil e Primaria. Crea un único arquivo index.html completamente autocontido (HTML5, CSS3 e JS ES6+ sen librarías externas nin conexión a internet) preparado para incrustarse en Moodle ou executarse en pizarra dixital.
+
+Obxectivo do Proxecto:
+Crear "O Monstro das Emocións", un personaxe SVG interactivo para traballar na asemblea matinal de Infantil o recoñecemento emocional, a empatía e a regulación mediante respiración guiada.
+
+Requisitos Técnicos e Funcionais:
+
+1. Personaxe SVG Expresivo e Animado:
+   - Un simpático monstro vectorial grande no centro da pantalla, deseñado con formas xeométricas amigables.
+   - 6 botóns visuais grandes con iconas e nome da emoción (Alegría, Calma, Tristeza, Enfado, Medo, Sorpresa).
+   - Ao tocar cada botón, o monstro cambia suavemente a cor do corpo, a forma dos ollos, a inclinación das cellas, a curvatura da boca e realiza unha micro-animación CSS acorde (salto alegre, lixeiro tremor no enfado, bágoas animadas na tristeza, ollos moi abertos na sorpresa).
+   - Emprega Web Audio API para xerar acordes musicais suaves e distintos para cada emoción (sen arquivos de audio externos).
+
+2. Modo Especial "Respirar Xuntos" (Regulación Emocional):
+   - Un botón destacado "Respiramos?" activa unha animación pausada e hipnótica: a barriga do monstro e unha flor vectorial na súa man espándense suavemente durante 4 segundos ("Inhala...") e contráense durante 4 segundos ("Exhala..."), acompañado dun ton harmónico ascendente e descendente moi relaxante.
+
+3. Modo Xogo "¿Como está hoxe o monstro?":
+   - Un modo secundario que amosa unha situación cotiá sinxela con icona (ex. "Perdeuse o seu xoguete favorito", "Hoxe é o seu aniversario") para que os nenos e nenas toquen a emoción correspondente.
+   - Deseño pensado para pantallas táctiles (botóns enormes, sen texto pequeno obrigatorio) e textos en galego.`
+            },
+            train: {
+                title: "O Tren das Formas",
+                icon: "🚂",
+                tag: "Xeometría e Atención",
+                tagColor: "rgba(211, 84, 0, 0.2)",
+                tagTextColor: "#FB923C",
+                prompt: `Actúa como programador frontend senior especialista en xogos táctiles para Educación Infantil. Crea un único arquivo index.html completamente autocontido (HTML5, CSS3 e JS ES6+ sen dependencias externas nin servidores) listo para usar offline ou nun iframe de Moodle.
+
+Obxectivo do Proxecto:
+Construír un xogo manipulativo chamado "O Tren das Formas" para reforzar o recoñecemento de figuras xeométricas básicas, cores e coordinación óculo-manual en Educación Infantil (3-6 anos).
+
+Requisitos Técnicos e Funcionais:
+
+1. Escenario Ferroviario SVG Animado:
+   - Un tren ilustrado en <svg> situado sobre unha vía na parte inferior da pantalla, composto por unha locomotora colorida e de 3 a 5 vagóns (segundo o nivel).
+   - Cada vagón mostra unha silueta gris baleira dunha figura (círculo, cadrado, triángulo, estrela, rectángulo, hexágono).
+   - Na parte superior da pantalla flotan as pezas de cores vivas listas para arrastrar.
+
+2. Interacción Táctil Tolerante (Eventos Pointer):
+   - Implementa o arrastre con eventos pointer (pointerdown, pointermove, pointerup) con detección de proximidade xenerosa (snap) para que os dedos dos nenos poidan encaixar as pezas sen frustración.
+   - Ao encaixar unha forma no seu vagón correspondente: a peza ilumínase, o vagón dá un pequeno botiño elástico e soa un "ding" musical agradable xerado con Web Audio API.
+   - Se a peza non corresponde á silueta, regresa suavemente ao banco superior sen sons estridentes nin castigos visuais.
+
+3. Gran Recompensa Final:
+   - Cando todos os vagóns están completos, a locomotora solta un silbato de tren sintetizado con Web Audio API, as rodas comezan a xirar, saen volutas de fume animado da cheminea e o tren atravesa toda a pantalla polo carril.
+   - Botón grande de "Xogar outra vez" con novo conxunto aleatorio de figuras e cores. Sen dependencia de lectura de texto, interface limpa e en galego.`
+            },
+            noise: {
+                title: "Semáforo do Ruído e Reloxo Visual",
+                icon: "🚦",
+                tag: "Xestión de Aula e Rutinas",
+                tagColor: "rgba(16, 185, 129, 0.2)",
+                tagTextColor: "#34D399",
+                prompt: `Actúa como programador frontend senior especialista en ferramentas de xestión de aula. Crea un único arquivo index.html completamente autocontido (HTML5, CSS3 e JS ES6+ sen dependencias externas nin servidor) deseñado para proxectarse na pizarra dixital ou incrustarse en Moodle.
+
+Obxectivo do Proxecto:
+Desenvolver unha ferramenta ambiental de aula que combina un "Semáforo do Clima de Traballo" e un "Reloxo Visual tipo Time Timer" para que o alumnado de Infantil e Primaria saiba en todo momento o nivel de voz esperado e o tempo restante sen precisar saber ler as horas.
+
+Requisitos Técnicos e Funcionais:
+
+1. Semáforo Interactivo do Clima de Aula:
+   - Un gran semáforo ilustrado en <svg> á esquerda da pantalla con tres estados seleccionables cun só clic:
+     - Verde (Cando toca traballar en equipo / falar baixo): luz verde brillante con cara sorrinte e icona de grupo.
+     - Ámbar (Parellas / voz moi suave): luz ámbar con cara atenta e icona de dúas persoas.
+     - Vermello (Silencio / lectura / traballo individual): luz vermella suave con cara tranquila pedindo calma.
+   - Ao cambiar de estado, o fondo ambiental da pantalla adapta sutilmente o seu matiz sen perder contraste nin cansar a vista.
+
+2. Reloxo Visual "Time Timer" en SVG (sen necesidade de ler números):
+   - Á dereita, un gran disco circular SVG (implementado manipulando stroke-dasharray e stroke-dashoffset dun <circle>) que mostra unha porción de cor que vai desaparecendo suavemente segundo pasan os segundos.
+   - Debaixo da porción que desaparece, revélase progresivamente un debuxo sorpresa alegre (ex. unha estrela sorrinte ou un sol) cando o tempo chega a cero.
+   - Botóns rápidos de duración con iconas e minutos (1, 3, 5, 10, 15, 20, 30 min) + botóns de Iniciar, Pausar e Reiniciar.
+
+3. Aviso Sonoro Respectuoso e Opcional:
+   - Ao rematar o tempo, un son suave e cálido de cuenco tibetano ou xilófono xerado con Web Audio API (evitando alarmas estridentes), con interruptor visible de "Silenciar audio".
+   - Uso de marcas de tempo reais (Date.now()) para que o temporizador non se atrase se o navegador cambia de pestana. Textos en galego.`
+            },
             meteo: {
                 title: "Estación Meteorolóxica e Radiación UV",
                 icon: "☀️",
