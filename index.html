@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="gl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursos IA · Formación Docente en Intelixencia Artificial (2026–2027)</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --card-bg: #1E1E1E;
+            --card-bg-elevated: #282828;
+            --text-main: #EAE0C8;
+            --text-dim: #A8A090;
+            --text-bright: #FFFFFF;
+
+            --accent-gold: #D4AF37;
+            --accent-orange: #f97316;
+            --accent-cyan: #06B6D4;
+            --accent-purple: #8B5CF6;
+            --accent-green: #10B981;
+
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 15% 15%, rgba(212, 175, 55, 0.06), transparent 35%),
+                radial-gradient(circle at 85% 80%, rgba(6, 182, 212, 0.06), transparent 35%);
+            color: var(--text-main);
+            font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 2.5rem;
+            flex: 1;
+        }
+
+        header {
+            margin-bottom: 2.75rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.75rem;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            margin-bottom: 0.9rem;
+        }
+
+        h1 {
+            font-size: clamp(1.85rem, 3.5vw, 2.65rem);
+            font-weight: 800;
+            color: var(--text-bright);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.6rem;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1.05rem;
+            max-width: 720px;
+        }
+
+        .section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            margin-bottom: 1.15rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 1.35rem;
+            margin-bottom: 2.75rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.6rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--card-accent, var(--accent-gold));
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            background: var(--card-bg-elevated);
+            border-color: var(--card-accent, var(--accent-gold));
+        }
+
+        .card--n1 { --card-accent: var(--accent-gold); }
+        .card--n2 { --card-accent: var(--accent-cyan); }
+        .card--n3 { --card-accent: var(--accent-orange); }
+
+        .card-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--card-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.65rem;
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            margin-bottom: 0.65rem;
+        }
+
+        .card p {
+            color: var(--text-dim);
+            font-size: 0.94rem;
+            margin-bottom: 1.35rem;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--card-accent);
+        }
+
+        .card-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            color: var(--text-dim);
+            font-weight: 400;
+        }
+
+        .archive-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.15rem 1.4rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .archive-info strong {
+            color: var(--text-main);
+            display: block;
+            font-size: 0.98rem;
+        }
+
+        .archive-info span {
+            color: var(--text-dim);
+            font-size: 0.86rem;
+        }
+
+        .btn-archive {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.55rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg-elevated);
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .btn-archive:hover {
+            border-color: var(--accent-purple);
+            color: var(--text-bright);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.25rem 1.5rem 2rem;
+            color: var(--text-dim);
+            font-size: 0.82rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        footer a {
+            color: var(--accent-gold);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header>
+            <span class="eyebrow">Edición 2026–2027 · Secundaria (Galicia)</span>
+            <h1>Cursos de Intelixencia Artificial para Docentes</h1>
+            <p class="subtitle">
+                Portal central de acceso ás presentacións interactivas, catálogos de micro-aplicacións e obradoiros prácticos organizados en tres niveis formativos.
+            </p>
+        </header>
+
+        <div class="section-title">Itinerario Formativo 2026–2027</div>
+        <section class="grid" aria-label="Niveis formativos 2026-2027">
+            <a class="card card--n1" href="./2026-27/01_Iniciacion_Docente/">
+                <div>
+                    <div class="card-badge">Nivel 1 · Base</div>
+                    <h2>Iniciación Docente á IA</h2>
+                    <p>
+                        Fundamentos, evolución histórica, casos de éxito, marco ético-legal e cinco obradoiros prácticos para comezar a integrar a IA na aula.
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-path">01_Iniciacion_Docente/</span>
+                    <span>Abrir presentación →</span>
+                </div>
+            </a>
+
+            <a class="card card--n2" href="./2026-27/02_Reforzo_MicroApps_Moodle/">
+                <div>
+                    <div class="card-badge">Nivel 2 · Reforzo 3h</div>
+                    <h2>Micro-Apps Interactivas e Moodle</h2>
+                    <p>
+                        Módulo intensivo de 3 horas sobre fitos actuais da IA, deseño de micro-aplicacións educativas en HTML/SVG e integración directa en Moodle.
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-path">02_Reforzo_MicroApps_Moodle/</span>
+                    <span>Abrir presentación →</span>
+                </div>
+            </a>
+
+            <a class="card card--n3" href="./2026-27/03_IA_Axentica/">
+                <div>
+                    <div class="card-badge">Nivel 3 · Avanzado</div>
+                    <h2>IA Axéntica para a Práctica Docente</h2>
+                    <p>
+                        Salto ao paradigma axéntico: contornos IDE/CLI, protocolo MCP, arquitectura de proxectos educativos e normativa vixente.
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-path">03_IA_Axentica/</span>
+                    <span>Abrir presentación →</span>
+                </div>
+            </a>
+        </section>
+
+        <div class="section-title">Arquivo de Edicións Anteriores</div>
+        <section class="archive-box" aria-label="Arquivo 2025-2026">
+            <div class="archive-info">
+                <strong>Edición 2025–2026 · Iniciación Docente</strong>
+                <span>Versión histórica do curso base conservada para consulta.</span>
+            </div>
+            <a class="btn-archive" href="./2025-26/01_Iniciacion_Docente/">
+                Consultar edición 2025–2026 →
+            </a>
+        </section>
+    </main>
+
+    <footer>
+        Proxecto <strong>Cursos-IA</strong> · Aloxado en
+        <a href="https://github.com/AlvaroMB74/Cursos-IA" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </footer>
+</body>
+</html>

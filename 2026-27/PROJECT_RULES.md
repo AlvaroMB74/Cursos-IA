@@ -6,7 +6,7 @@
 * **Líneas de Formación (3 Niveles del Proyecto):**
   1. `01_Iniciacion_Docente`: Curso base de iniciación docente (fundamentos, historia, casos de éxito, marco ético/legal y 5 talleres prácticos actualizados).
   2. `02_Reforzo_MicroApps_Moodle`: Módulo intensivo de 3 horas sobre integración de micro-aplicaciones interactivas e incrustación en Moodle.
-  3. `02_IA_Axentica`: Curso avanzado sobre el salto al paradigma agéntico, herramientas de escritorio/IDE (Claude Code, Antigravity, Cursor, Windsurf), MCP (Model Context Protocol), diseño de proyectos y gobernanza/normativa docente.
+  3. `03_IA_Axentica`: Curso avanzado sobre el salto al paradigma agéntico, herramientas de escritorio/IDE (Claude Code, Antigravity, Cursor, Windsurf), MCP (Model Context Protocol), diseño de proyectos y gobernanza/normativa docente.
 * **Idioma:** 
   * Diálogo, planificación, debates, commits y documentación técnica: **Castellano**.
   * Diapositivas, interfaces web interactivas (Reveal.js / React) y materiales para el profesorado/alumnado: **Gallego**.
@@ -18,7 +18,7 @@
 * **URLs Públicas de Acceso Independiente (GitHub Pages):**
   * **Nivel 1 (Iniciación):** `https://alvaromb74.github.io/Cursos-IA/2026-27/01_Iniciacion_Docente/`
   * **Nivel 2 (Refuerzo MicroApps):** `https://alvaromb74.github.io/Cursos-IA/2026-27/02_Reforzo_MicroApps_Moodle/`
-  * **Nivel 3 (IA Axéntica):** `https://alvaromb74.github.io/Cursos-IA/2026-27/02_IA_Axentica/`
+  * **Nivel 3 (IA Axéntica):** `https://alvaromb74.github.io/Cursos-IA/2026-27/03_IA_Axentica/`
 * **Reglas Críticas de Alojamiento Web (Servidor Linux):**
   * **Sensibilidad a Mayúsculas/Minúsculas:** Linux distingue `CSS` de `css` e `Img` de `img`. Todas las rutas relativas en `<link>`, `<script>`, `<img>`, `<iframe>` y fetch deben coincidir **exactamente** con la capitalización del disco.
   * **Rutas Relativas Estrictas:** Nunca utilizar rutas absolutas locales (`C:/...` o `/2026-27/...`); usar siempre rutas relativas (`./`, `../`, `../../`) para garantizar portabilidad en GitHub Pages.
